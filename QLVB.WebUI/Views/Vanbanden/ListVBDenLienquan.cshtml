@@ -1,0 +1,215 @@
+﻿@model QLVB.DTO.Vanbanden.SearchVBViewModel
+
+@using QLVB.DTO
+@{
+	ViewBag.Title = "ListVBDenLienquan";
+	int idhoso = ViewBag.idhoso;
+}
+@section header{
+	<i class="fa fa-file-text">&nbsp;</i>Văn bản đến liên quan
+}
+
+<div class="box " id="tbar">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="SearchVBLQbtn" class="btn btn-success btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm
+			</button>
+			<button id="SaveVBLQbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="fa fa-save"></i>&nbsp;Ghi nhận</button>
+			<button id="BackVBLQbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+		</nav>
+	</header>
+</div>
+
+<div class="row">
+	<div class="col-sm-12" id="detail-listVBDenLQ">        
+	@(Html.Kendo().Grid<QLVB.DTO.Vanbanden.ListVanbandenlienquanViewModel>()
+	.Name("grid")
+	.Columns(columns =>
+	{
+		columns.Bound(c => c.intid).Hidden();
+		columns.Bound(c => c.isCheck).Title("<input type='checkbox' id='hfAll' /> ")
+			.ClientTemplate(
+				"#if (isCheck) { #" +
+					"<input type='checkbox' id='hfID' value='#= intid #' checked disabled  />" +
+				"# } else { #" +
+					"<input type='checkbox' id='hfID' value='#= intid #'   />" +
+				"# } #"
+			)
+			.Width(28);
+		columns.Bound(o => o.IsAttach).Title(" ")
+			.ClientTemplate(
+				"#if (IsAttach) { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+				"# } else { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+				"# } #"
+			)
+			.Width(28);
+		columns.Bound(o => o.dtengayden).Format("{0:dd/MM/yyyy}").Title("Ngày đến").Width(90);
+		columns.Bound(o => o.intsoden).Title("Số đến").Width(60);
+		columns.Bound(o => o.strnoiphathanh).Title("Nơi gửi").Width("20%");
+		columns.Bound(o => o.strkyhieu).Title("Số, Ký hiệu").Width("12%");
+		columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("30%");
+		columns.Bound(o => o.strnoinhan).Title("Xử lý chính").Width("14%");
+		columns.Bound(o => o.inttrangthai).Hidden();
+		columns.Bound(o => o.inttinhtrangxuly).Hidden();
+		columns.Bound(o => o.isykien).Hidden();
+	})
+	.HtmlAttributes(new { style = "white-space: normal" })
+	.Scrollable()
+				//.Sortable()
+	.Selectable()
+	.Resizable(resize => resize.Columns(true))
+	.Pageable(pageable => pageable
+		.Refresh(true)
+		//.PageSizes(true)
+		.ButtonCount(5)
+		.Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+			.First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+			.Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+		)
+	.DataSource(dataSource => dataSource
+		.Ajax()
+		.PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+			.Read(read => read.Action("Vanbandenlienquan_Read", "Vanbanden",
+				new
+				{
+					idhoso = idhoso,
+
+					idsovb = Model.idsovb,
+					idloaivb = Model.idloaivb,
+					idkhoiph = Model.idkhoiph,
+					strngaydencat = Model.strngaydencat,
+					xuly = Model.xuly,
+					intsodenbd = Model.intsodenbd,
+					intsodenkt = Model.intsodenkt,
+					strngaydenbd = Model.strngaydenbd,
+					strngaydenkt = Model.strngaydenkt,
+					strngaykybd = Model.strngaykybd,
+					strngaykykt = Model.strngaykykt,
+					strsokyhieu = Model.strsokyhieu,
+					strnguoiky = Model.strnguoiky,
+					strnoigui = Model.strnoigui,
+					strtrichyeu = Model.strtrichyeu,
+					strnguoixuly = Model.strnguoixuly
+				 
+				})
+			)
+			.Events(events => events.Error("onError"))
+		)
+	.Events(events => events.Change("onChange").DataBound("onDataBound"))
+		)
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(window).resize(function () {
+		SetGridHeight();
+	});
+	$(document).ready(function () {
+		SetGridHeight();
+	})
+	function onChange(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#grid").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			var currentPage = grid.dataSource.page();
+
+		});
+	}
+	function onDataBound(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}
+			else {
+				var uid = dataView[i].uid;
+				var strClass = SetColorVanban(dataView[i].inttinhtrangxuly, dataView[i].isykien)
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass(strClass);
+			}
+		}
+	}
+	function SetColorVanban(inttinhtrangxuly, isykien) {
+		var strClass = "";
+		switch (inttinhtrangxuly) {
+			case 0: // dang xu ly
+				if (isykien == true) {
+					strClass = "coykien";
+				} else {
+					strClass = "dangxuly";
+				}
+				break;
+			case 1: // da hoan thanh
+				strClass = "daxuly";
+				break;
+			default:  // null
+				strClass = "daxuly";
+				break;
+		}
+		return strClass;
+	}
+	function onError(e, status) {
+		SetThongbao("Đã có lỗi xảy ra trên Server!");
+	}
+	function ViewDetailVBDen(id) {
+		OpenViewDetailVBDen(id);
+	}
+	function GetSelectedItemsVBDen() {
+		var idselect = "";
+		$("#grid  tbody").find('tr').each(function () {
+			var id = $(this).find('#hfID').val();
+			var IsCheck = $(this).find('#hfID').prop('checked');
+			if (IsCheck == true) {
+				idselect += id + ',';
+			}
+		});
+		return idselect;
+	};
+	$('#hfAll').on("click", function () {
+		var IsCheck = $('#hfAll').prop('checked');
+		$("#grid  tbody").find('tr').each(function () {
+			$(this).find('#hfID').prop('checked', IsCheck);
+		});
+	});
+	$('#SaveVBLQbtn').click(function () {
+		var idselect = GetSelectedItemsVBDen();
+		var idhoso = '@idhoso';
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_SaveVBDenLienquan", "Vanbanden")',
+			data: { 'stridvanban': idselect, 'idhosocongviec': idhoso },
+			success: function (data) {
+				if (data == 0) {
+					SetThongbao("Lỗi!!!");
+				}
+				else {
+					SetThongbao("Cập nhật thành công");
+					RefreshGrid();
+				}
+			},
+			dataType: "Json"
+		});
+	});
+
+	$('#BackVBLQbtn').click(function () {
+		var url = '@Url.Action("XulyHoso", "Hoso", new { id = idhoso })';
+		window.location = url;
+	});
+	$('#SearchVBLQbtn').click(function () {      
+		OpenSearchVBDenLQ();
+	})
+</script>
+@Html.Action("_ViewDetailVBDen", "Vanbanden")
+@Html.Action("_ViewDetailVBDi", "Vanbandi")
+@Html.Action("_ViewDetailHoso", "Hoso")
+@Html.Action("_SearchVBDenLQ", "Vanbanden", new { idhoso = @idhoso })
+

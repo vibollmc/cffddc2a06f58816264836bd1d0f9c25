@@ -1,0 +1,73 @@
+﻿@model QLVB.DTO.Sovb.EditSovanbanViewModel
+
+<div class="box">
+    <form class="form-horizontal" id="formEditSovb">
+        <span id="ketquaSaveSovb" class="validation-summary-valid"></span>
+        <header>
+            <nav style="padding: 3px;">
+                <button id="Savebtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </nav>
+        </header>
+
+        @Html.HiddenFor(m => m.intid)
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strkyhieu, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strkyhieu, new { @class = "form-control form-control-window", placeholder = "Ký hiệu" })
+            </div>
+        </div>
+        <div class="form-group form-group-window ">
+            @Html.LabelFor(m => m.strten, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strten, new { @class = "form-control form-control-window", placeholder = "Tên sổ văn bản" })
+            </div>
+        </div>
+        <div class="form-group form-group-window ">
+            @Html.LabelFor(m => m.strghichu, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strghichu, new { @class = "form-control form-control-window", placeholder = "Ghi chú" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.Loaisovanban, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.EnumDropDownListFor(m => m.Loaisovanban, new { @class = "form-control form-control-window" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.IsDefault, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.CheckBox("IsDefault", Model.IsDefault)
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+    $("#Savebtn").click(function () {
+        var validatable = $("#formEditSovb").kendoValidator().data("kendoValidator");
+        if (validatable.validate()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveSovb", "Sovb")',
+                dataType: "json",
+                data: $('#formEditSovb').serialize() ,
+                success: function (data) {
+                    if (data == 1) {
+                        ShowResult("ketquaSaveSovb", "Cập nhật thành công");
+                        //RefreshGrid();
+                    }
+                    else {
+                        ShowResult("ketquaSaveSovb", "Lỗi !!!");
+                        //RefreshGrid();
+                    }
+                },
+            });
+        }
+    });
+    $('#Backbtn').click(function () {
+        CloseEditSovb();
+    })
+</script>

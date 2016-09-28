@@ -1,0 +1,126 @@
+﻿@model int
+@(Html.Kendo().Window()
+	.Name("TamngungQuytrinh")
+	.Draggable()
+	.AutoFocus(true)
+	.Modal(false)
+	.Title("Tạm ngừng Quy trình xử lý")
+	.Resizable()
+	.Width(300)
+	.Height(160)
+	.Visible(false)
+	.Actions(actions => actions.Close())
+	.Content(
+	@<text>
+		<div id="detail-TamngungQuytrinh">
+			<div class="modal-body">
+				 
+				@Html.Label("Số ngày tạm ngừng xử lý :", new { @class = "font-label" })
+				@Html.TextBox("strThoigiantamngungXL", null, new { @class = "form-control form-control-window ", placeholder = "" })
+			</div>
+			<div class="modal-footer">
+				<button id="SubmitTamngungQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+				<button id="BackTamngungQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+			</div>
+		</div>
+	</text>
+	)
+)
+<script type="text/javascript">
+	function CloseTamngungQuytrinh() {
+		var window = $("#TamngungQuytrinh").data("kendoWindow");
+		window.close();
+	}
+	function OpenTamngungQuytrinh() {
+		var window = $("#TamngungQuytrinh").data("kendoWindow");
+		window.center();
+		window.open();		
+	}
+	$("#BackTamngungQuytrinhbtn").bind("click", function () {
+		CloseTamngungQuytrinh();
+	})
+	$('#SubmitTamngungQuytrinhbtn').click(function () {
+		var idhoso = GetIdHoso();
+		var strngay = $('#strThoigiantamngungXL').val();
+		if (strngay != "") {
+			$.ajax({
+				type: "POST",
+				url: '@Url.Action("_TamngungQuytrinh", "Hoso")',
+				data: { idhoso: idhoso,strngay:strngay },
+				success: function (data) {
+				    if (data == 1) {
+				        ReloadThongtinxuly();
+						CloseTamngungQuytrinh();
+						DisplayTamngungQuytrinh(true);
+					}
+					else {
+						CloseTamngungQuytrinh();
+						SetThongbao("Lỗi ");
+					}
+				},
+			});
+		} else {
+
+		}		
+	})	
+</script>
+
+@(Html.Kendo().Window()
+	.Name("TieptucQuytrinh")
+	.Draggable()
+	.AutoFocus(true)
+	.Modal(false)
+	.Title("Tiếp tục Quy trình xử lý")
+	.Resizable()
+	.Width(400)
+	.Height(120)
+	.Visible(false)
+	.Actions(actions => actions.Close())
+	.Content(
+	@<text>
+		<div id="detail-TieptucQuytrinh">
+			<div class="modal-body">
+				Bạn có muốn tiếp tục xử lý không?
+			</div>
+			<div class="modal-footer">
+				<button id="SubmitTieptucQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+				<button id="BackTieptucQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+			</div>
+		</div>
+	</text>
+	)
+)
+<script type="text/javascript">
+	function CloseTieptucQuytrinh() {
+		var window = $("#TieptucQuytrinh").data("kendoWindow");
+		window.close();
+	}
+	function OpenTieptucQuytrinh() {
+		var window = $("#TieptucQuytrinh").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	$("#BackTieptucQuytrinhbtn").bind("click", function () {
+		CloseTieptucQuytrinh();
+	})
+	$('#SubmitTieptucQuytrinhbtn').click(function () {
+		var idhoso = GetIdHoso();
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("_TieptucQuytrinh", "Hoso")',
+			data: { idhoso: idhoso },
+			success: function (data) {
+			    if (data == 1) {
+			        ReloadThongtinxuly();
+					CloseTieptucQuytrinh();
+					DisplayTamngungQuytrinh(false);
+				}
+				else {
+					CloseTieptucQuytrinh();
+					SetThongbao("Lỗi ");
+				}
+			},
+		});
+	})
+
+</script>

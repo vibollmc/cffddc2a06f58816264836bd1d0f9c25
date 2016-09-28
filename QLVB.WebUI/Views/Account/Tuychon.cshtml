@@ -1,0 +1,109 @@
+﻿@model QLVB.DTO.Account.TuychonViewModel
+@using QLVB.Domain.Entities;
+@{
+	var IsBool = new[]{
+				new {value = "true", name = "Có"},
+				new {value = "false", name = "Không"}
+			};	
+}
+
+<div class="col-sm-6">
+	<div class="box">
+		<header>
+			<div class="icons">
+				<i class="glyphicon glyphicon-pencil"></i>
+			</div>
+            Cài đặt giao diện
+		</header>
+		<div id="div-1" class="body">
+            <form class="form-horizontal" id="formTuychon">
+                <div class="form-actions no-margin-bottom">
+                    <button id="saveTuychonbtn" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                    <span id="ketquaTuychon" class="validation-summary-valid"></span>
+                </div>
+                <hr />
+                @foreach (var m in Model.Tuychon)
+                {
+                    string strSelect = string.Empty;
+                    if (!string.IsNullOrEmpty(m.strgiatri))
+                    {
+                        strSelect = m.strgiatri;
+                    }
+                    else
+                    {
+                        strSelect = m.strgiatridefault;
+                    }
+                    switch (m.strthamso)
+                    {
+                        case (ThamsoTuychon.MenuType):
+                            <div class="form-group">
+                                <label class="control-label col-sm-4">@m.strmota </label>
+                                <div class="col-sm-6">
+                                    @(Html.Kendo().DropDownList()
+                                        .Name(m.strthamso)
+                                        .BindTo(Model.MenuType)
+                                        .DataTextField("strmota")
+                                        .DataValueField("strgiatri")
+                                        .Value(strSelect)
+                                        .HtmlAttributes(new { @style = "width:100%;" })
+                                    )
+                                </div>
+                            </div>
+                            break;
+                        case (ThamsoTuychon.IsMenuClickable):
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">@m.strmota</label>
+                            <div class="col-sm-6">                                
+                                @(Html.Kendo().DropDownList()
+                                        .Name(m.strthamso)
+                                        .BindTo(IsBool)
+                                        .DataTextField("name")
+                                        .DataValueField("value")
+                                        .Value(strSelect)
+                                        .HtmlAttributes(new { @style = "width:100%;" })
+                                )
+                            </div>
+                        </div>
+                            break;
+                        case (ThamsoTuychon.HomePage):
+                           <div class="form-group">
+                                <label class="control-label col-sm-4">@m.strmota</label>
+                                <div class="col-sm-6">
+                                    @(Html.Kendo().DropDownList()
+                                        .Name(m.strthamso)
+                                        .BindTo(Model.HomePage)
+                                        .DataTextField("strmota")
+                                        .DataValueField("strgiatri")
+                                        .Value(strSelect)
+                                        .HtmlAttributes(new { @style = "width:100%;" })                                        
+                                    )
+                                    
+                                </div>
+                            </div>
+                            break;
+                    }
+                }
+
+
+            </form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$("#saveTuychonbtn").click(function () {
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("_SaveTuychon","Account")',
+			data: $("#formTuychon").serialize(),
+			success: function (data) {
+				if (data.id == 1) {
+					ShowResult("ketquaTuychon", "Cập nhật thành công");
+				}
+				else {
+					ShowResult("ketquaTuychon", "Lỗi !!!");
+				}
+			},
+			dataType: "Json"
+		});
+	});
+</script>

@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@*@section header{
+    <i class="fa fa-home dark">&nbsp;</i>Trang chu    
+}*@
+
+<div class="row">
+    <div class="col-md-5">
+        <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+sagittis lacus vel augue laoreet rutrum faucibus.">
+            Popover on bottom
+        </button>
+
+        <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</button>
+        @ViewBag.User || @ViewBag.id ||  @ViewBag.username || @ViewBag.userid
+    </div>
+</div>

@@ -1,0 +1,211 @@
+﻿@model QLVB.DTO.Tinhhinhxuly.ListTonghopVBDenViewModel
+
+@section header{
+	<i class="glyphicon glyphicon-tasks">&nbsp;</i>@Model.strloaivanban
+}
+
+<div class="box ">
+	<header>
+		<nav class="box-toolbar">			
+			<button id="XLVBbtn" disabled class="btn btn-metis-4 btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-pencil"></i>&nbsp;Xử lý
+			</button>
+			<button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
+			</button>
+			<button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+		</nav>
+	</header>
+</div>
+@(Html.Kendo().Grid<QLVB.DTO.Vanbanden.ListVanbandenViewModel>()
+	.Name("grid").AutoBind(false)
+	.Columns(columns =>
+	{
+		columns.Bound(c => c.intid).Hidden();
+		columns.Bound(o => o.IsAttach).Title(" ")
+			.ClientTemplate(
+				"#if (IsAttach) { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+				"# } else { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+				"# } #"
+			)
+			.Width(28);
+		columns.Bound(o => o.dtengayden).Format("{0:dd/MM/yyyy}").Title("Ngày đến").Width(90);
+		columns.Bound(o => o.intsoden).Title("Số đến").Width(60);
+		columns.Bound(o => o.strnoiphathanh).Title("Nơi gửi").Width("20%");
+		columns.Bound(o => o.strkyhieu).Title("Số, Ký hiệu").Width("12%");
+		columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("30%");
+		columns.Bound(o => o.strnoinhan).Title("Xử lý chính").Width("14%");
+		columns.Bound(o => o.inttrangthai).Hidden();
+		columns.Bound(o => o.inttinhtrangxuly).Hidden();
+	})
+	.HtmlAttributes(new { style = "white-space: normal" })
+	.Scrollable()
+		//.Sortable()
+	.Selectable()
+	.Resizable(resize => resize.Columns(true))
+	.Pageable(pageable => pageable
+		.Refresh(true)
+		//.PageSizes(true)
+		.ButtonCount(5)
+			.Messages(ms => ms.Display(QLVB.DTO.KendoGridDisplay.PageDisplay).Empty(QLVB.DTO.KendoGridDisplay.PageEmpty)
+					.First(QLVB.DTO.KendoGridDisplay.PageFirst).Previous(QLVB.DTO.KendoGridDisplay.PagePrevious)
+					.Next(QLVB.DTO.KendoGridDisplay.PageNext).Last(QLVB.DTO.KendoGridDisplay.PageLast))
+		)
+	.DataSource(dataSource => dataSource
+		.Ajax()
+		.PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+			.Read(read => read.Action("Vanbanden_Read", "Tinhhinhxuly",
+				new
+				{
+					intloai = Model.intloai ,
+					idcanbo = Model.idcanbo,
+					iddonvi = Model.iddonvi,
+					strngaybd = Model.strngaybd,
+					strngaykt = Model.strngaykt,
+					idloaingay = Model.idloaingay,
+					idsovb = Model.idsovb
+				})
+			)
+			.Events(events => events.Error("onError"))
+		)
+	.Events(events => events.Change("onChange")
+							.DataBound("onDataBound")
+	)
+)
+@Html.Hidden("idvanban")
+@Html.Hidden("idhoso")
+
+@Html.Action("_ViewDetailVBDen", "Vanbanden")
+@Html.Action("_ViewDetailVBDi", "Vanbandi")
+@Html.Action("_ViewDetailHoso", "Hoso")
+
+<script type="text/javascript">
+	$(function () {
+		dataSource = $('#grid').data().kendoGrid.dataSource;
+		dataSource.query({
+			page: '@Model.intPage',
+			group: dataSource.group(),
+			filter: dataSource.filter(),
+			sort: dataSource.sort(),
+			pageSize: dataSource.pageSize()
+		})
+	})
+	$(window).resize(function () {
+		SetGridHeight();
+	});
+	$(document).ready(function () {
+		SetGridHeight();
+	})
+	function onError(e, status) {
+		SetThongbao("Đã có lỗi xảy ra trên Server!");
+	}
+	function onChange(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#grid").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			SetIdVanban(intid);
+			$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("GetIdHosocongviec", "Vanbanden")',
+				data: { 'idvanban': intid },
+				success: function (data) {
+					var idhosocongviec = data;
+					SetIdHoso(idhosocongviec);
+					DisplayXuly(idhosocongviec);
+				}
+			});
+		});
+	}
+	function onDataBound(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}
+			else {
+				var uid = dataView[i].uid;
+				var strClass = SetColorVanban(dataView[i].inttinhtrangxuly)
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass(strClass);
+			}
+		}
+	}
+	function SetColorVanban(inttinhtrangxuly) {
+		var strClass = "";
+		switch (inttinhtrangxuly) {
+			case 0: // dang xu ly
+				strClass = "dangxuly";
+				break;
+			case 1: // da hoan thanh
+				strClass = "daxuly";
+				break;
+			default:  // null
+				strClass = "daxuly";
+				break;
+		}
+		return strClass;
+	}
+	function DisplayXuly(idhoso) {
+		if (idhoso == 0) {
+			ButtonEnable("XLVBbtn", false);
+		} else {
+			ButtonEnable("XLVBbtn", true);
+		}
+	}
+	function SetIdVanban(idvanban) {
+		$('#idvanban').val(idvanban);
+	}
+	function GetIdVanban() {
+		var id = $('#idvanban').val();
+		return id;
+	}
+	function SetIdHoso(idhoso) {
+		$('#idhoso').val(idhoso);
+	}
+	function GetIdHoso() {
+		var id = $('#idhoso').val();
+		return id;
+	}
+	function ViewDetailVBDen(id) {
+		OpenViewDetailVBDen(id);
+	}
+	$('#Backbtn').click(function () {
+		var url = '@Url.Action("Vanbanden", "Tinhhinhxuly", new { isBack = true })';
+		$().redirect(url);
+	});
+	$('#XLVBbtn').click(function () {
+		var idhosocongviec = 0;
+		idhosocongviec = GetIdHoso();
+		if (idhosocongviec != 0) {
+			var url = '@Url.Action("XulyHoso", "Hoso", (new { id = "__id__" }))'.replace('__id__', idhosocongviec);
+			window.location = url;
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#PrintListVBbtn').click(function () {
+		var strngaybd = '@Model.strngaybd';
+		var strngaykt = '@Model.strngaykt';
+		var idcanbo = '@Model.idcanbo';
+		var intloai = '@Model.intloai';
+		var iddonvi = '@Model.iddonvi';
+	    var idloaingay = '@Model.idloaingay';
+	    var idsovb = '@Model.idsovb';
+		var url = '@Url.Action("ExportVBDen", "Tinhhinhxuly")';
+		url = url + '?intloai=' + intloai;
+		url = url + '&idcanbo=' + idcanbo + '&iddonvi=' + iddonvi;
+		url = url + '&strngaybd=' + strngaybd + '&strngaykt=' + strngaykt;
+		url = url + '&idloaingay=' + idloaingay;
+		url = url + '&idsovb=' + idsovb;
+		window.location = url;
+	})
+</script>
+
+
+

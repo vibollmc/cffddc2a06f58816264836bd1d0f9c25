@@ -1,0 +1,11 @@
+﻿@using Microsoft.Reporting.WebForms;
+@using MvcReportViewer;
+@model QLVB.DTO.Baocao.PhieunhanVBDenViewModels
+
+@{
+    ViewBag.Title = "PhieuNhanHSVBDen";
+    Layout = "~/Views/Shared/_Layout_null.cshtml";
+}
+
+@Html.MvcReportViewerFluent("Report/rptPhieuNhanHSVBDen.rdlc").ProcessingMode(ProcessingMode.Local).ReportParameters(new { strngaybd = Model.strngaybd, strngaykt = Model.strngaykt, strngayhientai = Model.strngayhientai, tensovanban = Model.strtensovanban, strtendonvi = Model.strtendonvi, strtrichyeu = Model.strtrichyeu, strnguoitiepnhan = Model.strnguoitiepnhan }).Attributes(new { Height = 1000, Width = 800, style = "border: 1px" }).Method(FormMethod.Post)
+

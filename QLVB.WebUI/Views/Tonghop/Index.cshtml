@@ -1,0 +1,137 @@
+﻿
+@{
+	ViewBag.Title = "Index";
+}
+@section header{
+	<i class="fa fa-file-text">&nbsp;</i>Thông tin tổng hợp
+}
+@Html.Hidden("idvanbanden")
+<div class="row">	
+	<div class="col-sm-12 " id="listvanbanden">
+		@Html.Action("_ListVanbanden","Tonghop")
+	</div>	
+</div>
+<div class="row">
+	<div class="col-sm-12 " id="listHosoXLVBDen">
+		@Html.Action("_ListHosoXLVBDen", "Tonghop")
+	</div>
+</div>
+<script type="text/javascript">
+	function onChangeVBDen(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#gridVBDen").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			SetIdVanbanden(intid);
+			@*$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("_UpdateStatusVBDen", "Tonghop")',
+				data: { 'idvanban': intid },
+				success: function (data) {
+					if (data == 1) {
+						$(item).removeClass("UnRead");
+					}
+				}
+			});*@
+		});
+	}
+	function onDataBoundVBDen(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#gridVBDen tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}
+			else {
+				var uid = dataView[i].uid;
+				var strClass = SetColorVanban(dataView[i].inttinhtrangxuly)
+				$("#gridVBDen tbody").find("tr[data-uid=" + uid + "]").addClass(strClass);
+			}
+			$("#gridVBDen tbody").find("tr[data-uid=" + uid + "]").addClass("UnRead");
+		}
+	}
+	function SetColorVanban(inttinhtrangxuly) {
+		var strClass = "";
+		switch (inttinhtrangxuly) {
+			case 0: // dang xu ly
+				strClass = "dangxuly";
+				break;
+			case 1: // da hoan thanh
+				strClass = "daxuly";
+				break;
+			default:  // null
+				strClass = "daxuly";
+				break;
+		}
+		return strClass;
+	}
+	function onError(e, status) {
+		//SetThongbao("Đã có lỗi xảy ra trên Server!");
+	}
+	function SetIdVanbanden(idvanban) {
+		$('#idvanbanden').val(idvanban);
+	}
+	function GetIdVanbanden() {
+		var id = $('#idvanbanden').val();
+		return id;
+	}
+	function ViewDetailVBDen(id) {
+		OpenViewDetailVBDen(id);
+	}
+	function GetSelectedItemsVBDen() {
+		var idselect = "";
+		$("#gridVBDen  tbody").find('tr').each(function () {
+		    var id = $(this).find('#hfID').val();
+		    var IsCheck = $(this).find('#hfID').prop('checked');
+		    if (IsCheck == true) {
+		        idselect += id + ',';
+		    }
+			//var IsAdd = $(this).hasClass('k-state-selected');
+			//if (IsAdd == true) {
+			//	idselect += id + ',';
+			//}
+		});
+		return idselect;
+	}
+	$('#XLVBDenbtn').click(function () {
+		var url = '@Url.Action("Index", "Vanbanden", new { isBack = true })';
+	    //$().redirect(url);
+	    GetSelectedItemsVBDen();
+	});
+
+	//=====================================
+	//
+	//=====================================
+	function onChangeHSXLVBDen(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#gridHSXLVBDen").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			SetIdVanbanden(intid);			
+		});
+	}
+	function onDataBoundHSXLVBDen(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#gridHSXLVBDen tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}
+			else {
+				var uid = dataView[i].uid;
+				var strClass = SetColorVanban(dataView[i].inttinhtrangxuly)
+				$("#gridHSXLVBDen tbody").find("tr[data-uid=" + uid + "]").addClass(strClass);
+			}
+			$("#gridHSXLVBDen tbody").find("tr[data-uid=" + uid + "]").addClass("UnRead");
+		}
+	}
+</script>
+
+@Html.Action("_ViewDetailVBDen", "Vanbanden")
+@Html.Action("_ViewDetailVBDi", "Vanbandi")
+@Html.Action("_ViewDetailHoso", "Hoso")

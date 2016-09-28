@@ -1,0 +1,16 @@
+﻿@model QLVB.DTO.File.PdfViewerModel
+
+@{
+    string url = Url.Content("~/ViewerJS/#..");    
+    string kq = url + Model.filePath;
+}
+
+<iframe id="viewerjs" src=@kq width='630' height='470' allowfullscreen webkitallowfullscreen></iframe>
+
+<script type="text/javascript">
+    function ResizeViewerJs(width, height) {        
+        $('#viewerjs').width(width);
+        $('#viewerjs').height(height);
+    }
+</script>
+

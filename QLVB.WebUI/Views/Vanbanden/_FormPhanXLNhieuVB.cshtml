@@ -1,0 +1,82 @@
+﻿@model QLVB.DTO.Vanbanden.FormPhanXLNhieuVBViewModel
+<div class="row">
+    <div class="col-sm-10">
+        <span id="ketqua" class="validation-summary-valid"></span>
+        <form class="form-horizontal" id="formPhanXLVB" method="post" action="@Url.Action("PhanXLNhieuVB","Hoso")">
+            @Html.Hidden("idvanban")
+            <div class="form-group form-group-window">
+                <label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>Ngày mở hồ sơ</label>
+                <div class="col-sm-5">
+                    @(Html.Kendo().DatePicker()
+                        .Name("strngaymohoso")
+                        .Value(Model.dteNgaymohoso)
+                        .HtmlAttributes(new { style = "width:100%;" })
+                        .Format("dd/MM/yyyy")
+                    )
+                </div>
+            </div>
+            <div class="form-group form-group-window">
+                @Html.Label("Ý kiến xử lý", new { @class = "control-label col-sm-4" })
+                <div class="col-sm-8">
+                    @Html.TextArea("strnoidung", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group form-group-window">
+                <label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>Lãnh đạo giao việc</label>
+                <div class="col-sm-5">
+                    @(Html.Kendo().DropDownList()
+                        .Name("idlanhdaogiaoviec")
+                        .BindTo(Model.LanhdaogiaoviecModel)
+                        .DataTextField("strhoten")
+                        .DataValueField("intid")                        
+                        .HtmlAttributes(new { @style = "width:100%;" })
+                        .Template("#: strkyhieu # &nbsp;&nbsp; || &nbsp;&nbsp; #: strhoten #")
+                        .OptionLabel(" ")
+                    )                 
+                </div>
+            </div>
+            <div class="form-group form-group-window">
+                <label class="col-sm-4 control-label">Lãnh đạo phụ trách </label>
+                <div class="col-sm-5">
+                    @(Html.Kendo().MultiSelect()
+                        .Name("idlanhdaophutrach")
+                        .Placeholder("")
+                        .BindTo(Model.LanhdaophutrachModel)
+                        .DataTextField("strhoten")
+                        .DataValueField("intid")                                                  
+                        .HtmlAttributes(new { @style = "width:100%;" })
+                        .ItemTemplate("#: strkyhieu # &nbsp;&nbsp; || &nbsp;&nbsp; #: strhoten #")
+                    )
+                </div>
+            </div>
+            <div class="form-group form-group-window">
+                <label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>Xử lý chính</label>
+                <div class="col-sm-5">
+                    @(Html.Kendo().DropDownList()
+                        .Name("idxulychinh")
+                        .BindTo(Model.XulychinhModel)
+                        .DataTextField("strhoten")
+                        .DataValueField("intid")                        
+                        .HtmlAttributes(new { @style = "width:100%;" })
+                        .Template("#: strkyhieu # &nbsp;&nbsp; || &nbsp;&nbsp; #: strhoten #")
+                        .OptionLabel(" ")
+                    )
+                    
+                </div>
+            </div>
+            <div class="form-group form-group-window">
+                <label class="col-sm-4 control-label">Thời hạn xử lý</label>
+                <div class="col-sm-5">
+                    @(Html.Kendo().DatePicker()
+                        .Name("strthoihanxuly")
+                        .Value(Model.dteHanxuly)
+                        .HtmlAttributes(new { style = "width:100%;" })
+                        .Format("dd/MM/yyyy")
+                    )
+                </div>
+            </div>
+
+        </form>
+        
+    </div>
+</div>

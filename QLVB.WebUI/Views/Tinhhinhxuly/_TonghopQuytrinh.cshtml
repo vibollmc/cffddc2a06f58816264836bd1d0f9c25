@@ -1,0 +1,78 @@
+﻿@model IEnumerable<QLVB.DTO.Tinhhinhxuly.QuytrinhVBDenViewModel>
+@{
+    int count = 0;
+    int TongCB = 0;
+    int TongVBDaXuly_Dunghan = 0;
+    int TongVBDaXuly_Trehan = 0;    
+    int TongDangXL = 0;
+    int TongQuahan = 0;    
+    int TongCong = 0;
+}
+
+<table class="table table-bordered table-condensed responsive-table" style="width: 100%">
+    <tr style="font-weight:bold;">
+        <td style="width: 5%; text-align: center;">STT</td>
+        <td style="width:auto">Quy trình xử lý</td>
+        
+        <td style="width: 10%; text-align: center;">VB Đã xử lý đúng hạn</td>
+        <td style="width: 10%; text-align: center;">VB Đã xử lý trễ hạn</td>
+        <td style="width: 10%; text-align: center;">VB Đang xử lý</td>        
+        <td style="width: 10%; text-align: center;">VB Đã quá hạn</td>
+        <td style="width: 10%; text-align: center;">Tổng</td>
+    </tr>
+    @foreach (var m in Model)
+    {
+        count++;
+        TongCB = m.intVBDaXuly_Dunghan + m.intVBDaXuly_Trehan + m.intVBDangXuly + m.intVBQuahan;
+        TongVBDaXuly_Trehan += m.intVBDaXuly_Trehan;
+        TongVBDaXuly_Dunghan += m.intVBDaXuly_Dunghan;
+        TongDangXL += m.intVBDangXuly;
+        TongQuahan += m.intVBQuahan;
+        
+        <tr id="@m.idquytrinh">
+            <td style="width:5%; text-align: center;">@count</td>
+            <td style="width:auto;cursor:pointer" onclick="LoadPieChart(@m.idquytrinh)">@m.strtenquytrinh</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(1,@m.idquytrinh)">@m.intVBDaXuly_Dunghan</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(2,@m.idquytrinh)">@m.intVBDaXuly_Trehan</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(3,@m.idquytrinh)">@m.intVBDangXuly</td>            
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(4,@m.idquytrinh)">@m.intVBQuahan</td>
+            <td style="width: 10%; text-align: center;">@TongCB</td>
+
+        </tr>
+    }
+    @{ TongCong = TongVBDaXuly_Dunghan + TongVBDaXuly_Trehan + TongDangXL + TongQuahan ; }
+    <tr id="TongCong" style="color:red;font-weight:bold;">
+        <td style="width: 5%; text-align: center;">&nbsp;</td>
+        <td style="width:auto;cursor:pointer" onclick="LoadPieChart(0)">TỔNG CỘNG</td>
+
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenTong(1)">@TongVBDaXuly_Dunghan</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenTong(2)">@TongVBDaXuly_Trehan</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenTong(3)">@TongDangXL</td>
+
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenTong(4)">@TongQuahan</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenTong(6)">@TongCong</td>
+
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function(){
+        HideLoading();
+        LoadPieChart(0);
+    })
+
+    function LoadPieChart(idPer) {
+        if (idPer == 0) {
+            var item = '#TongCong';
+        } else {
+            var item = '#' + idPer;
+        }
+        var arr = [];
+        $(item).find('td').each(function () {
+            arr.push($(this).text());
+        })
+        var json = JSON.stringify(arr);
+        var url = '@Url.Action("_PieChartXLQT", "Tinhhinhxuly")';
+        //$('#piechart').load( url, { "xuly":json} );
+    }
+</script>
+<div id="piechart"></div>

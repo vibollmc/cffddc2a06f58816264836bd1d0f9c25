@@ -1,0 +1,39 @@
+﻿@model IList<DLTD.Web.Main.ViewModels.FileDinhKemViewModel>
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a href="@Url.Content(item.FileUrl)">
+                @if (item.FileName.ToLower().EndsWith(".doc") || item.FileName.ToLower().EndsWith(".docx"))
+                {
+                    <i class="fa fa-file-word-o"></i>
+                }
+                else if (item.FileName.ToLower().EndsWith(".xls") || item.FileName.ToLower().EndsWith(".xlsx"))
+                {
+                    <i class="fa fa-file-excel-o"></i>
+                }
+                else if (item.FileName.ToLower().EndsWith(".pdf"))
+                {
+                    <i class="fa fa-file-pdf-o"></i>
+                }
+                else if (item.FileName.ToLower().EndsWith(".zip") || item.FileName.ToLower().EndsWith(".rar"))
+                {
+                    <i class="fa fa-file-archive-o"></i>
+                }
+                else if (item.FileName.ToLower().EndsWith(".ppt") || item.FileName.ToLower().EndsWith(".pptx"))
+                {
+                    <i class="fa fa-file-powerpoint-o"></i>
+                }
+                else if (item.FileName.ToLower().EndsWith(".txt"))
+                {
+                    <i class="fa fa-file-text-o"></i>
+                }
+                else
+                {
+                    <i class="fa fa-file-o"></i>
+                }
+                @item.FileName
+            </a>
+        </li>
+    }
+</ul>

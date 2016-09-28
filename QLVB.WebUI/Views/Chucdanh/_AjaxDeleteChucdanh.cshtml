@@ -1,0 +1,36 @@
+﻿@model QLVB.DTO.Chucdanh.DeleteChucdanhViewModel
+<div class="modal-body">
+    Bạn có muốn xóa chức danh: @Model.strtenchucdanh không?
+</div>
+<div class="modal-footer">
+    <button id="SubmitDeleteChucdanhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+    <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+</div>
+
+<script type="text/javascript">
+    $("#Backbtn").bind("click", function () {
+        CloseEditChucdanh();
+    })
+    $('#SubmitDeleteChucdanhbtn').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete", "Chucdanh")',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                intid: '@Model.intid',
+                strtenchucdanh: '@Model.strtenchucdanh'                
+            }),
+            success: function (data) {
+                if (data == 1) {
+                    RefreshGrid();
+                    CloseEditChucdanh();
+                }
+                else {
+                    CloseEditChucdanh();
+                    SetThongbao("Lỗi, không xóa được");
+                }
+            },
+        });
+    })
+</script>

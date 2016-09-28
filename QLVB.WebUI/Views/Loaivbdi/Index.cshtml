@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section header{
+    <i class="glyphicon glyphicon-book">&nbsp;</i>Loại văn bản đi
+}
+
+<div class="row">
+    <div class="col-sm-5">
+        @Html.Partial("_Listloaivbdi")
+    </div>
+    <div class="col-sm-7" id="loaitruongvb">
+    </div>
+    @Html.Hidden("idloaivb")
+</div>
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetGridHeight();
+    });
+    $(document).ready(function () {
+        SetGridHeight();
+    })
+    function onChange(arg) {
+        var selected = $.map(this.select(), function (item) {
+            var value = $(item).text();
+            var grid = $("#grid").data("kendoGrid");
+            var row = grid.select();
+            var intid = grid.dataItem(row).intid;
+            SetIdLoaivb(intid);
+            var url = '@Url.Action("_AjaxTruongvb", "Loaivbdi", (new { id = "__id__" }) )'.replace('__id__', intid);
+            $('#loaitruongvb').load(url);
+            var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbdi", (new { id = "__id__" }))'.replace('__id__', intid);
+            $('#detail-editLoaivb').load(url);
+        });
+    }
+    function SetIdLoaivb(idloaivb) {
+        $('#idloaivb').val(idloaivb);
+    }
+    function GetIdLoaivb() {
+        var id = $('#idloaivb').val();
+        return id;
+    }    
+    function CloseEditLoaivb() {
+        var window = $("#EditLoaivb").data("kendoWindow");
+        window.close();
+    }
+    function OpenEditLoaivb() {
+        var window = $("#EditLoaivb").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    $("#Addbtn").bind("click", function () {
+        var id = 0;
+        var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbdi", (new { id = "__id__" }))'.replace('__id__', id);
+        $('#detail-editLoaivb').load(url);
+        OpenEditLoaivb();
+    });
+    $("#Editbtn").bind("click", function () {
+        var id = GetIdLoaivb();
+        if (id != 0) {
+            var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbdi", (new { id = "__id__" }))'.replace('__id__', id);
+            $('#detail-editLoaivb').load(url);
+            OpenEditLoaivb();
+        } else {
+            SetThongbao("Bạn chưa chọn loại văn bản")
+        }
+    });
+    $("#Deletebtn").bind("click", function () {
+        var id = GetIdLoaivb();
+        if (id != 0) {
+            var url = '@Url.Action("_AjaxDeleteLoaivb", "Loaivbdi", (new { id = "__id__" }))'.replace('__id__', id);
+            $('#detail-editLoaivb').load(url);
+            OpenEditLoaivb();
+        } else {
+            SetThongbao("Bạn chưa chọn loại văn bản")
+        }
+    });
+</script>
+@(Html.Kendo().Window()
+    .Name("EditLoaivb")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Cập nhật loại văn bản")
+    .Resizable()
+    .Width(500)
+    .HtmlAttributes(new { style = "height:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-editLoaivb">
+        </div>
+    </text>
+    )
+)
+
+

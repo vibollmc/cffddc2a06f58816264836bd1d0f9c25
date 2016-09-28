@@ -1,0 +1,48 @@
+﻿@model QLVB.DTO.Capcoquan.EditKhoiphViewModel
+
+<div class="box">
+    <form class="form-horizontal" id="formEditKhoiph">
+        <span id="ketquaSaveKhoiph" class="validation-summary-valid"></span>
+        <header>
+            <nav style="padding: 3px;">
+                <button id="SaveKhoiphbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                <button id="BackKhoiphbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </nav>
+        </header>
+
+        @Html.HiddenFor(m => m.intid)
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strtenkhoi, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strtenkhoi, new { @class = "form-control form-control-window", placeholder = "Tên cấp cơ quan" })
+            </div>
+        </div>        
+    </form>
+</div>
+<script type="text/javascript">
+
+    $("#SaveKhoiphbtn").click(function () {
+        var validatable = $("#formEditKhoiph").kendoValidator().data("kendoValidator");
+        if (validatable.validate()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveKhoiph", "Capcoquan")',
+                dataType: "json",                
+                data: $("#formEditKhoiph").serialize() ,
+                success: function (data) {
+                    if (data == 1) {
+                        ShowResult("ketquaSaveKhoiph", "Cập nhật thành công");
+                        RefreshGrid();
+                    }
+                    else {
+                        ShowResult("ketquaSaveKhoiph", "Lỗi !!!");
+                        RefreshGrid();
+                    }
+                },
+            });
+        }
+    });
+    $('#BackKhoiphbtn').click(function () {
+        CloseEditKhoiph();
+    })
+</script>

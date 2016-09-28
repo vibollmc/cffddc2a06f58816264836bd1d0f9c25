@@ -1,0 +1,151 @@
+﻿@model QLVB.DTO.Vanbandientu.SearchVBDiDientuViewModel
+
+@(Html.Kendo().Window()
+	.Name("SearchVBDiDientu")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Tìm kiếm văn bản đi điện tử")
+	.Resizable()
+	.Width(670)
+	.Height(350)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-SearchVBDi">
+			<div class="box">
+				<header>
+					<nav style="padding: 3px;">
+						<button id="SubmitSearchVBDibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm</button>
+						<button id="BackSearchVBDibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="fa fa-undo"></i>&nbsp;Quay lại</button>
+						<button id="RefreshSearchVBDibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-refresh"></i>&nbsp;Refresh</button>
+
+					</nav>
+				</header>
+			</div>
+			<form class="form-horizontal" id="formSearchVBDi">
+				@Html.Hidden("isSearch", true)
+				<table class="table table-condensed table-bordered responsive-table">
+					<tbody>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Số văn bản", new { @class = "font-label" })</td>
+							<td>@Html.TextBoxFor(m => m.intsodibd, null, new { @class = "form-control form-control-window2 ", placeholder = "" })</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>@Html.TextBoxFor(m => m.intsodikt, null, new { @class = "form-control form-control-window2 ", placeholder = "" })</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ngày ký", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaykybd")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaykykt")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ký hiệu", new { @class = "font-label" })</td>
+							<td>@Html.TextBox("strkyhieu", null, new { @class = "form-control form-control-window2 ", placeholder = "Số, ký hiệu" })</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("Đơn vị gửi", new { @class = "font-label" })</td>
+							<td> @Html.TextBox("strnoigui", null, new { @class = "form-control form-control-window2 ", placeholder = "Đơn vị gửi" })</td>
+						</tr>
+
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Trích yếu", new { @class = "font-label" })</td>
+							<td colspan="3">@Html.TextBox("strtrichyeu", null, new { @class = "form-control form-control-window ", placeholder = "Trích yếu văn bản" })</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ngày gửi", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngayguibd")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngayguikt")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ngày nhận", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaynhanbd")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaynhankt")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</text>
+	)
+)
+
+<script type="text/javascript">
+
+	function CloseSearchVBDi() {
+		var window = $("#SearchVBDiDientu").data("kendoWindow");
+		window.close();
+	}
+	function OpenSearchVBDi() {
+		var window = $("#SearchVBDiDientu").data("kendoWindow");
+		window.center();
+		window.open();
+		setTimeout(function () { $('#intsodibd').focus(); }, 1000);
+	}
+	$('#BackSearchVBDibtn').click(function () {
+		CloseSearchVBDi();
+	})
+
+	
+	$('#formSearchVBDi').on("keypress", function (e) {
+		if (e.keyCode == 13) {
+			//alert("Enter pressed");
+			SubmitSearchVBDi();
+			return false; // prevent the button click from happening
+		}
+	});
+	$('#SubmitSearchVBDibtn').click(function () {
+		SubmitSearchVBDi();
+	})
+	function SubmitSearchVBDi() {
+		var collection = $('#formSearchVBDi').serialize();
+		var url = '@Url.Action("_Listvanbandidientu", "Vanbandidientu")';
+		url = url + "?" + collection;
+		$('#listvanbandi').load(url);
+		CloseSearchVBDi();
+	}
+	$('#RefreshSearchVBDibtn').click(function () {
+		ResetFormVBDi();
+	})
+	function ResetFormVBDi() {
+		$("input").val('');
+		$("#isSearch").val('True');
+	}
+</script>
+

@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Hệ thống cơ sở dữ liệu theo dõi</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/kendo/css")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/kendo")
+    @using Kendo.Mvc.UI
+</head>
+<body>
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("CƠ SỞ DỮ LIỆU THEO DÕI", "Index", "Home", null, new {@class = "navbar-brand"})
+        </div>
+        <div class="navbar-collapse collapse">
+            @*<ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>*@
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>
+    <div id="megaStore">
+      @(Html.Kendo().Menu()
+      .Name("Menu")
+      .Items(items =>
+      {
+          items.Add()
+              .Text("Nhiệm vụ")
+              .Items(children =>
+              {
+                  children.Add().Text("Đã giao");
+
+
+                  children.Add().Text("Đã hoàn thành");
+                  children.Add().Text("Chưa thực hiện");
+                  children.Add().Text("Đang thực hiện");
+
+              });
+          items.Add()
+              .Text("Báo cáo")
+              .Items(children =>
+              {
+                  children.Add().Text("BC chi tiết");
+
+
+                  children.Add().Text("BC Tổng hợp");
+
+              });
+     
+          
+      })
+        )
+
+    </div>
+    <style>
+        #megaStore {
+            max-width: 600px;
+            margin: 30px auto;
+            padding-top: 120px;
+            background: url('../../content/web/menu/header.jpg') no-repeat center 0;
+        }
+
+        #menu h2 {
+            font-size: 1em;
+            text-transform: uppercase;
+            padding: 5px 10px;
+        }
+
+        #template img {
+            margin: 5px 20px 0 0;
+            float: left;
+        }
+
+        #template {
+            width: 380px;
+        }
+
+            #template ol {
+                float: left;
+                margin: 0 0 0 30px;
+                padding: 10px 10px 0 10px;
+            }
+
+            #template:after {
+                content: ".";
+                display: block;
+                height: 0;
+                clear: both;
+                visibility: hidden;
+            }
+
+            #template .k-button {
+                float: left;
+                clear: left;
+                margin: 5px 0 5px 12px;
+            }
+    </style>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year TRUNG TÂM TIN HỌC - VĂN PHÒNG UBND TỈNH ĐỒNG NAI. ĐT: 061.3820704.</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

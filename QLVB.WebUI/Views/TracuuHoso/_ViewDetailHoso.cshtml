@@ -1,0 +1,62 @@
+﻿@(Html.Kendo().Window()
+	.Name("ViewDetailHoso")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Thông tin Hồ sơ")
+	.Resizable()
+	.Width(650)
+	.Height(490)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-Hoso">
+			<div class="box">
+				<header>
+					<nav style="padding: 3px;">
+						<button id="InChitietHosobtn" type="button" class="btn btn-sm btn-primary btn-flat ">
+							<i class="glyphicon glyphicon-print"></i>&nbsp;In
+						</button>
+						<button id="BackViewDetailHosobtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+					</nav>
+				</header>
+			</div>
+			<div id="chitiethosocongviec">
+
+			</div>
+
+		</div>
+	</text>
+	)
+)
+
+<script type="text/javascript">
+	function CloseViewDetailHoso() {
+		var window = $("#ViewDetailHoso").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewDetailHoso(idhoso) {
+		LoadHoso(idhoso);
+		var window = $("#ViewDetailHoso").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadHoso(id) {
+		var url = '@Url.Action("_XemChitietHoso","TracuuHoso")';
+		url = url + "?id=" + id;
+		$('#chitiethosocongviec').load(url);
+	}
+	function ViewVBDen(id) {
+		OpenViewDetailVBDen(id);
+		CloseViewDetailHoso();
+	}
+	$('#BackViewDetailHosobtn').click(function () {
+		CloseViewDetailHoso();
+	})
+
+	$('#InChitietHosobtn').click(function () {
+		PrintElement('#chitiethosocongviec');
+	})
+
+</script>

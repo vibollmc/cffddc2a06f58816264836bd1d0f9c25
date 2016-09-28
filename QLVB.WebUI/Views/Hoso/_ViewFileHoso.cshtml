@@ -1,0 +1,114 @@
+﻿@model IEnumerable<QLVB.DTO.File.DownloadFileViewModel>
+
+@foreach (var f in Model)
+{
+	@Html.CheckBox(f.intid.ToString(), new { @class = "clsFile", id=f.intid })
+	
+	<a href="@Url.Action("DownloadFile", "File", new { intloai = f.intloai, idfile = f.intid })">
+		@*<i class=@f.fileIcon></i>*@
+		<img src="@Url.Content(f.strfiletypeimages)" style='height:25px;width:25px;' />
+		@f.strtenfile
+	</a>
+	<span>&nbsp;</span>
+	if (f.fileExt == "pdf")
+	{
+		<a href='javascript:OpenViewerPdfHoso(@f.intid,@f.intloai)'><i>(Xem trước)</i></a>
+		<span>&nbsp;&nbsp;</span>
+	}
+	if (f.fileExt == "docx")
+	{
+		<a href='javascript:OpenViewerDocx(@f.intid,@f.intloai)'><i>(Xem trước)</i></a>
+		<span>&nbsp;&nbsp;</span>
+	}
+	if (f.IsPhathanh)
+	{
+		<span><i>(Đã chuyển phát hành) &nbsp;</i></span><br />
+	}
+	else
+	{
+		<br />
+	}
+}
+
+<script type="text/javascript">
+	function CloseViewerDocx() {
+		var window = $("#ViewerDocx").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewerDocx(idfile, intloai) {
+		LoadDocxViewer(idfile, intloai);
+		var window = $("#ViewerDocx").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadViewerDocx(idfile, intloai) {
+		var url = '@Url.Action("DocxLoading", "File")';
+		url = url + "?idfile=" + idfile;
+		url = url + "&intloai=" + intloai;
+		$('#detail-ViewerDocx').load(url);
+	}
+	//===============================================
+	function CloseViewerPdf() {
+	    var window = $("#ViewerPdfHoso").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewerPdfHoso(idfile, intloai) {
+	    LoadViewerPdfHoso(idfile, intloai);
+	    var window = $("#ViewerPdfHoso").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadViewerPdfHoso(idfile, intloai) {
+		var url = '@Url.Action("PdfLoading", "File")';
+		url = url + "?idfile=" + idfile;
+		url = url + "&intloai=" + intloai;
+		$('#detail-ViewerPdfHoso').load(url);
+	}
+	function onResizeViewerPdfHoso(e) {
+	    var width = $('#ViewerPdfHoso').width();
+	    var height = $('#ViewerPdfHoso').height();
+		ResizeViewerJs(width - 10, height - 10);
+	}
+	
+</script>
+
+@(Html.Kendo().Window()
+	.Name("ViewerDocx")
+	.Draggable()
+	.AutoFocus(true)
+	.Modal(true)
+	.Title("Nội dung văn bản")
+	.Resizable()
+	.Width(700)
+	.Height(500)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-ViewerDocx" style="padding-top:10px;padding-left:30px;padding-right:20px">
+
+		</div>
+	</text>
+	)
+)
+
+@(Html.Kendo().Window()
+	.Name("ViewerPdfHoso")
+	.Draggable()
+	.AutoFocus(true)
+	.Modal(true)
+	.Title("Nội dung văn bản")
+	.Resizable()
+	.Width(650)
+	.Height(500)
+	.Visible(false)
+	.Actions(actions => actions.Close())
+        //.Events(events => events.Resize("onResizeViewerPdfHoso"))
+	.Content(
+	@<text>
+		<div id="detail-ViewerPdfHoso">
+
+</div>
+	</text>
+	)
+)

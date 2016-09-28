@@ -1,0 +1,430 @@
+﻿@using DLTD.Web.Main.Models.Enum;
+@{
+    ViewBag.Title = @ViewBag.TieuDe;
+}
+
+<div fixedsize="true" class="row">
+    <div class="col-lg-12">
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-home"></i>
+                <a href="/"> Nhiệm vụ</a>
+            </li>
+            @*<li><i class="fa fa-bars"></i>Pages</li>*@
+            <li><i class="glyphicon glyphicon-list"></i> @ViewBag.TieuDe</li>
+        </ol>
+    </div>
+</div>
+<div fixedsize="true" class="row">
+    <div class="col-lg-8">
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnThemNhiemvu" onclick="window.open('@System.Web.Configuration.WebConfigurationManager.AppSettings["ServerQLVBOauthPath"]/Vanbandi', '_blank');return false;">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Thêm Nhiệm vụ
+        </button>
+        @*@if (((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.QuanTriHeThong && ((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.ChuyenVien)
+            {*@
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnTinhHinhXuLy" style="display:@ViewBag.TinhHinhThucHien;" data-toggle="modal" data-target="#modalTinhHinhXuLy">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Tình hình Thực hiện
+        </button>
+        @*}*@
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display:@ViewBag.HoanThanh">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Hoàn Thành
+        </button>
+    </div>
+    <div class="col-lg-4">
+        <div id="custom-search-input">
+            <div class="input-group col-md-12">
+                <input type="text" class="form-control" placeholder="Tìm kiếm nhiệm vụ" id="txtSearch" autocomplete="off" value="" />
+                <span class="input-group-btn">
+                    <button class="btn btn-info btn-lg" type="button" id="btnSearch">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12" id="DanhSachNhiemVu">
+        @Html.Action("DanhSachNhiemVu", new { trangThai = ViewBag.TrangThai })
+    </div>
+</div>
+
+<!-- Modal Tinh Hinh Xu Ly -->
+<div class="modal fade" id="modalTinhHinhXuLy" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tình hình thực hiện</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label">Văn bản:</label>
+                    <p class="control-label" id="TrichYeuVanBan"></p>
+                </div>
+                <form id="FormInput" method="post" enctype="multipart/form-data">
+                    <hr />
+                    <div class="form-group">
+                        <label class="control-label">Đơn vị:</label>
+                        <select style="width: 100%" name="DonVi" id="selectDonVi"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Tình hình thực hiện:</label>
+                        <input type="text" name="TinhHinhXuLy" class="form-control" id="TinhHinhXuLy">
+                    </div>
+                    <div class="form-group">
+                        <label for="FileDinhKem" class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i> Đính kèm file</label>
+                        <span title="Xóa file đã chọn" style="display: none; cursor: pointer" class="glyphicon glyphicon-remove" id="RemoveFile"></span>
+                        <input name="FileDinhKem" id="FileDinhKem" type="file" style="display: none" />
+                    </div>
+                    <div class="form-group" style="text-align: right">
+                        <button type="button" class="btn btn-primary" id="btnSave"><i class="glyphicon glyphicon-floppy-disk"></i> Gửi phản hồi</button>
+                    </div>
+                    <div id="Notification" class="alert alert-success">
+                        <strong>Success!</strong> thông báo ở đây
+                    </div>
+                    <input type="hidden" name="IdVanBan" id="IdVanBan" />
+                </form>
+                <hr />
+                <div class="form-group" id="danhsachbaocao">
+                    <label class="control-label">Đơn vị</label>
+                    <i class="date-right">Ngày báo cáo: 01/02/2016 11:20</i>
+                    <div class="clear"></div>
+                    <p class="control-label"> Nội dung báo cáo</p>
+                    <a href="#"><i class="glyphicon glyphicon-paperclip"></i> File đính kèm</a>
+                    <hr />
+                    <label class="control-label">Đơn vị</label>
+                    <i class="date-right">Ngày báo cáo: 01/02/2016 11:20</i>
+                    <div class="clear"></div>
+                    <p class="control-label"> Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo Nội dung báo cáo</p>
+                    <a href="#"><i class="glyphicon glyphicon-paperclip"></i> File đính kèm</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Tinh Hinh Xu Ly-->
+<!-- Begin modal attachments-->
+<div class="modal fade" id="modalAttachments" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class='glyphicon glyphicon-paperclip'></i> Nội dung văn bản</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal attachments-->
+@section scripts {
+    <script type="text/javascript">
+        var idVanbanSelected = '';
+        var isProcessing = false;
+
+
+        function openAttachments(id) {
+            if (isProcessing) return false;
+            isProcessing = true;
+
+            $.ajax({
+                url: "@Url.Action("GetVanBanDetail")",
+                type: "POST",
+                data: { id: id },
+                success: function (response) {
+                    $('#modalAttachments .modal-body').html(response);
+                    $('#modalAttachments').modal('show');
+                },
+                complete: function () {
+                    isProcessing = false;
+                }
+            });
+
+            return true;
+        }
+
+        $("#btnHoanThanh").click(function () {
+            if (isProcessing) return false;
+
+            isProcessing = true;
+
+            if (idVanbanSelected === '') {
+                alert('Chưa chọn văn bản.');
+                return false;
+            }
+
+            $.ajax({
+                url: "@Url.Action("UpdateCompleteVanBan")",
+                type: "POST",
+                data: { id: idVanbanSelected },
+                success: function (response) {
+                    if (response.Code === 1) {
+                        isProcessing = false;
+                        $("#btnSearch").click();
+                    }
+
+                },
+                complete: function () {
+                    isProcessing = false;
+                }
+            });
+
+            return false;
+        });
+
+        function buildHtmlTHTH(data, idContainer) {
+
+            if (idContainer == undefined || idContainer == null || idContainer == "") idContainer = "#danhsachbaocao";
+
+            if (data.Code < 1) {
+                $(idContainer).html(data.Message);
+                return;
+            }
+            if (data.Code > 1) {
+                $(idContainer).html(data.Results);
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < data.Results.length; i++) {
+                if (i > 0) html += '<hr/>';
+
+                //var reportDate = moment(data.Results[i].NgayBaoCao).fromNow();
+                var reportDate = moment(data.Results[i].NgayBaoCao).format('dddd, DD/MM/YYYY HH:mm');
+
+                html += '<label class="control-label">' + data.Results[i].DonVi + '</label> <i class="date-right">Ngày báo cáo: ' + reportDate + '</i>';
+                html += '<div class="clear"></div>';
+                html += '<p class="control-label">' + data.Results[i].NoiDungThucHien + '</p>';
+                html += '<div class="row">';
+                html += '<div class="col-lg-11">';
+                if (data.Results[i].FileDinhKem != null && data.Results[i].FileDinhKem !== '' &&
+                    data.Results[i].FileUrl != null && data.Results[i].FileUrl !== '')
+                    html += '<a href="' + data.Results[i].FileUrl + '"><i class="glyphicon glyphicon-paperclip"></i> ' + data.Results[i].FileDinhKem + '</a>';
+                html += '</div>';
+                html += '<div class="col-lg-1" style="text-align: right">';
+                html += '<span onclick="deleteBaoCaoTHTH(' + data.Results[i].Id + ',' + data.Results[i].LoaiBaoCao + ');" style="cursor:pointer" data-toggle="tooltip" title="Xóa" class="glyphicon glyphicon-trash"> </span>';
+                html += '</div>';
+                html += '</div>';
+            }
+
+            $(idContainer).html(html);
+
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+
+        function deleteBaoCaoTHTH(id, loaiBaoCao) {
+            if (isProcessing) return false;
+
+            isProcessing = true;
+
+            $.ajax({
+                url: "@Url.Action("DeleteTinhHinhThucHien")",
+                type: "POST",
+                data: { id: id, loaiBaoCao: loaiBaoCao, idVanBan: $("#IdVanBan").val() },
+                success: function (response) {
+                    buildHtmlTHTH(response);
+                },
+                complete: function () {
+                    isProcessing = false;
+                }
+            });
+        }
+
+        $("#FileDinhKem").change(function () {
+            $("label[for=FileDinhKem]").html("<i class=\"glyphicon glyphicon-paperclip\"></i> " + $(this).val());
+            $("#RemoveFile").show();
+        });
+
+        $("#RemoveFile").click(function () {
+            var file = document.getElementById("FileDinhKem");
+            file.value = file.defaultValue;
+
+            $("label[for=FileDinhKem]").html("<i class=\"glyphicon glyphicon-paperclip\"></i> Đính kèm file");
+
+            $(this).hide();
+        });
+
+        $("#btnTinhHinhXuLy").click(function () {
+            var comboDonvi = $("#selectDonVi").kendoComboBox({
+                placeholder: "Chọn đơn vị",
+                dataTextField: "Name",
+                dataValueField: "Id",
+                filter: "contains",
+                autoBind: true,
+                minLength: 3,
+                dataSource: {
+                    type: "json",
+                    serverFiltering: false,
+                    transport: {
+                        read: {
+                            url: "@Url.Action("GetDonViPhoiHop")" + "?idVanBan=" + $("#IdVanBan").val()
+                        }
+                    }
+                }
+            }).data("kendoComboBox");
+
+            comboDonvi.value("");
+            $('#TinhHinhXuLy').val("");
+            var file = document.getElementById("FileDinhKem");
+            file.value = file.defaultValue;
+            $('#danhsachbaocao').empty();
+            $('#Notification').hide();
+
+            $.ajax({
+                url: "@Url.Action("GetTinhHinhThucHien")" + "?idVanBanChiDao=" + $("#IdVanBan").val(),
+                type: "GET",
+                success: function (response) {
+                    buildHtmlTHTH(response);
+                }
+            });
+        });
+
+        var isProcessing = false;
+
+        $("#btnSave").click(function () {
+            if (isProcessing) return false;
+
+            isProcessing = true;
+
+            $(this).attr("disabled", "disabled");
+            $(this).html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Đang thực hiện");
+
+            var formData = new FormData($("form#FormInput")[0]);
+
+
+            $.ajax({
+                url: "@Url.Action("SaveTinhHinhThucHien")",
+                type: "POST",
+                data: formData,
+                async: false,
+                success: function (response) {
+                    if (response.Code === 1) {
+                        $("#Notification")
+                            .attr("class", "alert alert-success")
+                            .html("<strong>Thành công!</strong> Gửi báo cáo thành công.")
+                            .show();
+                    } else {
+                        $("#" + idButton + "Notification")
+                            .attr("class", "alert alert-danger")
+                            .html("<strong>Lỗi!</strong> " + response.Message)
+                            .show();
+                    }
+
+                    buildHtmlTHTH(response);
+                },
+                complete: function () {
+                    isProcessing = false;
+                    $("#btnSave").removeAttr("disabled");
+                    $("#btnSave").html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Gửi phản hồi");
+
+                    setTimeout("$('#Notification').hide();", 5000);
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            return false;
+        });
+
+        function gridSelected(arg) {
+            var selected = $.map(this.select(), function (item) {
+                var grid = $("#grid").data("kendoGrid");
+                var row = grid.select();
+                var id = grid.dataItem(row).Id;
+                var trangThai = grid.dataItem(row).TrangThaiVB;
+                var trichYeu = grid.dataItem(row).Trichyeu;
+
+                $('#TrichYeuVanBan').html(trichYeu);
+                $('#IdVanBan').val(id);
+
+                $('#btnTinhHinhXuLy').removeAttr('disabled');
+                $("#btnHoanThanh").removeAttr('disabled');
+                idVanbanSelected = id;
+                return id;
+            });
+
+            if (selected.length === 0) {
+                $('#btnTinhHinhXuLy').attr('disabled', 'disabled');
+                $('#btnHoanThanh').attr('disabled', 'disabled');
+            }
+        }
+
+
+        $("#btnSearch").click(function () {
+            if (isProcessing) return false;
+
+            isProcessing = true;
+
+            $.ajax({
+                url: "@Url.Action("DanhSachNhiemVu")",
+                type: 'POST',
+                data: { search: $("#txtSearch").val(), trangThai: '@ViewBag.TrangThai' },
+                success: function (data) {
+                    $('#DanhSachNhiemVu').html(data);
+                },
+                complete: function () {
+                    isProcessing = false;
+                }
+            });
+
+            return false;
+        });
+
+        function setGridHeight() {
+            var height = $(window).innerHeight();
+            var used = 70;
+            $('div[fixedsize=true]').each(function () {
+                used += $(this).outerHeight();
+            });
+            var girdHeaderAndFooter = $('#DanhSachNhiemVu .k-grid-pager').outerHeight() + $('#DanhSachNhiemVu .k-grid-header').outerHeight();
+            $('#DanhSachNhiemVu').css("height", height - used);
+            $('#DanhSachNhiemVu .k-grid-content').css("height", height - used - girdHeaderAndFooter);
+        }
+
+        $("#txtSearch").keypress(function (e) {
+            if (e.keyCode === 13) {
+                $("#btnSearch").click();
+            }
+        });
+        //$('#btnThemNhiemVu').click(function () {
+        //    window.open("http://192.168.2.114:800/Vanbandi", "_blank");
+        //    return false;
+        //});
+        $(document).ready(function () {
+            setGridHeight();
+        });
+        $(window).resize(function () {
+            setGridHeight();
+        });
+        function gridDataBound(arg) {
+            var dataView = this.dataSource.view();
+            for (var i = 0; i < dataView.length; i++) {
+                var uid = dataView[i].uid;
+                if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("hoàn thành") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
+                }
+                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("đang thực hiện") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0000cd");
+                }
+                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trễ hạn") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#dc143c");
+                }
+                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("mới") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#cd853f");
+                }
+                else {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
+                }
+            }
+        }
+    </script>
+}

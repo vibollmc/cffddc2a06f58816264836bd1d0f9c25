@@ -1,0 +1,19 @@
+﻿@model QLVB.DTO.Donvi.DeleteDonviViewModel
+
+@using (Html.BeginForm("DeleteDonvi", "Donvi", FormMethod.Post, new { @class = "form-horizontal" }))
+{   
+    @Html.HiddenFor(m => m.intid)
+    <div class="modal-body">
+        Bạn có muốn xóa @Model.strtendonvi không?
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="" value="Ghi nhận">
+        <button id="BackDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">Bỏ qua</button>
+    </div>        
+}
+
+<script type="text/javascript">    
+    $("#BackDonvibtn").bind("click", function () {
+        CloseEditDonvi();
+    })
+</script>

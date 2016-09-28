@@ -1,0 +1,92 @@
+﻿@model QLVB.DTO.Vanbanden.SearchVBViewModel
+
+@using QLVB.DTO
+
+@(Html.Kendo().Grid<QLVB.DTO.Vanbanden.ListVanbandenViewModel>()
+    .Name("grid").AutoBind(false)
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.intid).Hidden();
+        columns.Bound(o => o.IsAttach).Title(" ")
+            .ClientTemplate(
+                "#if (IsAttach) { #" +
+                    "<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+                "# } else { #" +
+                    "<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+                "# } #"
+            )
+            .Width(28);
+        columns.Bound(o => o.dtengayden).Format("{0:dd/MM/yyyy}").Title("Ngày đến").Width(90);
+        columns.Bound(o => o.intsoden).Title("Số đến").Width(60);
+        columns.Bound(o => o.strnoiphathanh).Title("Nơi gửi").Width("20%");
+        columns.Bound(o => o.strkyhieu).Title("Số, Ký hiệu").Width("12%");
+        columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("30%").Encoded(false);
+        columns.Bound(o => o.strnoinhan).Title("Xử lý chính").Width("14%");
+        columns.Bound(o => o.inttrangthai).Hidden();
+        columns.Bound(o => o.inttinhtrangxuly).Hidden();
+        columns.Bound(o => o.isykien).Hidden();
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+        //.Sortable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("Vanbanden_Read", "Vanbanden",
+                new
+                {                                        
+                    idsovb = Model.idsovb,
+                    idloaivb = Model.idloaivb,
+                    idkhoiph = Model.idkhoiph,
+                    strngaydencat = Model.strngaydencat,
+                    xuly = Model.xuly,
+                    intsodenbd = Model.intsodenbd,
+                    intsodenkt = Model.intsodenkt,
+                    strngaydenbd = Model.strngaydenbd,
+                    strngaydenkt = Model.strngaydenkt,
+                    strngaykybd = Model.strngaykybd,
+                    strngaykykt = Model.strngaykykt,
+                    strsokyhieu = Model.strsokyhieu,
+                    strnguoiky = Model.strnguoiky,
+                    strnoigui = Model.strnoigui,
+                    strtrichyeu = Model.strtrichyeu,
+                    strnguoixuly = Model.strnguoixuly
+                })        
+            )
+            .Events(events => events.Error("onError"))
+        )
+    .Events(events => events.Change("onChange")
+                            .DataBound("onDataBound")
+    )
+)
+<script type="text/javascript">
+    $(function () {
+        dataSource = $('#grid').data().kendoGrid.dataSource;
+        dataSource.query({
+            page: '@Model.intPage',
+            group: dataSource.group(),
+            filter: dataSource.filter(),
+            sort: dataSource.sort(),
+            pageSize: dataSource.pageSize()
+        })
+    })
+    $(window).resize(function () {
+        SetGridHeight();
+    });
+    $(document).ready(function () {
+        SetGridHeight();
+    })    
+    function onError(e, status) {
+        SetThongbao("Đã có lỗi xảy ra trên Server!");
+    }
+</script>

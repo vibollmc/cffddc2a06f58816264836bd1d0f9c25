@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Mail";
+}
+
+@section header{
+    Test Mail
+}
+
+<div class="row">
+    <div class="col-sm-10">
+        <div class="box">
+            <header>
+                <div class="icons">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </div>
+                <h5> văn bản điện tử</h5>               
+            </header>
+            <div id="div-1" class="body">
+                <form class="form-horizontal" id="formTestMail">
+                    <div class="form-actions no-margin-bottom">                       
+                        <button id="Decodebtn" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Decode</button>
+                        <button id="Encodebtn" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Encode</button>
+                        <button id="Popbtn" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;singleton pop</button>
+                        <span id="ketquaMail" class="validation-summary-valid"></span>
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Mail Encode")                        
+                        <div class="col-lg-8">
+                            @Html.TextArea("encode", "", new { @class = "form-control", placeholder = "mail mã hóa" })
+                           
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Mail Decode")
+                        <div class="col-lg-8">
+                            @Html.TextArea("decode", "", new { @class = "form-control", placeholder = "mail giải mã" })
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+	$("#Decodebtn").click(function () {
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("_DecodeMail", "Test")',
+			data: $("#formMail").serialize(),
+			success: function (data) {
+				
+			},
+			dataType: "Json"
+		});
+	});
+    $("#Encodebtn").click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("_EncodeMail", "Test")',
+            data: $("#formMail").serialize(),
+            success: function (data) {
+
+            },
+            dataType: "Json"
+        });
+    });
+    $("#Popbtn").click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("_AutoReceiveMail", "Test")',            
+            success: function (data) {
+                console.log(data);
+            },
+            dataType: "Json"
+        });
+    });
+	
+</script>
+
+
+
+
+

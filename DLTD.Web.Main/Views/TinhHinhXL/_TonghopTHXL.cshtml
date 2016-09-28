@@ -1,0 +1,21 @@
+﻿@model DLTD.Web.Main.ViewModels.TonghopTinhhinhXulyViewModel
+
+<table id="detail-tinhhinhxuly" class="table table-bordered table-condensed responsive-table" style="width: 100%">
+    <tr style="font-weight:bold;">    
+        <td style="width: 10% ;text-align:center;">VB Đã hoàn thành</td>
+        <td style="width: 10%; text-align: center;">VB Đã xử lý</td>
+        <td style="width: 10%; text-align: center;">VB Đang xử lý</td>      
+        <td style="width: 10%; text-align: center;">VB Đã quá hạn</td>
+        <td style="width: 10%; text-align: center;">Tổng</td>
+    </tr>
+     
+        <tr> 
+            <td style="width: 10%; text-align: center;">@Model.HoanThanh</td>
+            <td style="width: 10%; text-align: center;">@Model.DangThucHien</td>
+            <td style="width: 10%; text-align: center; cursor: pointer;" onclick="OpenDetail(3,null)">@Model.QuaHan</td>
+            <td style="width: 10%; text-align: center;">@Model.HoanThanhQuaHan</td>                   
+            <td style="width: 10%; text-align: center;">@Model.TongNhiemVu</td>
+        </tr>
+ 
+   
+</table>

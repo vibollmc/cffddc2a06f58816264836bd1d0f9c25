@@ -1,0 +1,54 @@
+﻿@using DLTD.Web.Main.Common
+@using DLTD.Web.Main.ViewModels
+@using Kendo.Mvc.UI
+
+@(Html.Kendo().Grid<VanBanChiDaoViewModel>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+          columns.Bound(p => p.Id).Visible(false);
+          columns.Bound(p => p.LinkFileDinhKem).Visible(false);
+          columns.Bound(p => p.FileDinhKem)
+               .ClientTemplate(
+               "<a href='javascript:void(0);' onclick='openAttachments(" + "#= Id #" + ");'>" + "<i class='glyphicon glyphicon-eye-open'></i>" + "</a>"
+               
+            //"#if (FileDinhKem > 1) { #" +
+            //    "<a href='javascript:void(0);' onclick='openAttachments(" + "#= Id #" + ");'>" + "<i class='glyphicon glyphicon-eye-open'></i>" + "</a>" +
+            //"# } else if (FileDinhKem == 1) { #" +
+            //    "<a href='" + "#= LinkFileDinhKem #" + "'>" + "<i class='glyphicon glyphicon-paperclip'></i>" + "</a>" +
+            //"# } else { #" +
+
+            //"# } #"
+           ).Width(30);
+          columns.Bound(p => p.SoKH).Width("10%");
+          columns.Bound(p => p.Ngayky).Width(90);
+          columns.Bound(p => p.Trichyeu).Width("20%").Encoded(false);
+          columns.Bound(p => p.TenDonVi).Width(100);
+          columns.Bound(p => p.NguoiGui);
+          columns.Bound(p => p.YKienChiDao).Width("20%").Encoded(false); ;
+          columns.Bound(p => p.ThoiHanXuLy).Width(90);
+          columns.Bound(p => p.DoKhan).Width(60);      
+          columns.Bound(p => p.TrangThaiVB).Width(50);
+      })
+      .Pageable(
+          pageable => pageable
+              .Refresh(true)
+              //.PageSizes(true)
+              .ButtonCount(5)
+              .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+                  .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+                  .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+      )
+      .Scrollable()
+      .Selectable(s => s.Type(GridSelectionType.Row).Mode(GridSelectionMode.Single))
+      .Resizable(resize => resize.Columns(true))
+      .HtmlAttributes(new { style = "height:100%;" })
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          //.Group(g=>g.Add(x=>x.Trichyeu))
+          .PageSize(10)
+          .Read(read => read.Action("GetVanBanChiDao", "Home", new {search = ViewBag.SearchText, trangThai = ViewBag.TrangThai}))
+      )
+    .Events(events => events.Change("gridSelected").DataBound("gridDataBound"))
+
+)

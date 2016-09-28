@@ -1,0 +1,63 @@
+Content-type: multipart/related; boundary="470qqP70hk6ezjmgio9z8Azz"; type="text/xml";start="<1_1.edxml>"
+
+--470qqP70hk6ezjmgio9z8Azz
+Content-ID: 1_1.edxml
+Content-Type: text/xml
+
+<soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <edXML:MessageHeader OriginalBodyRequested="false" ImmediateResponseRequired="true" xmlns:edXML="http://www.inetcloud.vn/ns/edxml">
+      <edXML:From>
+        <edXML:OrganId>01.23.H19</edXML:OrganId>
+        <edXML:OrganName>Ủy ban nhân dân Thành phố Biên Hòa - Đồng Nai</edXML:OrganName>
+        <edXML:OrganAdd>Số 2 Nguyễn Văn Trị P Thanh Bình TP Biên Hòa ĐN</edXML:OrganAdd>
+        <edXML:Email>qlvbtest@dongnai.gov.vn</edXML:Email>
+        <edXML:Telephone>3820704</edXML:Telephone>
+      </edXML:From>
+      <edXML:To>
+        <edXML:OrganId>01.23.H19</edXML:OrganId>
+        <edXML:OrganName>Ủy ban nhân dân Thành phố Biên Hòa - Đồng Nai</edXML:OrganName>
+      </edXML:To>
+      <edXML:To>
+        <edXML:OrganId>00.02.H19</edXML:OrganId>
+        <edXML:OrganName>Ủy ban nhân dân Tỉnh Đồng Nai</edXML:OrganName>
+      </edXML:To>
+      <edXML:DocumentId>1</edXML:DocumentId>
+      <edXML:Code>
+        <edXML:CodeNumber>1</edXML:CodeNumber>
+      </edXML:Code>
+      <edXML:PromulgationInfo>
+        <edXML:Place>Đồng Nai</edXML:Place>
+        <edXML:PromulgationDate>09/04/2015</edXML:PromulgationDate>
+      </edXML:PromulgationInfo>
+      <edXML:DocumentType>
+        <edXML:Type>18</edXML:Type>
+        <edXML:TypeName>Công văn</edXML:TypeName>
+        <edXML:TypeDetail>0</edXML:TypeDetail>
+      </edXML:DocumentType>
+      <edXML:ResponseFor />
+      <edXML:Subject>Test lien thong gui nhan VBDT voi chinh phu</edXML:Subject>
+      <edXML:SignerInfo />
+      <edXML:ToPlaces />
+      <edXML:OtherInfo>
+        <edXML:Priority>0</edXML:Priority>
+        <edXML:Appendixes />
+      </edXML:OtherInfo>
+      <edXML:SteeringType>10</edXML:SteeringType>
+    </edXML:MessageHeader>
+    <edXML:TraceHeaderList xmlns:soap-env="http://schemas.xmlsoap.org/soap/actor/next" id="3490sdo9" version="1.0" mustUnderstand="1" soap-env:actor="http://schemas.xmlsoap.org/soap/actor/next" xmlns:edXML="http://www.inetcloud.vn/ns/edxml">
+      <edXML:TraceHeader>
+        <edXML:Timestamp>04/09/2015 09:49:31</edXML:Timestamp>
+        <edXML:Sender />
+      </edXML:TraceHeader>
+    </edXML:TraceHeaderList>
+    <edXML:ErrorList xmlns:soap-env="http://www.inetcloud.vn/ns/errorlist" id="3490sdo9" highestSeverity="error" version="1.0" soap-env:mustUnderstand="1" xmlns:edXML="http://www.inetcloud.vn/ns/edxml">
+      <edXML:Error />
+    </edXML:ErrorList>
+    <edXML:DigitalSignature xmlns:edXML="http://www.inetcloud.vn/ns/edxml" />
+  </soap-env:Header>
+  <soap-env:Body>
+    <edXML:Manifest edXML="http://www.inetcloud.vn/ns/edxml" version="1.0" xmlns:edXML="http://www.inetcloud.vn/ns/edxml" />
+  </soap-env:Body>
+</soap-env:Envelope>
+--470qqP70hk6ezjmgio9z8Azz--

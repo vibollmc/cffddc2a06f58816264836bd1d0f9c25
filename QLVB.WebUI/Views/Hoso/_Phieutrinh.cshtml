@@ -1,0 +1,109 @@
+﻿@model QLVB.DTO.Hoso.PhieutrinhViewModel
+
+<div class="box " id="tbar">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="SavePhieutrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+			<button id="BackPhieutrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+		</nav>
+	</header>
+</div>
+<div class="row">
+	<div class="col-sm-11">
+		<form class="form-horizontal" id="formAddPhieutrinh" method="post" action="@Url.Action("SavePhieutrinh","Hoso")">
+			@Html.Hidden("idhoso_phieutrinh", Model.idhoso)
+			@Html.Hidden("idphieutrinh", Model.idphieutrinh)
+
+			@Html.Label("Ý kiến đề xuất giải quyết")
+
+			<div class="form-group form-group-window">
+				<label class="col-sm-3 control-label font-label">Kính gửi</label>
+				<div class="col-sm-7">					
+					@if (Model.idphieutrinh == 0)
+					{
+						@(Html.Kendo().DropDownList()
+						.Name("idlanhdao")
+						.BindTo(Model.lanhdao)
+						.DataTextField("strhoten")
+						.DataValueField("idcanbo")
+						.HtmlAttributes(new { @style = "width:103%;" })
+						.OptionLabel(" ")						
+					    )
+					}
+					else
+					{
+						@(Html.Kendo().DropDownList()
+						.Name("idlanhdao")
+						.BindTo(Model.lanhdao)
+						.DataTextField("strhoten")
+						.DataValueField("idcanbo")
+						.HtmlAttributes(new { @style = "width:103%;", @disabled="disabled" })
+						.OptionLabel(" ")
+						.Value(Model.idlanhdaotrinh.ToString())
+					    )
+					}
+
+				</div>
+			</div>
+			<div class="form-group form-group-window">
+				<label class="col-sm-3 control-label font-label">Nội dung trình</label>
+				<div class="col-sm-7">
+					@Html.TextArea("strnoidungtrinh", Model.strnoidungtrinh, new
+						{
+							@class = "form-control form-control-window",
+							rows = 5
+						})
+				</div>
+			</div>
+			<hr />
+			@Html.Label("Ý kiến chỉ đạo giải quyết của lãnh đạo")
+
+			<div class="form-group form-group-window">
+				<label class="col-sm-3 control-label font-label">Ý kiến chỉ đạo</label>
+				<div class="col-sm-7">
+					@Html.TextArea("strykienchidao", Model.strykienchidao, new
+						{
+							@class = "form-control form-control-window",
+							rows = 5
+						})
+				</div>
+			</div>
+
+		</form>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		var idphieutrinh = '@Model.idphieutrinh';
+		if (idphieutrinh == 0) {
+			$('#strykienchidao').prop('disabled', true);
+		} else {
+			$('#strnoidungtrinh').prop('disabled', true);			
+		}
+	})
+	$('#BackPhieutrinhbtn').click(function () {        
+		ClosePhieutrinh();
+	});
+	$('#SavePhieutrinhbtn').click(function () {
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_SavePhieutrinh", "Hoso")',
+			data: $("#formAddPhieutrinh").serialize(),
+			success: function (data) {
+				if (data == 0) {
+					SetThongbao("Lỗi!!!");
+				}
+				else {
+					ReloadThongtinxuly();
+					ClosePhieutrinh();
+					UpdateSophieutrinh();
+				}
+			},
+			dataType: "Json"
+		});
+	})
+</script>

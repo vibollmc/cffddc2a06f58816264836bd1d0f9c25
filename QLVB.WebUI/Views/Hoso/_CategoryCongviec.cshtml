@@ -1,0 +1,74 @@
+﻿@model QLVB.DTO.Hoso.CategoryCongviecViewModel
+@using Kendo.Mvc.UI.Fluent
+
+@(
+ Html.Kendo().TreeView()
+    .Name("treeview")
+    .Events(events => events.Select("onSelect_treeview"))
+    .HtmlAttributes(new { @class = "text-color-black" })
+    .Items(item =>
+    {        
+        item.Add()
+        .Text("Ngày mở hồ sơ")            
+        .Id("parentNode")
+        .Items(subItem =>
+        {
+            for (int d = 0; d < Model.Songayhienthi; d++)
+            {
+                subItem.Add()
+                    .Text(QLVB.Common.Date.DateServices.FormatDateVNCategory(DateTime.Now, d))
+                    .Id("strngayhosocat=" + QLVB.Common.Date.DateServices.FormatDateVNCategory(DateTime.Now, d))
+                    ;
+            }
+        });
+            
+            
+        //item.Add()
+        //.Text("Vai trò xử lý")
+        //.Id("parentNode")
+        //.Items(subItem =>
+        //{
+        //    subItem.Add()
+        //        .Text("Xử lý chính").Id("xuly=xulychinh");
+        //    subItem.Add()
+        //        .Text("Phối hợp xử lý").Id("xuly=phoihopxuly");
+        //});
+           
+        item.Add()
+        .Text("Tình trạng xử lý")
+        .Id("parentNode")
+        .Items(subItem =>
+        {                    
+            subItem.Add()
+                .Text("Cần xử lý").Id("xuly=canxuly");
+            subItem.Add()
+                .Text("Đã hoàn thành").Id("xuly=hoanthanh");
+        });           
+        
+    })
+)
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetTreeViewHeight();
+    });
+    $(document).ready(function () {
+        SetTreeViewHeight();
+    })
+    function onSelect_treeview(e) {
+        var treeview = $("#treeview").getKendoTreeView();
+        var text = treeview.dataItem(e.node).text;
+        var id = treeview.dataItem(e.node).id;
+        //console.log(id);
+        if (id != "parentNode") {
+            var url = '@Url.Action("_ListVanbanden", "Vanbanden")';
+            url = url + '?isSearch=true&' + id;
+            console.log(url);
+            //$('#listcongviec').load(url);
+        } else {
+            treeview.collapse('.k-item');
+            treeview.expand(treeview.findByText(text));
+        }
+    }
+
+</script>
+

@@ -1,0 +1,63 @@
+﻿@model  QLVB.DTO.Account.LoginViewModel
+@{    
+    Layout = "~/Views/Shared/_Layout_null.cshtml";
+   
+}
+
+
+<body class="login">
+    <div class="container">
+        <div class="text-center">
+            <p>
+                <h2>@Model.TenDonvi</h2>
+            </p>
+            <p>
+                @if (Request.QueryString["ReturnUrl"] != null && Request.QueryString["ReturnUrl"].StartsWith("/OAuth/Authorize", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>HỆ THỐNG CƠ SỞ DỮ LIỆU THEO DÕI</h4>
+                }
+                else
+                {
+                    <h4>@QLVB.Common.Utilities.AppSettings.SiteName</h4>
+                }
+
+            </p>
+        </div>
+
+        <div id="login" class="tab-pane active">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
+            {
+                @*@Html.AntiForgeryToken()*@
+                @Html.ValidationSummary(true, null, new { style = "color: #b94a48;" })
+                <p class="text-muted text-center">
+                    Nhập tên và mật khẩu đăng nhập
+                </p>
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Tên đăng nhập" })
+                @Html.ValidationMessageFor(m => m.UserName)
+
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control :focus", placeholder = "Mật khẩu" })
+                @Html.ValidationMessageFor(m => m.Password)
+
+                @Html.CheckBoxFor(m => m.RememberMe)                 
+                @Html.LabelFor(m => m.RememberMe, new { @class = "font-label" })
+                
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
+                
+            }
+
+
+        </div>
+
+    </div><!-- /container -->
+    @*<div id="footer">
+            <p>2014 &copy; TRUNG TÂM TIN HỌC - VĂN PHÒNG UBND TỈNH ĐỒNG NAI</p>
+        </div>*@
+    <script type="text/javascript">
+        $(document).ready(function () {            
+            function GetFocus() {
+                $('#UserName').focus();                
+            }            
+            setTimeout(GetFocus, 1000);
+        })       
+    </script>
+</body>

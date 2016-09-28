@@ -1,0 +1,255 @@
+﻿@{
+    string strImageProfile = QLVB.Common.Utilities.AppConts.ImageProfile;
+}
+<div id="right">
+    @*<div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Warning!</strong>  Best check yo self, you're not looking too good.
+        </div>*@
+    <!-- .well well-small -->
+    <div class="well well-small dark">
+        <ul class="list-unstyled">
+            <li>
+                Xin chào <span id='spanUser'></span>
+            </li>
+            <li>
+                Tổng số User Online <span class="dynamicsparkline pull-right" id="UserOnline">Loading...</span>
+            </li>
+            <li>
+                <span id="LastUserLogin"></span>
+            </li>
+            <li>
+                <span id="LastUserLogout"></span>
+            </li>
+        </ul>
+    </div><!-- /.well well-small -->
+    <div class="well well-small dark" id="listuseronline">
+        <input id="hdId" type="hidden" />
+        <input id="hdUserId" type="hidden" />
+        <input id="hdUserName" type="hidden" />
+        Danh sách User Online
+        <ul class="list-unstyled" id="divusers"></ul>
+
+    </div><!-- /.well well-small -->
+    <div id="listChatContainner"></div>
+    <script type="text/javascript">
+
+    $(function () {
+        var chatHub = $.connection.chatRoomHub;
+        //$.connection.hub.logging = true;
+
+        registerClientMethods(chatHub);
+
+        // Start Hub
+        $.connection.hub.start().done(function () {
+            chatHub.server.connect();
+            //registerEvents(chatHub);
+        });
+
+    });
+    function registerClientMethods(chatHub) {
+        // Calls when user successfully logged in
+        chatHub.client.onConnected = function (id, userId, userName, userImage, allUsers, messages) {
+            $('#hdId').val(id);
+            $('#hdUserId').val(userId);
+            $('#hdUserName').val(userName);
+            $('#spanUser').html(userName);
+
+            // Add All Users
+            $('#UserOnline').html(allUsers.length);
+            for (i = 0; i < allUsers.length; i++) {
+                AddUser(chatHub, allUsers[i].ConnectionId, allUsers[i].UserID, allUsers[i].UserName, allUsers[i].UserImage);
+            }
+
+            // Add Existing Messages
+            for (i = 0; i < messages.length; i++) {
+                //AddMessage(messages[i].UserName, messages[i].Message);
+            }
+        }
+
+        // On New User Connected
+        chatHub.client.onNewUserConnected = function (id, UserID, userName, UserImage, allUsers) {
+            UserConnect(chatHub, id, UserID, userName, UserImage);
+            //AddUser(chatHub, id, UserID, userName);
+            //$('#LastUserLogin').text(userName + " Login ");
+            $('#UserOnline').html(allUsers.length);
+        }
+        // On User Disconnected
+        chatHub.client.onUserDisconnected = function (id, userId, userName, allUsers) {
+            //$('#' + id).remove();
+            //$('#LastUserLogout').text(userName + " Logout");
+            $('#UserOnline').html(allUsers);
+            UserDisconnect(id, userId);
+        }
+
+    }
+    function AddUser(chatHub, id, userId, UserName, UserImage) {
+        var ConnectId = $('#hdId').val();
+        var UserId = $('#hdUserId').val();
+        var code = "";
+        if (ConnectId == id) {
+            //code = $("<li class='loginUser'>" + UserName + "</li>");
+        }
+        else {
+            var strImage = '@strImageProfile' + UserImage;
+            var img = '@Url.Content(strImageProfile)' + UserImage;
+            //console.log(img + " -- " + strImage);
+            code = $('<li id="' + id + '"><img class="user-image-online" src="' + img + '" >'
+                    + '<a class="user-online" userid="' + userId + '" >'
+                + UserName + '<a></li>');
+            $(code).dblclick(function () {
+                //var id = $(this).attr('id');
+                //var
+                if (ConnectId != id) {
+                    //OpenPrivateChatWindow(chatHub, id, UserName);
+                }
+            });
+        }
+
+        $("#divusers").append(code);
+    }
+    function UserDisconnect(id, userId) {
+        $('#' + id).removeClass("user-online");
+        $('#' + id).addClass("user-offline");
+        $('#' + id).remove();
+        var ctrId = 'private_' + id;
+        $('#' + ctrId).remove();
+    }
+    function UserConnect(chatHub, id, userId, UserName, UserImage) {
+        var code = "";
+        var ConnectId = $('#divusers a').attr('id'); // $('#' + id).attr('id');
+        var ConnectUserId = $('#divusers a').attr('userid');
+        //console.log(ConnectUserId);
+        //console.log(ConnectId);
+        if (ConnectUserId == userId) {
+            //console.log("ok");
+            $('#' + ConnectId).removeClass("user-offline");
+            $('#' + ConnectId).addClass("user-online");
+            $('#' + ConnectId).attr('id', id);
+        } else {            
+            var img = '@Url.Content(strImageProfile)' + UserImage;            
+            code = $('<li  id="' + id + '"><img class="user-image-online" src="' + img + '">'
+                + '<a class="user-online" userid="' + userId + '">'
+                + UserName + '<a></li>');
+            $("#divusers").append(code);
+        }
+    }
+    function OpenPrivateChatWindow(chatHub, id, userName) {
+        var ctrId = 'private_' + id;
+        if ($('#' + ctrId).length > 0) return;
+        createPrivateChatWindow(chatHub, id, ctrId, userName);
+    }
+
+    function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
+        console.log(ctrId);
+
+        var kdiv = '<div id="' + ctrId + '" >' +
+                    '<div id="divMessage" class="messageArea">' +
+
+                   '</div>' +
+                   '<div class="buttonBar">' +
+                      '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
+                      '<input id="btnSendMessage" class="submitButton button" type="button" value="Send"   />' +
+                   '</div>' +
+                    '</div>';
+        //$('#listChatContainner').append(kdiv);
+
+        $("#" + ctrId).kendoWindow({
+            title: userName,
+            animation: {
+                open: {
+                    effects: "fade:in"
+                }
+            },
+            maxHeight: 400,
+            width: 250,
+            visible: false
+        });
+        // $("#" + ctrId).data("kendoWindow").center().open();
+
+        var $kdiv = $(kdiv);
+
+        // Send Button event
+        $kdiv.find("#btnSendMessage").click(function () {
+            console.log("click");
+            $textBox = $kdiv.find("#txtPrivateMessage");
+            var msg = $textBox.val();
+            if (msg.length > 0) {
+                var $messageArea = $kdiv.find("#divMessage");
+                $messageArea.append('<div class="message">' + msg + '</div>');
+                //chatHub.server.sendPrivateMessage(userId, msg);
+                $textBox.val('');
+            }
+        });
+
+        //$("#" + ctrId).kendoWindow({});
+        //$("#" + ctrId).data("kendoWindow").open();
+
+        var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
+                   '<div class="header">' +
+                      '<div  style="float:right;">' +
+                          //'<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/>' +
+                       '</div>' +
+
+                       '<span class="selText" rel="0">' + userName + '</span>' +
+                   '</div>' +
+                   '<div id="divMessage" class="messageArea">' +
+
+                   '</div>' +
+                   '<div class="buttonBar">' +
+                      '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
+                      '<input id="btnSendMessage" class="submitButton button" type="button" value="Send"   />' +
+                   '</div>' +
+                '</div>';
+
+        var $div = $(div);
+
+        //// DELETE BUTTON IMAGE
+        //$div.find('#imgDelete').click(function () {
+        //    $('#' + ctrId).remove();
+        //});
+
+        //// Send Button event
+        $div.find("#btnSendMessage").click(function () {
+
+            $textBox = $div.find("#txtPrivateMessage");
+            var msg = $textBox.val();
+            if (msg.length > 0) {
+
+                chatHub.server.sendPrivateMessage(userId, msg);
+                $textBox.val('');
+            }
+        });
+
+        //// Text Box event
+        //$div.find("#txtPrivateMessage").keypress(function (e) {
+        //    if (e.which == 13) {
+        //        $div.find("#btnSendMessage").click();
+        //    }
+        //});
+
+        AddDivToContainer($div);
+
+        $("#" + ctrId).dialog();
+    }
+
+    function AddDivToContainer($div) {
+        $('#listChatContainner').prepend($div);
+
+        $div.draggable({
+            handle: ".header",
+            stop: function () {
+
+            }
+        });
+
+        ////$div.resizable({
+        ////    stop: function () {
+
+        ////    }
+        ////});
+
+    }
+
+    </script>
+</div><!-- /#right -->

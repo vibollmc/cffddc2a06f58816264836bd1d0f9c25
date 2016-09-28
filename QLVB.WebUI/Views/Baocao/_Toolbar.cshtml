@@ -1,0 +1,121 @@
+﻿@{
+	DateTime strngaybd = ViewBag.strngaybd;
+	DateTime strngaykt = ViewBag.strngaykt;
+}
+<div class="box ">
+	<header>
+		<nav class="box-toolbar">
+			<button id="Printbtn" type="button" class="btn btn-sm btn-primary btn-flat" title="In Báo cáo">
+				<i class="glyphicon glyphicon-print"></i>&nbsp;In Báo cáo
+			</button>  
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Từ ngày &nbsp;&nbsp;
+			@(Html.Kendo().DatePicker()
+						.Name("strngaybd")
+						.Value(strngaybd)                        
+						.Format("dd/MM/yyyy")
+			)
+			&nbsp;&nbsp;==>&nbsp;&nbsp;
+			@(Html.Kendo().DatePicker()
+						.Name("strngaykt")
+						.Value(strngaykt)                    
+						.Format("dd/MM/yyyy")
+			)
+		</nav>
+	</header>
+</div>
+<script type="text/javascript">
+	$('#Printbtn').click(function () {
+		var idloaibc = GetIdLoaiBC();
+		var idcheckboxbc = GetIdBaocao();
+		var url = GetfrmBC(idloaibc, idcheckboxbc);
+		open(url, "_blank");
+		//if (idcheckboxbc != 0) {
+			
+		//} else {
+		//	SetThongbao("Bạn cần phải chọn loại báo cáo");
+		//}
+	});
+	function SetIdBaocao(idbaocao) {
+		$('#idbaocao').val(idbaocao);
+	};
+	function GetIdBaocao() {
+		return $('#idbaocao').val();
+	}
+	function SetIdLoaiBC(idloai) {
+		$('#idloai').val(idloai);
+	}
+	function GetIdLoaiBC() {
+		return $('#idloai').val();
+	}
+
+	function GetfrmBC(idloaibc, idcheckboxbc) {
+		var strngaybd = getNgaybd();
+		var strngaykt = getNgaykt();
+		var url = "";
+		url = '@Url.Action("__id__","Report")'.replace('__id__', "");
+		switch (idloaibc) {
+			case "1": // so van ban den   
+				var IsXuly = $('#IsXuly').val();
+				if ($('#IsXuly').is(':checked')) {
+					IsXuly = true;
+				} else {
+					IsXuly = false;
+				}
+				var iddonvi = $('#listdonvi').val();
+				var listid = GetAllCheckbox();
+				//console.log(listid);
+				url = '@Url.Action("Sovanbanden", "Baocao")';			    
+				url = url + "?strngaybd=" + strngaybd + "&strngaykt=" + strngaykt;
+				url = url + "&sovb=" + idcheckboxbc + "&IsXuly=" + IsXuly + "&iddonvi=" + iddonvi;
+				url = url + "&listidso=" + listid;
+				//console.log(url);
+				break;
+			case "2": // so van ban di
+				url = '@Url.Action("Sovanbandi", "Baocao")';
+				url = url + "?strngaybd=" + strngaybd + "&strngaykt=" + strngaykt + "&sovb=" + idcheckboxbc;
+				break;
+			case "3": // loai van ban den
+				url = '@Url.Action("Loaivanbanden", "Baocao")';
+				url = url + "?strngaybd=" + strngaybd + "&strngaykt=" + strngaykt + "&loaivb=" + idcheckboxbc;
+				break;
+			case "4":  // loai van ban di
+				url = '@Url.Action("Loaivanbandi", "Baocao")';
+				url = url + "?strngaybd=" + strngaybd + "&strngaykt=" + strngaykt + "&loaivb=" + idcheckboxbc;
+				break;
+			case "5":  // van ban den dien tu
+				url = '@Url.Action("Detailvbdt", "Baocao", new { intloai = 1})';
+				break;
+			case "6":  // van ban di dien tu
+				url = '@Url.Action("Detailvbdt", "Baocao", new { intloai = 2})';
+				break;
+		}
+		return url;
+	}	
+	function getNgaybd() {
+		var ngay = $('#strngaybd').val();
+		return ngay;
+	}
+	function getNgaykt() {
+		var ngay = $('#strngaykt').val();
+		return ngay;
+	}
+	function changeCheck(idCheck) {
+		SetIdBaocao(idCheck);
+		$('.clsChon').prop('checked', false)
+		var item = '#' + idCheck;
+		var value = $(item).prop('checked', true);
+	}
+	function Checked() {
+		//$(".donvi2").prop('checked', $(this).prop('checked'));
+		if ($('.clsChon').is(':checked')) {
+
+		}
+	}
+	function GetAllCheckbox() {
+		var listid = "";
+		$('.clsChon:checked').each(function () {	        
+			listid += this.value + ",";
+		});
+		return listid;
+	}
+</script>

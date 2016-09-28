@@ -1,0 +1,1 @@
+intloai = 1 and strngaycapnhat < '2016-09-01 00:00:00.000'

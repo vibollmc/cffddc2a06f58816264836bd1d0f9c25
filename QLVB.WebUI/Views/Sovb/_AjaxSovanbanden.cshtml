@@ -1,0 +1,59 @@
+﻿@model QLVB.DTO.Sovb.ListKhoiphathanhViewModel
+
+<div class="box">
+    <header>
+        <nav style="padding: 3px;">
+            <button id="submitkhoiphbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+            <span id="ketquakhoiph" class="validation-summary-valid"></span>
+        </nav>
+    </header>
+
+    <form class="form-horizontal" id="formAjaxKhoiph">
+        @Html.HiddenFor(m=>m.idsovb)
+        <div class="body collapse in">
+            <table id="listkhoiph" class="table responsive-table">
+                <thead>
+                    <tr>
+                        <td style="width:10%; text-align:center">
+                            <b>Chọn</b>
+                        </td>
+                        <td style="width:90%;">
+                            <b>Khối phát hành</b>
+                        </td>                       
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Khoiphathanh)
+                    {
+                        <tr>
+                            <td style="width:10%; text-align:center">
+                                @Html.CheckBox(p.intid.ToString(), p.IsDefault)
+                            </td>
+                            <td style="width:90%">
+                                @Html.Label(p.strtenkhoi, new { @class = "font-label" })
+                            </td>                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $("#submitkhoiphbtn").click(function () {        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveKhoiphathanh", "Sovb")',
+            data: $("#formAjaxKhoiph").serialize(),
+            success: function (data) {
+                if (data == 1) {
+                    ShowResult("ketquakhoiph", "Cập nhật thành công");
+                }
+                else {
+                    ShowResult("ketquakhoiph", "Lỗi !!!");
+                }
+            },
+            dataType: "Json"
+        });
+    });
+</script>

@@ -1,0 +1,63 @@
+﻿@model DLTD.Web.Main.ViewModels.VanBanChiDaoViewModel
+<table class="table table-condensed table-bordered responsive-table" style="border:none">
+    <tbody>
+        <tr>
+            <td colspan="4" class="title-header">
+                <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN VĂN BẢN
+            </td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Ngày đến</th>
+            <td class="table-col-4">@Model.Ngayky</td>
+            <th class="table-col-4">Số Ký hiệu</th>
+            <td class="table-col-4">@Model.SoKH</td>
+        </tr>
+
+        <tr>
+            <th class="table-col-4">Nguồn chỉ đạo</th>
+            <td class="table-col-4" colspan="3">@Model.NguonChiDao</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Ý kiến chỉ đạo</th>
+            <td class="table-col-4" colspan="3">@Model.YKienChiDao</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Trích yếu </th>
+            <td class="table-col-4" colspan="3">@Model.Trichyeu</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Ngày giao </th>
+            <td class="table-col-4">@Model.NgayTao</td>
+            <th class="table-col-4">Hạn xử lý</th>
+            <td class="table-col-4">@Model.NgayHoanThanh</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Đơn vị xử lý chính</th>
+            <td class="table-col-4" colspan="3">@Model.TenDonVi</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Trạng thái văn bản</th>
+            <td class="table-col-4" colspan="3">@Model.TrangThaiVB</td>
+        </tr>
+        <tr>
+            <td colspan="4" id="chitietTHXL">
+            
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                @Html.Action("GetFileVanBan", "Home", new { id = Model.Id })
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script>
+    $.ajax({
+        url: "@Url.Action("GetTinhHinhThucHien")" + "?idVanBanChiDao=@Model.Id",
+        type: "GET",
+        success: function (response) {
+            buildHtmlTHTH(response, '#chitietTHXL');
+        }
+    });
+</script>
+

@@ -1,0 +1,94 @@
+﻿@using QLVB.DTO
+<div class="box ">
+    <header>
+        <nav class="box-toolbar">
+            <button id="AddUserbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title="Thêm mới"><i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm</button>
+            <button id="EditUserbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-pencil"></i>&nbsp;Sửa</button>
+            <button id="DeleteUserbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-trash"></i>&nbsp;Xóa</button>
+            <button id="MoveUserbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-arrow-right"></i><i class="glyphicon glyphicon-user"></i>&nbsp;Chuyển cán bộ</button>
+            
+        </nav>
+    </header>
+</div>
+@(Html.Kendo().Grid<QLVB.DTO.Donvi.ListUserViewModel>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+        columns.Bound(o => o.intid).Title("ID").Hidden();
+        columns.Bound(o => o.strmacanbo).Width("10%").Title("Mã CB");
+        columns.Bound(o => o.strkyhieu).Width(65).Title("Ký hiệu");
+        columns.Bound(o => o.strhoten).Width("25%").Title("Họ tên");
+        columns.Bound(o => o.strusername).Width("15%").Title("Tên đăng nhập");
+        columns.Bound(o => o.strchucdanh).Width("20%").Title("Chức danh");
+        columns.Bound(o => o.strtennhomquyen).Width("20%").Title("Nhóm quyền");        
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+    .Sortable()
+    .Selectable()
+    .Resizable(resize=>resize.Columns(true))
+    .HtmlAttributes(new { style="height:400px;"})
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("User_Read", "Donvi", new { iddonvi = ViewBag.iddonvi }))
+        )
+    .Events(events => events.Change("onChangeUser"))
+)
+<script type="text/javascript">    
+    $("#AddUserbtn").bind("click", function () {        
+        var iddonvi = GetIdDonvi();
+        var iduser = 0;
+        var url = '@Url.Action("_formEditUser", "Donvi")';
+        url = url + '?iddonvi=' + iddonvi;
+        url = url + '&iduser=' + iduser;
+        $('#detail-editUser').load(url);
+        OpenEditUser();
+    });
+    $("#EditUserbtn").bind("click", function () {
+        var iddonvi = GetIdDonvi();
+        var iduser = GetIdUser();
+        if (iduser != 0) {
+            var url = '@Url.Action("_formEditUser", "Donvi")';
+            url = url + '?iddonvi=' + iddonvi;
+            url = url + '&iduser=' + iduser;
+            $('#detail-editUser').load(url);
+            OpenEditUser();
+        } else {
+            SetThongbao("Bạn chưa chọn cán bộ");
+        }
+    });
+    $("#DeleteUserbtn").bind("click", function () {        
+        var iduser = GetIdUser();
+        if (iduser != 0) {
+            var url = '@Url.Action("_formDeleteUser", "Donvi")';
+            url = url + '?id=' + iduser;
+            // dung editdonvi de auto height
+            $('#detail-editDonvi').load(url);
+            OpenEditDonvi();
+        } else {
+            SetThongbao("Bạn chưa chọn cán bộ");
+        }
+    });
+    $("#MoveUserbtn").bind("click", function () {
+        var iddonvi = GetIdDonvi();
+        if (iddonvi != 0) {
+            var url = '@Url.Action("_formMoveUser", "Donvi")';
+            url = url + '?idsource=' + iddonvi;
+            url = url + '&iddest=1';
+            $('#detail-MoveUser').load(url);
+            OpenMoveUser();
+        } else {
+            SetThongbao("Bạn chưa chọn cán bộ");
+        }
+    });
+    
+</script>

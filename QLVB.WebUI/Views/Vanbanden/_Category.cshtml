@@ -1,0 +1,121 @@
+﻿@model QLVB.DTO.Vanbanden.CategoryViewModel
+@using Kendo.Mvc.UI.Fluent
+
+@(
+ Html.Kendo().TreeView()
+    .Name("treeview")    
+    .Events(events => events.Select("onSelect_treeview"))
+    .HtmlAttributes(new { @class = "text-color-black" })
+    .Items(item =>
+    {
+        foreach (var m in Model.Category)
+        {
+            if ((m.intMa == 1) && (m.intbac == 1))
+            {
+                item.Add()
+                .Text(m.strten)
+                //.Id(m.intMa.ToString())
+                .Id("parentNode")
+                .Items(subItem =>
+                {
+                    for (int d = 0; d < Model.Songayhienthi; d++)
+                    {
+                        subItem.Add()
+                            .Text(QLVB.Common.Date.DateServices.FormatDateVNCategory(DateTime.Now, d))
+                            .Id("strngaydencat=" + QLVB.Common.Date.DateServices.FormatDateVNCategory(DateTime.Now, d))
+                            ;
+                    }
+                });
+            }
+            if ((m.intMa == 2) && (m.intbac == 1))
+            {
+                item.Add()
+                .Text(m.strten)
+                .Id("parentNode")
+                .Items(subItem =>
+                {
+                    foreach (var k in Model.Khoiphathanh)
+                    {
+                        subItem.Add()
+                            .Text(k.strtenkhoi)
+                            .Id("idkhoiph=" + k.intid.ToString())
+                            ;
+                    }
+                });
+            }
+            if ((m.intMa == 3) && (m.intbac == 1))
+            {
+                item.Add()
+                .Text(m.strten)
+                .Id("parentNode")
+                .Items(subItem =>
+                {
+                    foreach (var k in Model.Loaivanban)
+                    {
+                        subItem.Add()
+                            .Text(k.strtenvanban)
+                            .Id("idloaivb=" + k.intid.ToString())
+                            ;
+                    }
+                });
+            }
+            if ((m.intMa == 4) && (m.intbac == 1))
+            {
+                item.Add()
+                .Text(m.strten)
+                .Id("parentNode")
+                .Items(subItem =>
+                {
+                    foreach (var k in Model.Sovanban)
+                    {
+                        subItem.Add()
+                            .Text(k.strten)
+                            .Id("idsovb=" + k.intid.ToString())
+                            ;
+                    }
+                });
+            }
+            if ((m.intMa == 5) && (m.intbac == 1))
+            {
+                item.Add()
+                .Text(m.strten)
+                .Id("parentNode")
+                .Items(subItem =>
+                {
+                    subItem.Add()
+                        .Text("Chưa duyệt").Id("xuly=chuaduyet");
+                    subItem.Add()
+                        .Text("Đã xử lý").Id("xuly=daxuly");
+                    subItem.Add()
+                        .Text("Đang xử lý chính").Id("xuly=xulychinh");
+                    subItem.Add()
+                        .Text("Đang phối hợp xử lý").Id("xuly=phoihopxl");
+                });
+            }
+        }        
+    })
+)
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetTreeViewHeight();
+    });
+    $(document).ready(function () {
+        SetTreeViewHeight();
+    })
+    function onSelect_treeview(e) {
+        var treeview = $("#treeview").getKendoTreeView();
+        var text = treeview.dataItem(e.node).text;
+        var id = treeview.dataItem(e.node).id;        
+        //console.log(id);        
+        if (id != "parentNode") {
+            var url = '@Url.Action("_ListVanbanden", "Vanbanden")';
+            url = url + '?isSearch=true&' + id;
+            //console.log(url);
+            $('#listvanbanden').load(url);
+        } else {
+            treeview.collapse('.k-item');
+            treeview.expand(treeview.findByText(text));
+        }
+    }
+    
+</script>

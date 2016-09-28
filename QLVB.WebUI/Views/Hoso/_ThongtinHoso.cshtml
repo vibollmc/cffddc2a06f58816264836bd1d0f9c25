@@ -1,0 +1,70 @@
+﻿@model QLVB.DTO.Hoso.ThongtinHosoViewModel
+
+
+<table class="table-condensed table-bordered responsive-table" style="width:100%;">
+    <tr>
+        <td colspan="4" class="title-header">
+            <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN CHUNG
+        </td>
+    </tr>
+    @*<tr>
+            <th>Số hiệu HT:</th>
+            <td colspan="3">@Model.strsohieuht</td>
+
+        </tr>*@
+    <tr>
+        <th class="table-col-4">Tiêu đề</th>
+        <td class="table-col-4" colspan="3">@Model.strtieude</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Lĩnh vực</th>
+        <td class="table-col-4">&nbsp;@Model.strtenlinhvuc</td>
+        <th class="table-col-4">Mức độ quan trọng</th>
+        <td class="table-col-4">&nbsp;@Model.strmucquantrong</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Ngày mở hồ sơ</th>
+        <td class="table-col-4" colspan="3">@Model.strngaymohoso</td>
+    </tr>
+    @if (@Model.idvanban > 0)
+    {
+        <tr>
+            <th class="table-col-4">Văn bản đến</th>
+            <td class="table-col-4" colspan="3">
+                <a style='color:blue' href='javascript:ViewVBDen(@Model.idvanban)' title='Nội dung Văn bản'><i>@Model.strtrichyeuvanban</i></a>
+            </td>
+        </tr>
+    }    
+    <tr>
+        <th class="table-col-4">Nội dung công việc</th>
+        <td class="table-col-4" colspan="3">@Model.strnoidung</td>
+    </tr>
+
+    <tr>
+        <th class="table-col-4">Thời hạn xử lý</th>
+        <td class="table-col-4" colspan="3">@Model.strthoihanxuly</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Tình trạng hồ sơ</th>
+        <td class="table-col-4" colspan="3">@Model.strtrangthai</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Hồ sơ văn bản liên quan</th>
+        <td class="table-col-4" colspan="3">
+            @if (Model.isVBDenLQ)
+            {
+                <a style='color:blue' href='javascript:OpenHosoVBLQ(@Model.idhosocongviec,1)' title='Văn bản đến'><i>Văn bản đến</i></a>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            }
+            @if (Model.isVBDiLQ)
+            {
+                <a style='color:blue' href='javascript:OpenHosoVBLQ(@Model.idhosocongviec,2)' title='Văn bản đi'><i>Văn bản đi</i></a>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            }
+        </td>
+    </tr>
+
+</table>
+
+
+
