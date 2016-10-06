@@ -14,6 +14,7 @@ namespace DLTD.Web.Main.Controllers
     {
         public async Task<ActionResult> QlvbScripts(string v)
         {
+            var qlvbUri = WebConfigurationManager.AppSettings["ServerQLVBOauthPath"];
             var donVi = await DonViManagement.Go.GetDonViByKhoi(6, 7, 9);
             var khoi = await DonViManagement.Go.GetNguonChiDaoByKhoi();
             var htmlOption = new StringBuilder();
@@ -31,7 +32,8 @@ namespace DLTD.Web.Main.Controllers
 
             js = js.Replace("{{DONVI}}", htmlOption.ToString())
                 .Replace("{{URI}}", Request.Url.AbsoluteUri.Replace(Request.RawUrl, ""))
-                .Replace("{{KHOI}}", htmlOptionkhoi.ToString());
+                .Replace("{{KHOI}}", htmlOptionkhoi.ToString())
+                .Replace("{{QLVBURI}}", qlvbUri);
 
             htmlOption = new StringBuilder();
             var nguoiChiDao = await DangNhapManagement.Go.GetNguoiChiDao(WebConfigurationManager.AppSettings["IDDonViTrucThuocLanhDao"].ToIntExt());

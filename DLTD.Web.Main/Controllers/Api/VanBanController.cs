@@ -38,6 +38,7 @@ namespace DLTD.Web.Main.Controllers.Api
             string fileUrl = null;
             try
             {
+                var fileDinhKem = new List<FileDinhKemInput>();
 
                 if (httpRequest.Files.Count > 0)
                 {
@@ -53,18 +54,16 @@ namespace DLTD.Web.Main.Controllers.Api
                         filePath = string.Format("{0}{1}", folderUpload, fileNameBeSave);
 
                         postedFile.SaveAs(filePath);
+
+                        if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(fileUrl))
+                        {
+                            fileDinhKem.Add(new FileDinhKemInput
+                            {
+                                TenFile = fileName,
+                                UrlFile = fileUrl,
+                            });
+                        }
                     }
-                }
-
-                var fileDinhKem = new List<FileDinhKemInput>();
-
-                if (!string.IsNullOrWhiteSpace(fileName) && !string.IsNullOrWhiteSpace(fileUrl))
-                {
-                    fileDinhKem.Add(new FileDinhKemInput
-                    {
-                        TenFile = fileName,
-                        UrlFile = fileUrl,
-                    });
                 }
 
                 if (!string.IsNullOrWhiteSpace(httpRequest.Form["FileVBDinhKem"]))
