@@ -292,6 +292,8 @@ namespace DLTD.Web.Main.DAL
                                   y.ThoiHanXuLy < DateTime.Now)
                                  || (trangthai == TrangThaiVanBan.Undefined));
 
+                if (!vanBanChiDao.Any()) continue;
+
                 obj.Name = item.Ten;
                 obj.Id = item.Id;
 
@@ -353,6 +355,8 @@ namespace DLTD.Web.Main.DAL
                     item.VanBanChiDao.Where(
                         y => (y.NgayTao >= tuNgay || tuNgay == null) && (y.NgayTao <= denNgay || denNgay == null));
 
+                if (!vanBanChiDao.Any()) continue;
+
                 obj.Name = item.Ten;
                 obj.Id = item.Id;
 
@@ -409,6 +413,8 @@ namespace DLTD.Web.Main.DAL
                     item.VanBanChiDao.Where(
                         y => (y.NgayTao >= tuNgay || tuNgay == null) && (y.NgayTao <= denNgay || denNgay == null));
 
+                if (!vanBanChiDao.Any()) continue;
+
                 obj.Name = item.Ten;
                 obj.Id = item.Id;
 
@@ -464,6 +470,8 @@ namespace DLTD.Web.Main.DAL
                 var vanBanChiDao =
                     item.VanBanChiDao.Where(
                         y => (y.NgayTao >= tuNgay || tuNgay == null) && (y.NgayTao <= denNgay || denNgay == null));
+
+                if (!vanBanChiDao.Any()) continue;
 
                 obj.Name = item.Ten;
                 obj.Id = item.Id;
