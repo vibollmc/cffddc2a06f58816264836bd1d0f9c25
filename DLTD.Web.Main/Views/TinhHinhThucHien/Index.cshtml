@@ -3,7 +3,7 @@
 @using Kendo.Mvc.UI;
 @model DLTD.Web.Main.ViewModels.TonghopTinhhinhXulyViewModel
 @{
-    ViewBag.Title = "TinhHinhThucHien";
+    ViewBag.Title = "Tình hình thực hiện";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,10 +12,10 @@
         <ol class="breadcrumb">
             <li>
                 <i class="glyphicon glyphicon-home"></i>
-                <a href="/">TÌNH HÌNH THỰC HIỆN</a>
+                <a href="@Url.Action("Index","Home")"> Nhiệm vụ</a>
             </li>
             @*<li><i class="fa fa-bars"></i>Pages</li>*@
-            <li><i class="glyphicon glyphicon-list"></i></li>
+            <li><i class="glyphicon glyphicon-list"></i>@ViewBag.Title</li>
         </ol>
     </div>
 </div>

@@ -54,7 +54,7 @@ function buildButton() {
     //design all input here
     modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Nội dung cần thực hiện:</label>";
-    modalHtml += "<input type='text' name='YKienChiDao' class='form-control' id='" + idButton + "YKCD'>";
+    modalHtml += "<textarea type='text' name='YKienChiDao' rows='2' class='form-control' id='" + idButton + "YKCD'></textarea>";
     modalHtml += "</div>";
 
     modalHtml += "<div class='form-group row'>";
@@ -110,12 +110,12 @@ function buildButton() {
     modalHtml += "</div>";
 
     modalHtml += "<div class='form-group' id='" + idButton + "groupAttachment'>";
-    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><span class='glyphicons glyphicons-plus'></span> Thêm file đính kèm</button><br>";
+    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><span class='glyphicons glyphicons-plus'></span> Thêm file đính kèm</button><br><br>";
     modalHtml += "<label for='" + idButton + "File' class='btn btn-default'>";
     modalHtml += "<i class='glyphicon glyphicon-paperclip'></i> Đính kèm file";
     modalHtml += "</label>";
     modalHtml += " <span title='Xóa file đã chọn' style='display:none; cursor:pointer' class='glyphicon glyphicon-remove' id='" + idButton + "RemoveFile'></span>";
-    modalHtml += "<input name='FileDinhKem' id='"+idButton+"File' type='file' style='display:none'/>";
+    modalHtml += "<input name='FileDinhKem' id='" + idButton + "File' type='file' style='display:none'/><div style='height:10px;width:100%'></div>";
     modalHtml += "</div>";
 
     modalHtml += "<input type='hidden' name='IdVanBan' id='" + idButton + "IdVanBan'>";
@@ -153,7 +153,7 @@ function addAttachment(number) {
     attachmentHtml += " <span title='Xóa file đã chọn' style='display:none; cursor:pointer' class='glyphicon glyphicon-remove' id='" + idButton + "RemoveFile" + number + "'></span>";
     attachmentHtml += "<input name='FileDinhKem' id='" + idButton + "File" + number + "' type='file' style='display:none'/>";
 
-    attachmentHtml += "  <button type='button' class='btn btn-xs btn-danger' id='" + idButton + "RemoveAttachment" + number + "' ><span class='glyphicons glyphicons-remove-circle'></span> Xóa</button>";
+    attachmentHtml += "  <button type='button' class='btn btn-xs btn-danger' id='" + idButton + "RemoveAttachment" + number + "' ><span class='glyphicons glyphicons-remove-circle'></span> Xóa</button><div style='height:10px;width:100%'></div>";
 
     $("#" + idButton + "groupAttachment").append(attachmentHtml);
 
@@ -176,6 +176,7 @@ function addAttachment(number) {
         $(this).prev().remove();
         $(this).prev().remove();
         $(this).prev().remove();
+        $(this).next().remove();
         $(this).remove();
     });
 
@@ -319,17 +320,31 @@ $(document).ready(function() {
         ],
         index: 0
     }).data("kendoDropDownList");
-    
-    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox().data("kendoComboBox");
 
-    var comboNguonChiDao = $("#" + idButton + "NguonChiDao").kendoComboBox().data("kendoComboBox");
+    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
 
-    var comboNguoiChiDao = $("#" + idButton + "NguoiChiDao").kendoComboBox().data("kendoComboBox");
+    var comboNguonChiDao = $("#" + idButton + "NguonChiDao").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
 
-    var comboNguoiTheoDoi = $("#" + idButton + "NguoiTheoDoi").kendoComboBox().data("kendoComboBox");
+    var comboNguoiChiDao = $("#" + idButton + "NguoiChiDao").kendoComboBox({
+        filter: "contains",
+        suggest: true
+    }).data("kendoComboBox");
+
+    var comboNguoiTheoDoi = $("#" + idButton + "NguoiTheoDoi").kendoComboBox({
+        filter: "contains",
+        suggest: true
+    }).data("kendoComboBox");
 
     var combodonViPhoiHop = $("#" + idButton + "DonViPhoiHop").kendoMultiSelect({
-        autoClose: false
+        autoClose: false,
+        filter: "contains",
+        suggest: true
     }).data("kendoMultiSelect");
 
     $("#" + idButton + "File").change(function() {
@@ -370,7 +385,7 @@ $(document).ready(function() {
        
         $("#" + idButton + "YKCD").val("");
         $("#" + idButton + "HanXL").val("");
-        comboDoKhan.value("");
+        comboDoKhan.value("0");
         comboNguonChiDao.value("");
         comboDonvi.value("");
         comboNguoiChiDao.value("");
@@ -399,6 +414,10 @@ $(document).ready(function() {
         $("#" + idButton + "Ngayky").val(Ngayky);
         $("#" + idButton + "SoKH").val(SoKH);
         $("#" + idButton + "Trichyeu").val(Trichyeu);
+
+        $("button[id^=" + idButton + "RemoveAttachment]").each(function() {
+            $(this).click();
+        });
 
     });
 
