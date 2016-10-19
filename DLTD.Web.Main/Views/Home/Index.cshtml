@@ -26,8 +26,11 @@
             <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Tình hình Thực hiện
         </button>
         @*}*@
-        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display:@ViewBag.HoanThanh">
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display: @ViewBag.HoanThanh">
             <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Hoàn Thành
+        </button>
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnDelete" disabled style="display:@ViewBag.HoanThanh">
+            <i class="glyphicons glyphicons-remove-circle"></i>&nbsp;Xóa văn bản
         </button>
     </div>
     <div class="col-lg-4">
@@ -150,6 +153,50 @@
 
             return true;
         }
+
+        $("#btnDelete").click(function () {
+            if (isProcessing) return false;
+
+            isProcessing = true;
+
+
+            bootbox.confirm({
+                title: "Xác nhận",
+                message: "Bạn có muốn xóa văn bản đang chọn?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Hủy',
+                        className: 'btn-success'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Xóa',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "@Url.Action("DeleteVanBan")",
+                            type: "POST",
+                            data: { id: idVanbanSelected },
+                            success: function(response) {
+                                if (response.Result) {
+                                    isProcessing = false;
+                                    $("#btnSearch").click();
+                                }
+
+                            },
+                            complete: function() {
+                                isProcessing = false;
+                            }
+                        });
+                    }
+                    else {
+                        isProcessing = false;
+                    }
+                }
+            });
+        });
 
         $("#btnHoanThanh").click(function () {
             if (isProcessing) return false;
