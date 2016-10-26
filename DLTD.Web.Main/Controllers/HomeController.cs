@@ -242,6 +242,13 @@ namespace DLTD.Web.Main.Controllers
 
             return PartialView("_XemChitietVanban", model);
         }
+
+        public async Task<ActionResult> DeleteVanBan(int id)
+        {
+            var result = await VanBanChiDaoManagement.Go.DeleteVanBan(id);
+            return Json(new {Result = result}, JsonRequestBehavior.AllowGet);
+        }
+
         public class DonViComboBoxViewModal
         {
             public int? Id { get; set; }
