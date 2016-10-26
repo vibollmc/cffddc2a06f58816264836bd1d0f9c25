@@ -3,7 +3,7 @@
     @foreach (var item in Model)
     {
         <li>
-            <a href="@Url.Content(item.FileUrl)">
+            <a href="@Url.Content("~/" + item.FileUrl)">
                 @if (item.FileName.ToLower().EndsWith(".doc") || item.FileName.ToLower().EndsWith(".docx"))
                 {
                     <i class="fa fa-file-word-o"></i>

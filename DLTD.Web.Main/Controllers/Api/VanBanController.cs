@@ -46,12 +46,13 @@ namespace DLTD.Web.Main.Controllers.Api
                     {
                         var postedFile = httpRequest.Files[file];
                         if (postedFile == null || postedFile.ContentLength == 0) continue;
-                        var folderUpload = HttpContext.Current.Server.MapPath("~/Uploads/");
-                        if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+                        string folderUpload;
+
+                        this.CreatePathUpload(out folderUpload, out fileUrl);
+
                         fileName = postedFile.FileName;
-                        var fileNameBeSave = string.Format("{0:yyyyMMddHHmmss}-{1}", DateTime.Now, fileName);
-                        fileUrl = string.Format("~/Uploads/{0}", fileNameBeSave);
-                        filePath = string.Format("{0}{1}", folderUpload, fileNameBeSave);
+                        fileUrl = string.Format("{0}/{1}", fileUrl, fileName);
+                        filePath = string.Format("{0}/{1}", folderUpload, fileName);
 
                         postedFile.SaveAs(filePath);
 
@@ -145,6 +146,32 @@ namespace DLTD.Web.Main.Controllers.Api
         public void Delete(int id)
         {
         }
+
+
+        private void CreatePathUpload(out string folderUpload, out string fileUrl)
+        {
+            var dateTime = DateTime.Now;
+
+            folderUpload = HttpContext.Current.Server.MapPath("~/Uploads/");
+            fileUrl = "Uploads/";
+            if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+
+            folderUpload = string.Format("{0}/{1}", folderUpload, dateTime.Year);
+            fileUrl = string.Format("{0}/{1}", fileUrl, dateTime.Year);
+
+            if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+
+            folderUpload = string.Format("{0}/{1:00}", folderUpload, dateTime.Month);
+            fileUrl = string.Format("{0}/{1:00}", fileUrl, dateTime.Month);
+
+            if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+
+            folderUpload = string.Format("{0}/{1:00}", folderUpload, dateTime.Day);
+            fileUrl = string.Format("{0}/{1:00}", fileUrl, dateTime.Day);
+
+            if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+        }
+
         private bool DownloadFile(string url, string fileName, out string fileUrl)
         {
             using (var webClient = new WebClient())
@@ -152,11 +179,11 @@ namespace DLTD.Web.Main.Controllers.Api
                 
                 try
                 {
-                    var folderUpload = HttpContext.Current.Server.MapPath("~/Uploads/");
-                    if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
+                    string folderUpload;
+                    this.CreatePathUpload(out folderUpload, out fileUrl);
 
-                    fileUrl = string.Format("~/Uploads/{0:yyyyMMddHHmmss}-{1}", DateTime.Now, fileName);
-                    var filePath = HttpContext.Current.Server.MapPath(fileUrl);
+                    fileUrl = string.Format("{0}/{1}", fileUrl, fileName);
+                    var filePath = string.Format("{0}/{1}", folderUpload, fileName);
 
 
                     webClient.DownloadFile(new Uri(url), filePath);
