@@ -510,5 +510,16 @@ namespace DLTD.Web.Main.DAL
 
             return results;
         }
+
+        public async Task<bool> DeleteVanBan(int id)
+        {
+            var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
+            if (vb == null) return true;
+
+            this._dbContext.VanBanChiDao.Remove(vb);
+            await this._dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -38,7 +38,7 @@
       <HintPath>..\packages\DBTek.Crypto.2.0.1\lib\DBTek.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="EdXml2">
-      <HintPath>F:\TestLab\VPCP\13082015\Example\net_api_example\lib\EdXml2.dll</HintPath>
+      <HintPath>..\packages\EDXML\EdXml2.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZip\SharpZipLib_0860_Bin\net-20\ICSharpCode.SharpZipLib.dll</HintPath>
