@@ -36,8 +36,14 @@ function buildButton() {
     modalHtml += "<button type='button' class='close' data-dismiss='modal'>&times;</button>";
     modalHtml += "<h4 class='modal-title'>NHẬP CSDL THEO DÕI</h4>";
     modalHtml += "</div>";
-    modalHtml += "<div class='modal-body'>";
 
+    modalHtml += "<div class='modal-footer'>";
+    modalHtml += "<span>Phân công cho nhiều đơn vị <input id='" + idButton + "AnotherOne' type='checkbox'>  </span>";
+    modalHtml += "<button type='button' style='width:60px;' class='btn btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu </button>";
+    modalHtml += "<button type='button' class='btn btn-default' data-dismiss='modal'>Đóng</button>";
+    modalHtml += "</div>";
+
+    modalHtml += "<div class='modal-body'>";
     modalHtml += "<form id='"+idButton+"Form' method='post' enctype='multipart/form-data'>";
     modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Văn bản:</label>";
@@ -107,7 +113,7 @@ function buildButton() {
     modalHtml += "{{NGUOITHEODOI}}";
     modalHtml += "</select>";
     modalHtml += "</div>";
-    modalHtml += "</div>";
+ 
 
     modalHtml += "<div class='form-group' id='" + idButton + "groupAttachment'>";
     modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><span class='glyphicons glyphicons-plus'></span> Thêm file đính kèm</button><br>";
@@ -134,11 +140,6 @@ function buildButton() {
 
     modalHtml += "</div>";//end modal-body
 
-    modalHtml += "<div class='modal-footer'>";
-    modalHtml += "<span>Phân công cho đơn vị khác <input id='"+idButton+"AnotherOne' type='checkbox'>  </span>";
-    modalHtml += "<button type='button' style='width:144px;' class='btn btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu </button>";
-    modalHtml += "<button type='button' class='btn btn-default' data-dismiss='modal'>Đóng</button>";
-    modalHtml += "</div>";
     modalHtml += "</div>";
     modalHtml += "</div>";
     modalHtml += "</div>";
@@ -184,13 +185,13 @@ function addAttachment(number) {
 function checkValidData() {
     var message = "<ul>";
     var valid = true;
-    var comboDonvi = $("#" + idButton + "DonVi").data("kendoComboBox");
+    var comboDonvi = $("#" + idButton + "DonVi").data("kendoComboBox"); // Đối với mấy thằng xài kendo thì vầy
     if (comboDonvi.value() == "") {
         valid = false;
         message += "<li>Yêu cầu chọn đơn vị xử lý chính.</li>";
     }
 
-    var ykcd = $("#" + idButton + "YKCD");
+    var ykcd = $("#" + idButton + "YKCD"); // Mấy thằng bình thường thì xài kiểu này. 
     if ($.trim(ykcd.val()) == "") {
         valid = false;
         message += "<li>Yêu cầu nhập ý kiến chỉ đạo.</li>";
