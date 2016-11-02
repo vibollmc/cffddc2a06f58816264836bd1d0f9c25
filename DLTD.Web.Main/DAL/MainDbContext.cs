@@ -17,6 +17,8 @@ namespace DLTD.Web.Main.DAL
         public DbSet<DonViPhoiHop> DonViPhoiHop { get; set; }
         public DbSet<TinhHinhThucHien> TinhHinhThucHien { get; set; }
         public DbSet<TinhHinhPhoiHop> TinhHinhPhoiHop { get; set; }
+
+        public DbSet<MarkedDatabaseChange> MarkedDatabaseChange { get; set; }
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

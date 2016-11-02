@@ -4983,7 +4983,6 @@
     <TypeScriptCompile Include="Scripts\typings\d3\d3.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\d3\plugins\d3.superformula.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\gojs\goJS-1.5.5.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\gojs\goJS.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jsplumb\jquery.jsPlumb.d.ts" />
   </ItemGroup>

@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -237,60 +238,14 @@
     <Compile Include="DAL\DangNhapManagement.cs" />
     <Compile Include="DAL\DonViManagement.cs" />
     <Compile Include="DAL\MainDbContext.cs" />
+    <Compile Include="DAL\QLVBDatabase.cs" />
+    <Compile Include="DAL\SyncDataFromQLVB.cs" />
     <Compile Include="DAL\TinhHinhPhoiHopManagement.cs" />
     <Compile Include="DAL\TinhHinhThucHienManagement.cs" />
     <Compile Include="DAL\VanBanChiDaoManagement.cs" />
-    <Compile Include="Migrations\201603160942382_CreateInitial.cs" />
-    <Compile Include="Migrations\201603160942382_CreateInitial.Designer.cs">
-      <DependentUpon>201603160942382_CreateInitial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603270353581_ThemTableDVPhoiHop.cs" />
-    <Compile Include="Migrations\201603270353581_ThemTableDVPhoiHop.Designer.cs">
-      <DependentUpon>201603270353581_ThemTableDVPhoiHop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604090705185_AddSomeNewTable.cs" />
-    <Compile Include="Migrations\201604090705185_AddSomeNewTable.Designer.cs">
-      <DependentUpon>201604090705185_AddSomeNewTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604100843100_EditSomeTable.cs" />
-    <Compile Include="Migrations\201604100843100_EditSomeTable.Designer.cs">
-      <DependentUpon>201604100843100_EditSomeTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604120023404_ThemCotNgayHoanThanh.cs" />
-    <Compile Include="Migrations\201604120023404_ThemCotNgayHoanThanh.Designer.cs">
-      <DependentUpon>201604120023404_ThemCotNgayHoanThanh.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604221054022_NguonChiDao.cs" />
-    <Compile Include="Migrations\201604221054022_NguonChiDao.Designer.cs">
-      <DependentUpon>201604221054022_NguonChiDao.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604221056296_NguonChiDao1.cs" />
-    <Compile Include="Migrations\201604221056296_NguonChiDao1.Designer.cs">
-      <DependentUpon>201604221056296_NguonChiDao1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604251137472_update-database.cs" />
-    <Compile Include="Migrations\201604251137472_update-database.Designer.cs">
-      <DependentUpon>201604251137472_update-database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604260625396_UpdateVanbanDi.cs" />
-    <Compile Include="Migrations\201604260625396_UpdateVanbanDi.Designer.cs">
-      <DependentUpon>201604260625396_UpdateVanbanDi.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201604260657453_Thaydoicadong.cs" />
-    <Compile Include="Migrations\201604260657453_Thaydoicadong.Designer.cs">
-      <DependentUpon>201604260657453_Thaydoicadong.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201605191922180_AddSomeThing.cs" />
-    <Compile Include="Migrations\201605191922180_AddSomeThing.Designer.cs">
-      <DependentUpon>201605191922180_AddSomeThing.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608120318070_addtralaivb.cs" />
-    <Compile Include="Migrations\201608120318070_addtralaivb.Designer.cs">
-      <DependentUpon>201608120318070_addtralaivb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608120322168_tinhhinhthuchiennoibo.cs" />
-    <Compile Include="Migrations\201608120322168_tinhhinhthuchiennoibo.Designer.cs">
-      <DependentUpon>201608120322168_tinhhinhthuchiennoibo.cs</DependentUpon>
+    <Compile Include="Migrations\201611020420004_createnewdb.cs" />
+    <Compile Include="Migrations\201611020420004_createnewdb.Designer.cs">
+      <DependentUpon>201611020420004_createnewdb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DonViPhoihop.cs" />
@@ -306,7 +261,12 @@
     </Compile>
     <Compile Include="Models\FileTinhHinhPhoiHop.cs" />
     <Compile Include="Models\FileTinhHinhThucHien.cs" />
+    <Compile Include="Models\MarkedDatabaseChange.cs" />
     <Compile Include="Models\MetaData\TinhHinhThucHienInput.cs" />
+    <Compile Include="Models\QLVB\Canbo.cs" />
+    <Compile Include="Models\QLVB\Donvitructhuoc.cs" />
+    <Compile Include="Models\QLVB\Khoiphathanh.cs" />
+    <Compile Include="Models\QLVB\Tochucdoitac.cs" />
     <Compile Include="Models\TinhHinhPhoiHop.cs" />
     <Compile Include="Models\TinhHinhThucHien.cs" />
     <Compile Include="Reports\reportsData.Designer.cs">
@@ -2077,49 +2037,15 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603160942382_CreateInitial.resx">
-      <DependentUpon>201603160942382_CreateInitial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603270353581_ThemTableDVPhoiHop.resx">
-      <DependentUpon>201603270353581_ThemTableDVPhoiHop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604090705185_AddSomeNewTable.resx">
-      <DependentUpon>201604090705185_AddSomeNewTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604100843100_EditSomeTable.resx">
-      <DependentUpon>201604100843100_EditSomeTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604120023404_ThemCotNgayHoanThanh.resx">
-      <DependentUpon>201604120023404_ThemCotNgayHoanThanh.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604221054022_NguonChiDao.resx">
-      <DependentUpon>201604221054022_NguonChiDao.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604221056296_NguonChiDao1.resx">
-      <DependentUpon>201604221056296_NguonChiDao1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604251137472_update-database.resx">
-      <DependentUpon>201604251137472_update-database.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604260625396_UpdateVanbanDi.resx">
-      <DependentUpon>201604260625396_UpdateVanbanDi.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201604260657453_Thaydoicadong.resx">
-      <DependentUpon>201604260657453_Thaydoicadong.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201605191922180_AddSomeThing.resx">
-      <DependentUpon>201605191922180_AddSomeThing.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608120318070_addtralaivb.resx">
-      <DependentUpon>201608120318070_addtralaivb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608120322168_tinhhinhthuchiennoibo.resx">
-      <DependentUpon>201608120322168_tinhhinhthuchiennoibo.cs</DependentUpon>
-    </EmbeddedResource>
     <Content Include="Reports\Test.rdlc" />
     <Content Include="Reports\TongHopTinhHinhXuLy.rdlc" />
     <Content Include="Reports\TongHopVanBan.rdlc" />
     <Content Include="Reports\VanBanChiDao.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201611020420004_createnewdb.resx">
+      <DependentUpon>201611020420004_createnewdb.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
