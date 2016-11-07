@@ -31,3 +31,11 @@
 /QLVB5.v12.suo
 /DLTD.Web.Main/Log
 /DLTD.Web.Main/Uploads
+/QLVBConvert/.vs
+/QLVBConvert/packages/NLog.2.1.0
+/QLVBConvert/packages/NLog.Config.2.1.0
+/QLVBConvert/packages/NLog.Schema.2.1.0
+/QLVBConvert/packages/EntityFramework.6.1.0
+/QLVBConvert/Convert/bin
+/QLVBConvert/Convert/obj
+/QLVBConvert/packages/repositories.config
