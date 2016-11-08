@@ -44,7 +44,7 @@ namespace Convert.Properties
             {
                 if ((resourceMan == null))
                 {
-                    var temp = new global::System.Resources.ResourceManager("Convert.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Convert.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

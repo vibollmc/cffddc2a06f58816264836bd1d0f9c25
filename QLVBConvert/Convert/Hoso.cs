@@ -11,20 +11,21 @@ namespace Convert
 {
     public class Hoso
     {
-        readonly Logging _logger = new Logging();
+        Logging _logger = new Logging();
 
         public event ProgressBarHandler ReportProgress;
 
-        public void Doituongxuly(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Doituongxuly(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tbldoituongxuly";
-            const string tableD = "doituongxuly";
+            string tableS = "tbldoituongxuly";
+            string tableD = "doituongxuly";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -33,47 +34,49 @@ namespace Convert
 
             sqlConnectionnguon.Open();
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            const string sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidhoso";
-                var intidhoso = reader.GetIntNullCheck(colname);
+                int? intidhoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidcanbo";
-                var intidcanbo = reader.GetIntNullCheck(colname);
+                int? intidcanbo = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intvaitro";
-                var intvaitro = reader.GetIntNullCheck(colname);
+                int? intvaitro = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidnguoitao";
-                var intidnguoitao = reader.GetIntNullCheck(colname);
+                int? intidnguoitao = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strngaythang";
-                var dtengaythang = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtengaythang = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "intvaitrocu";
-                var intvaitrocu = reader.GetIntNullCheck(colname);
+                int? intvaitrocu = Utils.GetIntNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -86,29 +89,18 @@ namespace Convert
                             + " ) ";
 
                     sInsert += "values("
-                            + "@intid,"
-                            + "@intidhoso, "
-                            + "@intidcanbo, "
-                            + "@intvaitro, "
-                            + "@intidnguoitao, "
-                            + "@dtengaythang, "
-                            + "@intvaitrocu "
+                            + "'" + intid + "',"
+                            + "'" + intidhoso + "', "
+                            + "'" + intidcanbo + "', "
+                            + "'" + intvaitro + "', "
+                            + "'" + intidnguoitao + "', "
+                            + "'" + dtengaythang + "', "
+                            + "'" + intvaitrocu + "' "
                             + " ); ";
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    var lstParams = new List<SqlParameter>
-                    {
-                        new SqlParameter("@intid", intid),
-                        new SqlParameter("@intidhoso", intidhoso),
-                        new SqlParameter("@intidcanbo", intidcanbo),
-                        new SqlParameter("@intvaitro", intvaitro),
-                        new SqlParameter("@intidnguoitao", intidnguoitao),
-                        new SqlParameter("@dtengaythang", dtengaythang),
-                        new SqlParameter("@intvaitrocu", intvaitrocu)
-                    };
-
-                    Utils.RunQuery(sInsert, strconnectdich, lstParams.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
                 }
                 catch (Exception ex)
                 {
@@ -124,17 +116,17 @@ namespace Convert
 
         }
 
-        public void Hosocongviec(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Hosocongviec(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;
 
-            var tableS = "tblhosocongviec";
-            var tableD = "hosocongviec";
+            string tableS = "tblhosocongviec";
+            string tableD = "hosocongviec";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -146,91 +138,91 @@ namespace Convert
             reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            var sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
                 ReportProgress(countrows, count);
 
-                var colname = string.Empty;
+                string colname = string.Empty;
 
                 colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intsotudong";
-                var intsotudong = reader.GetIntNullCheck(colname);
+                int? intsotudong = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strsohieuht";
-                var strsohieuht = reader.GetStringNullCheck(colname);
+                string strsohieuht = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "intloaihoso";
-                var intloaihoso = reader.GetIntNullCheck(colname);
+                int? intloaihoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intmucdo";
-                var intmucdo = reader.GetIntNullCheck(colname);
+                int? intmucdo = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intlinhvuc";
-                var intlinhvuc = reader.GetIntNullCheck(colname);
+                int? intlinhvuc = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intiddonvi";
-                var intiddonvi = reader.GetIntNullCheck(colname);
+                int? intiddonvi = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strtieude";
-                var strtieude = reader.GetStringNullCheck(colname);
+                string strtieude = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strngaymohoso";
-                var dtengaymohoso = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtengaymohoso = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "strthoihanxuly";
-                var dtethoihanxuly = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtethoihanxuly = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "strnoidung";
-                var strnoidung = reader.GetStringNullCheck(colname);
+                string strnoidung = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "bittinhtrang";
-                var bittinhtrang = reader.GetBitNullCheck(colname);
+                bool? bittinhtrang = Utils.GetBitNullCheck(reader, colname);
                 int? inttrangthai = (bittinhtrang == true) ?
                     (int)enumHosocongviec.inttrangthai.Dahoanthanh : (int)enumHosocongviec.inttrangthai.Dangxuly;
 
                 colname = "strngayketthuc";
-                var dtengayketthuc = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtengayketthuc = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "strketqua";
-                var strketqua = reader.GetStringNullCheck(colname);
+                string strketqua = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "intidnguoinhap";
-                var intidnguoinhap = reader.GetIntNullCheck(colname);
+                int? intidnguoinhap = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strnguoihoanthanh";
-                var strnguoihoanthanh = reader.GetStringNullCheck(colname);
+                string strnguoihoanthanh = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "intsoden";
-                var intsoden = reader.GetIntNullCheck(colname);
+                int? intsoden = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intkhan";
-                var intkhan = reader.GetIntNullCheck(colname);
+                int? intkhan = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intmat";
-                var intmat = reader.GetIntNullCheck(colname);
+                int? intmat = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "bitluuhoso";
                 // vpub : int
-                var intluuhoso = reader.GetIntNullCheck(colname);
+                int? intluuhoso = Utils.GetIntNullCheck(reader, colname);
 
                 // cac don vi : bit
 
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -256,55 +248,31 @@ namespace Convert
                             + " ) ";
 
                     sInsert += "values("
-                            + "@intid,"
-                            + "@intsotudong,"
-                            + "@strsohieuht,"
-                            + "@intloaihoso,"
-                            + "@intmucdo,"
-                            + "@intlinhvuc,"
-                            + "@intiddonvi,"
-                            + "@strtieude,"
-                            + "@dtengaymohoso,"
-                            + "@dtethoihanxuly,"
-                            + "@strnoidung,"
-                            + "@inttrangthai,"
-                            + "@dtengayketthuc,"
-                            + "@strketqua,"
-                            + "@intidnguoinhap,"
-                        //+ "@intidnguoihoanthanh,"
-                            + "@intsoden,"
-                            + "@intkhan,"
-                            + "@intmat,"
-                            + "@intluuhoso"
+                            + "'" + intid + "',"
+                            + "'" + intsotudong + "',"
+                            + "N'" + strsohieuht + "',"
+                            + "'" + intloaihoso + "',"
+                            + "'" + intmucdo + "',"
+                            + "'" + intlinhvuc + "',"
+                            + "'" + intiddonvi + "',"
+                            + "N'" + strtieude + "',"
+                            + "'" + dtengaymohoso + "',"
+                            + "'" + dtethoihanxuly + "',"
+                            + "N'" + strnoidung + "',"
+                            + "'" + inttrangthai + "',"
+                            + "'" + dtengayketthuc + "',"
+                            + "N'" + strketqua + "',"
+                            + "'" + intidnguoinhap + "',"
+                        //+ "'" + intidnguoihoanthanh + "',"
+                            + "'" + intsoden + "',"
+                            + "'" + intkhan + "',"
+                            + "'" + intmat + "',"
+                            + "'" + intluuhoso + "' "
                             + " ); ";
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    var lstParam = new List<SqlParameter>()
-                    {
-                        new SqlParameter("@intid", intid),
-                        new SqlParameter("@intsotudong", intsotudong),
-                        new SqlParameter("@strsohieuht", strsohieuht),
-                        new SqlParameter("@intloaihoso", intloaihoso),
-                        new SqlParameter("@intmucdo", intmucdo),
-                        new SqlParameter("@intlinhvuc", intlinhvuc),
-                        new SqlParameter("@intiddonvi", intiddonvi),
-                        new SqlParameter("@strtieude", strtieude),
-                        new SqlParameter("@dtengaymohoso", dtengaymohoso),
-                        new SqlParameter("@dtethoihanxuly", dtethoihanxuly),
-                        new SqlParameter("@strnoidung", strnoidung),
-                        new SqlParameter("@inttrangthai", inttrangthai),
-                        new SqlParameter("@dtengayketthuc", dtengayketthuc),
-                        new SqlParameter("@strketqua", strketqua),
-                        new SqlParameter("@intidnguoinhap", intidnguoinhap),
-                        //new SqlParameter("@intidnguoihoanthanh", intidnguoihoanthanh),
-                        new SqlParameter("@intsoden", intsoden),
-                        new SqlParameter("@intkhan", intkhan),
-                        new SqlParameter("@intmat", intmat),
-                        new SqlParameter("@intluuhoso", intluuhoso)
-                    };
-
-                    Utils.RunQuery(sInsert, strconnectdich, lstParam.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
                 }
                 catch (Exception ex)
                 {
@@ -320,18 +288,19 @@ namespace Convert
 
         }
 
-        public void Hosovanban(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Hosovanban(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblhosovanban";
-            const string tableD = "hosovanban";
+            string tableS = "tblhosovanban";
+            string tableD = "hosovanban";
 
             // xoa trung ho so truoc khi convert
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -340,41 +309,43 @@ namespace Convert
 
             sqlConnectionnguon.Open();
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            const string sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidhoso";
-                var intidhoso = reader.GetIntNullCheck(colname);
+                int? intidhoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intloai";
-                var intloai = reader.GetIntNullCheck(colname);
+                int? intloai = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidvanban";
-                var intidvanban = reader.GetIntNullCheck(colname);
+                int? intidvanban = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "inttrangthai";
-                var inttrangthai = reader.GetIntNullCheck(colname);
+                int? inttrangthai = Utils.GetIntNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -415,18 +386,19 @@ namespace Convert
         /// </summary>
         /// <param name="strconnectnguon"></param>
         /// <param name="strconnectdich"></param>
-        public void Hosovanbanlienquan(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Hosovanbanlienquan(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblhosovanbanlq";
-            const string tableD = "hosovanban";
+            string tableS = "tblhosovanbanlq";
+            string tableD = "hosovanban";
 
             // xoa trung ho so truoc khi convert
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -435,41 +407,43 @@ namespace Convert
 
             sqlConnectionnguon.Open();
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            var sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidhoso";
-                var intidhoso = reader.GetIntNullCheck(colname);
+                int? intidhoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intloai";
-                var intloai = reader.GetIntNullCheck(colname);
+                int? intloai = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidvanban";
-                var intidvanban = reader.GetIntNullCheck(colname);
+                int? intidvanban = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "inttrangthai";
-                var inttrangthai = reader.GetIntNullCheck(colname);
+                int? inttrangthai = Utils.GetIntNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -505,16 +479,17 @@ namespace Convert
 
         }
 
-        public void Hosoykienxuly(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Hosoykienxuly(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblhosoykienxuly";
-            const string tableD = "hosoykienxuly";
+            string tableS = "tblhosoykienxuly";
+            string tableD = "hosoykienxuly";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -523,46 +498,48 @@ namespace Convert
 
             sqlConnectionnguon.Open();
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            var sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intiddoituongxuly";
-                var intiddoituongxuly = reader.GetIntNullCheck(colname);
+                int? intiddoituongxuly = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strthoigian";
-                var dtethoigian = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtethoigian = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "strykien";
-                var strykien = reader.GetStringNullCheck(colname);
+                string strykien = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "bittrangthai";
-                var bittrangthai = reader.GetBitNullCheck(colname);
+                bool? bittrangthai = Utils.GetBitNullCheck(reader, colname);
                 int? inttrangthai = (bittrangthai == true) ?
                     (int)enumHosoykienxuly.inttrangthai.Dachoykien : (int)enumHosoykienxuly.inttrangthai.DangchoYkien;
 
                 colname = "intidnguoilap";
-                var intidnguoilap = reader.GetIntNullCheck(colname);
+                int? intidnguoilap = Utils.GetIntNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -574,28 +551,17 @@ namespace Convert
                             + " ) ";
 
                     sInsert += "values("
-                            + "@intid,"
-                            + "@intiddoituongxuly, "
-                            + "@dtethoigian, "
-                            + "@strykien, "
-                            + "@inttrangthai, "
-                            + "@intidnguoilap"
+                            + "'" + intid + "',"
+                            + "'" + intiddoituongxuly + "', "
+                            + "'" + dtethoigian + "', "
+                            + "N'" + strykien + "', "
+                            + "'" + inttrangthai + "', "
+                            + "'" + intidnguoilap + "' "
                             + " ); ";
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    var lstParams = new List<SqlParameter>()
-                    {
-                        new SqlParameter("@intid", intid),
-                        new SqlParameter("@intiddoituongxuly", intiddoituongxuly),
-                        new SqlParameter("@dtethoigian", dtethoigian),
-                        new SqlParameter("@strykien", strykien),
-                        new SqlParameter("@inttrangthai", inttrangthai),
-                        new SqlParameter("@intidnguoilap", intidnguoilap)
-                    };
-
-
-                    Utils.RunQuery(sInsert, strconnectdich, lstParams.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
                 }
                 catch (Exception ex)
                 {
@@ -611,16 +577,17 @@ namespace Convert
 
         }
 
-        public void Phieutrinh(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void Phieutrinh(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblphieutrinh";
-            const string tableD = "phieutrinh";
+            string tableS = "tblphieutrinh";
+            string tableD = "phieutrinh";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS
                         + " order by intid ";
@@ -629,62 +596,64 @@ namespace Convert
 
             sqlConnectionnguon.Open();
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // truncate table truoc khi convert
-            const string sqlTruncate = "delete from " + tableD;
+            string sqlTruncate = "delete from " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
+            int count = 0;
             while (reader.Read())
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strsohieuht";
-                var strsohieuht = reader.GetStringNullCheck(colname);
+                string strsohieuht = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "intidhoso";
-                var intidhoso = reader.GetIntNullCheck(colname);
+                int? intidhoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strnguoinhan";
-                var strnguoinhan = reader.GetStringNullCheck(colname);
+                string strnguoinhan = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "intiddoituongxuly";
-                var intiddoituongxuly = reader.GetIntNullCheck(colname);
+                int? intiddoituongxuly = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strykienxuly";
-                var strykienxuly = reader.GetStringNullCheck(colname);
+                string strykienxuly = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strthoigian";
-                var dtethoigian = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtethoigian = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "inttrangthaidtxl";
-                var inttrangthaidtxl = reader.GetIntNullCheck(colname);
+                int? inttrangthaidtxl = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidlanhdao";
-                var intidlanhdao = reader.GetIntNullCheck(colname);
+                int? intidlanhdao = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strykienlanhdao";
-                var strykienlanhdao = reader.GetStringNullCheck(colname);
+                string strykienlanhdao = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strthoigianduanx";
-                var dtethoigianduanx = reader.GetDateTimeNullCheck(colname);
+                DateTime? dtethoigianduanx = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "inttrangthaildnx";
-                var inttrangthaildnx = reader.GetIntNullCheck(colname);
+                int? inttrangthaildnx = Utils.GetIntNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -702,39 +671,23 @@ namespace Convert
                             + " ) ";
 
                     sInsert += "values("
-                            + "@intid,"
-                            + "@intidhoso, "
-                            + "@intiddoituongxuly, "
-                            + "@strykienxuly, "
-                            + "@dtethoigian, "
-                            + "@inttrangthaidtxl, "
+                            + "'" + intid + "',"
+                            + "'" + intidhoso + "', "
+                            + "'" + intiddoituongxuly + "', "
+                            + "N'" + strykienxuly + "', "
+                            + "'" + dtethoigian + "', "
+                            + "'" + inttrangthaidtxl + "', "
 
-                            + "@intidlanhdao, "
-                            + "@strykienlanhdao, "
-                            + "@dtethoigianduanx, "
-                            + "@inttrangthaildnx "
+                            + "'" + intidlanhdao + "', "
+                            + "N'" + strykienlanhdao + "', "
+                            + "'" + dtethoigianduanx + "', "
+                            + "'" + inttrangthaildnx + "' "
 
                             + " ); ";
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    var lstParams = new List<SqlParameter>()
-                    {
-                        new SqlParameter("@intid", intid),
-                        new SqlParameter("@intidhoso", intidhoso),
-                        new SqlParameter("@intiddoituongxuly", intiddoituongxuly),
-                        new SqlParameter("@strykienxuly", strykienxuly),
-                        new SqlParameter("@dtethoigian", dtethoigian),
-                        new SqlParameter("@inttrangthaidtxl", inttrangthaidtxl),
-
-                        new SqlParameter("@intidlanhdao", intidlanhdao),
-                        new SqlParameter("@strykienlanhdao", strykienlanhdao),
-                        new SqlParameter("@dtethoigianduanx", dtethoigianduanx),
-                        new SqlParameter("@inttrangthaildnx", inttrangthaildnx)
-                    };
-
-
-                    Utils.RunQuery(sInsert, strconnectdich, lstParams.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
                 }
                 catch (Exception ex)
                 {

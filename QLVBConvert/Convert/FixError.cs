@@ -13,14 +13,14 @@ namespace Convert
     {
         Logging _logger = new Logging();
 
-        public void BuildIndex(Stringconnect strconnectdich)
+        public void BuildIndex(stringconnect strconnectdich)
         {
 
-            var sqlIndex = "DECLARE @Database VARCHAR(255) "
+            string sqlIndex = "DECLARE @Database VARCHAR(255) "
             + "DECLARE @Table VARCHAR(255) "
             + "DECLARE @cmd NVARCHAR(500) "
             + "DECLARE @fillfactor INT "
-            + "set @Database='" + strconnectdich.Database + "' "
+            + "set @Database='" + strconnectdich.database + "' "
             + "SET @fillfactor = 90 "
             + "SET @cmd = 'DECLARE TableCursor CURSOR FOR SELECT table_catalog + ''.'' + table_schema + ''.'' + table_name as tableName  "
             + "FROM ' + @Database + '.INFORMATION_SCHEMA.TABLES WHERE table_type = ''BASE TABLE'''  "

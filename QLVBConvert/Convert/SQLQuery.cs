@@ -15,13 +15,13 @@ namespace Convert
 
         public static string countFieldsInTable(string table)
         {
-            var sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + table + "'";
+            string sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + table + "'";
             return sql;
         }
 
         public static string CountRows(string table)
         {
-            var sql = "select count(*) from " + table;
+            string sql = "select count(*) from " + table;
             return sql;
         }
 
@@ -30,7 +30,7 @@ namespace Convert
         //alter table vanbanden drop column id1
         public static string AddColumn(string table, string columnName, string columnType)
         {
-            var sql = "if not exists (select * from sys.columns where Name = N'" + columnName
+            string sql = "if not exists (select * from sys.columns where Name = N'" + columnName
                                         + "' and Object_ID = Object_ID(N'" + table + "') ) "
                 + " begin alter table " + table + " add " + columnName + " " + columnType + " null end ";
             return sql;
@@ -38,7 +38,7 @@ namespace Convert
 
         public static string DropColumn(string table, string columnName)
         {
-            var sql = "if exists (select * from sys.columns where Name = N'" + columnName
+            string sql = "if exists (select * from sys.columns where Name = N'" + columnName
                                         + "' and Object_ID = Object_ID(N'" + table + "') ) "
                 + " begin alter table " + table + " drop column " + columnName + " end ";
             return sql;
@@ -47,7 +47,7 @@ namespace Convert
 
         public static string UpdateId1(string table, string value, string whereid)
         {
-            var sql = "update " + table + " set id1='" + value + "' where intid='" + whereid + "'";
+            string sql = "update " + table + " set id1='" + value + "' where intid='" + whereid + "'";
             return sql;
         }
 
@@ -55,8 +55,8 @@ namespace Convert
 
         public static string FixDateTime(string table, string column)
         {
-            var value = "1900 - 01 - 01";
-            var sql = "update " + table + " set " + column + " =null where " + column + " = '" + value + "'";
+            string value = "1900 - 01 - 01";
+            string sql = "update " + table + " set " + column + " =null where " + column + " = '" + value + "'";
             return sql;
         }
 

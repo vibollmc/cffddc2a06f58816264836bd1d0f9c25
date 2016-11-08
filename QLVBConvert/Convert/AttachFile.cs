@@ -11,21 +11,23 @@ namespace Convert
 {
     public class AttachFile
     {
-        readonly Logging _logger = new Logging();
+        Logging _logger = new Logging();
 
         public event ProgressBarHandler ReportProgress;
 
-        public void AttachCongvan(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void AttachCongvan(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
             //QLVBDatabase context = new QLVBDatabase();
 
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblattachcongvan";
+            string tableS = "tblattachcongvan";
+            string tableD = "AttachVanban";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from " + tableS + " order by intid";
             cmd.CommandType = CommandType.Text;
@@ -41,7 +43,7 @@ namespace Convert
                 return;
             }
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // them cot id1 de luu intid cua qlvb 1 
             //string sqlAddColumn = SQLQuery.AddColumn(tableD, "id1", "int");
@@ -52,42 +54,42 @@ namespace Convert
             //Utils.RunQuery(sqlTruncate, strconnectdich);
 
             // mo ket noi toi qlvb2
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Moving ...");
 
-            var count = 0;
-            while (reader.Read())
+            int count = 0;
+            while ((reader != null) && (reader.Read()))
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intloai";
-                var intloai = reader.GetIntNullCheck(colname);
+                int? intloai = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidcongvan";
-                var intidcongvan = reader.GetIntNullCheck(colname);
+                int? intidcongvan = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strtenfile";
-                var strtenfile = reader.GetStringNullCheck(colname);
+                string strtenfile = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strmota";
-                var strmota = reader.GetStringNullCheck(colname);
+                string strmota = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strngaycapnhat";
-                var strngaycapnhat = reader.GetDateTimeNullCheck(colname);
+                DateTime? strngaycapnhat = Utils.GetDateTimeNullCheck(reader, colname);
 
                 //int intidmodel = 0;
                 try
                 {
-                    var sInsert = "";// " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = "";// " Set IDENTITY_INSERT " + tableD + " ON;";
 
-                    string tableD;
-                    var arrayParam = new List<SqlParameter>();
                     if (intloai == 4)
                     {
                         tableD = "AttachMail";
@@ -103,21 +105,13 @@ namespace Convert
                             + "inttrangthai ) ";
 
                         sInsert += "values("
-                                + "@id, "
-                                + "@loai, "
-                                + "@idcongvan, "
-                                + "@tenfile, "
-                                + "@mota, "
-                                + "@ngaycapnhat, "
-                                + "1);";
-
-                        arrayParam.Add(new SqlParameter("@id", intid));
-                        arrayParam.Add(new SqlParameter("@loai", intloai));
-                        arrayParam.Add(new SqlParameter("@idcongvan", intidcongvan));
-                        arrayParam.Add(new SqlParameter("@tenfile", strtenfile));
-                        arrayParam.Add(new SqlParameter("@mota", strmota));
-                        arrayParam.Add(new SqlParameter("@ngaycapnhat", strngaycapnhat));
-
+                                + "'" + intid + "', "
+                                + "'" + intloai + "', "
+                                + "'" + intidcongvan + "', "
+                                + "'" + strtenfile + "', "
+                                + "'" + strmota + "', "
+                                + "'" + strngaycapnhat + "', "
+                                + " '1') ;";
                     }
                     else
                     {
@@ -133,25 +127,18 @@ namespace Convert
                             + "inttrangthai ) ";
 
                         sInsert += "values("
-                                + "@id, "
-                                + "@loai, "
-                                + "@idcongvan, "
-                                + "@tenfile, "
-                                + "@mota, "
-                                + "@ngaycapnhat, "
-                                + "1);";
-
-                        arrayParam.Add(new SqlParameter("@id", intid));
-                        arrayParam.Add(new SqlParameter("@loai", intloai));
-                        arrayParam.Add(new SqlParameter("@idcongvan", intidcongvan));
-                        arrayParam.Add(new SqlParameter("@tenfile", strtenfile));
-                        arrayParam.Add(new SqlParameter("@mota", strmota));
-                        arrayParam.Add(new SqlParameter("@ngaycapnhat", strngaycapnhat));
+                                + "'" + intid + "', "
+                                + "'" + intloai + "', "
+                                + "'" + intidcongvan + "', "
+                                + "'" + strtenfile + "', "
+                                + "'" + strmota + "', "
+                                + "'" + strngaycapnhat + "', "
+                                + " '1') ;";
                     }
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    Utils.RunQuery(sInsert, strconnectdich, arrayParam.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
 
                 }
                 catch (Exception ex)
@@ -171,18 +158,19 @@ namespace Convert
         }
 
 
-        public void AttachHoso(Stringconnect strconnectnguon, Stringconnect strconnectdich)
+        public void AttachHoso(stringconnect strconnectnguon, stringconnect strconnectdich)
         {
             //QLVBDatabase context = new QLVBDatabase();
 
-            var sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
-            var cmd = new SqlCommand();
+            SqlConnection sqlConnectionnguon = Utils.GetSqlConnection(strconnectnguon);
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader;
 
-            const string tableS = "tblattachhoso";
-            const string tableD = "AttachHoso";
+            string tableS = "tblattachhoso";
+            string tableD = "AttachHoso";
 
-            var soField = Utils.CountFields(tableS, strconnectnguon);
-            var countrows = Utils.CountRows(tableS, strconnectnguon);
+            int soField = Utils.CountFields(tableS, strconnectnguon);
+            int countrows = Utils.CountRows(tableS, strconnectnguon);
 
             cmd.CommandText = "select * from tblattachhoso order by intid";// where bittrangthai
             cmd.CommandType = CommandType.Text;
@@ -198,55 +186,57 @@ namespace Convert
                 return;
             }
 
-            var reader = cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
 
             // them cot id1 de luu intid cua qlvb 1 
             //string sqlAddColumn = SQLQuery.AddColumn(tableD, "id1", "int");
             //Utils.RunQuery(sqlAddColumn, strconnectdich);
 
             // truncate table truoc khi convert
-            const string sqlTruncate = "truncate table " + tableD;
+            string sqlTruncate = "truncate table " + tableD;
             Utils.RunQuery(sqlTruncate, strconnectdich);
 
             // mo ket noi toi qlvb2
-            var sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
+            SqlConnection sqlConnectionDich = Utils.GetSqlConnection(strconnectdich);
             sqlConnectionDich.Open();
 
             _logger.Info(tableS + " -- Converting...");
 
-            var count = 0;
-            while (reader.Read())
+            int count = 0;
+            while ((reader != null) && (reader.Read()))
             {
                 count++;
-                ReportProgress?.Invoke(countrows, count);
+                ReportProgress(countrows, count);
 
-                var colname = "intid";
-                var intid = reader.GetIntNullCheck(colname);
+                string colname = string.Empty;
+
+                colname = "intid";
+                int? intid = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intloai";
-                var intloai = reader.GetIntNullCheck(colname);
+                int? intloai = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidtailieu";
-                var intidtailieu = reader.GetIntNullCheck(colname);
+                int? intidtailieu = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "intidhoso";
-                var intidhoso = reader.GetIntNullCheck(colname);
+                int? intidhoso = Utils.GetIntNullCheck(reader, colname);
 
                 colname = "strtenfile";
-                var strtenfile = reader.GetStringNullCheck(colname);
+                string strtenfile = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strmota";
-                var strmota = reader.GetStringNullCheck(colname);
+                string strmota = Utils.GetStringNullCheck(reader, colname);
 
                 colname = "strngaycapnhat";
-                var strngaycapnhat = reader.GetDateTimeNullCheck(colname);
+                DateTime? strngaycapnhat = Utils.GetDateTimeNullCheck(reader, colname);
 
                 colname = "bittrangthai"; // = 0 la file van ban den
-                var bittrangthai = reader.GetBitNullCheck(colname);
+                bool? bittrangthai = Utils.GetBitNullCheck(reader, colname);
 
                 try
                 {
-                    var sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
+                    string sInsert = " Set IDENTITY_INSERT " + tableD + " ON;";
 
                     sInsert += "insert into  " + tableD
                             + "(intid, "
@@ -259,29 +249,18 @@ namespace Convert
                             + "inttrangthai ) ";
 
                     sInsert += "values("
-                            + "@id, "
-                            + "@loai, "
-                            + "@idhoso, "
-                            + "@idtailieu, "
-                            + "@tenfile, "
-                            + "@mota, "
-                            + "@ngaycapnhat, "
-                            + " 1);";
-
-                    var lstParams = new List<SqlParameter>
-                    {
-                        new SqlParameter("@id", intid),
-                        new SqlParameter("@loai", intloai),
-                        new SqlParameter("@idhoso", intidhoso),
-                        new SqlParameter("@idtailieu", intidtailieu),
-                        new SqlParameter("@tenfile", strtenfile),
-                        new SqlParameter("@mota", strmota),
-                        new SqlParameter("@ngaycapnhat", strngaycapnhat)
-                    };
+                            + "'" + intid + "', "
+                            + "'" + intloai + "', "
+                            + "'" + intidhoso + "', "
+                            + "'" + intidtailieu + "', "
+                            + "'" + strtenfile + "', "
+                            + "'" + strmota + "', "
+                            + "'" + strngaycapnhat + "', "
+                            + " '1') ;";
 
                     sInsert += " Set IDENTITY_INSERT " + tableD + " OFF;";
 
-                    Utils.RunQuery(sInsert, strconnectdich, lstParams.ToArray());
+                    Utils.RunQuery(sInsert, strconnectdich);
 
                 }
                 catch (Exception ex)

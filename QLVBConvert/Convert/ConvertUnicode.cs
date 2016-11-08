@@ -16,13 +16,13 @@ namespace Convert
             }
             else
             {
-                var raw_db_string = utf8String;
-                var sourceEncoding = Encoding.GetEncoding(1252);
-                var targetEncoding = Encoding.GetEncoding(65001);
+                String raw_db_string = utf8String;
+                Encoding sourceEncoding = Encoding.GetEncoding(1252);
+                Encoding targetEncoding = Encoding.GetEncoding(65001);
 
-                var encodeTheseChars = sourceEncoding.GetBytes(raw_db_string);
+                byte[] encodeTheseChars = sourceEncoding.GetBytes(raw_db_string);
 
-                var recoded_string = targetEncoding.GetString(encodeTheseChars);
+                String recoded_string = targetEncoding.GetString(encodeTheseChars);
 
                 return recoded_string;
             }
@@ -35,13 +35,13 @@ namespace Convert
             }
             else
             {
-                var raw_db_string = unicodeString;
-                var sourceEncoding = Encoding.GetEncoding(65001);
-                var targetEncoding = Encoding.GetEncoding(1252);
+                String raw_db_string = unicodeString;
+                Encoding sourceEncoding = Encoding.GetEncoding(65001);
+                Encoding targetEncoding = Encoding.GetEncoding(1252);
 
-                var encodeTheseChars = sourceEncoding.GetBytes(raw_db_string);
+                byte[] encodeTheseChars = sourceEncoding.GetBytes(raw_db_string);
 
-                var recoded_string = targetEncoding.GetString(encodeTheseChars);
+                String recoded_string = targetEncoding.GetString(encodeTheseChars);
 
                 return recoded_string;
             }
