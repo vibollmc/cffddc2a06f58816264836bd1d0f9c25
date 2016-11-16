@@ -12,6 +12,7 @@ namespace DLTD.Web.Main.Models
         public VanBanChiDao()
         {
             NgayTao = DateTime.Now;
+            this.TinhHinhThucHienNoiBo = TrangThaiVanBan.Undefined;
         }
         [Key]
         public long? Id { get; set; }
@@ -46,9 +47,10 @@ namespace DLTD.Web.Main.Models
         [ForeignKey("NguoiTheoDoi")]
         public int? IdNguoiTheoDoi { get; set; }
         public int? IsTralai { get; set; }
-        public int? LydoTraLai { get; set; }
+        public string LydoTraLai { get; set; }
         public DateTime? NgayTra { get; set; }
-        public TrangThaiVanBan? TinhHinhThucHienNoiBo { get; set; }
+        public string GhiChu { get; set; }
+        public TrangThaiVanBan TinhHinhThucHienNoiBo { get; set; }
         public virtual DangNhap NguoiGui { get; set; }
         public virtual DonVi DonVi { get; set; }
         public virtual Khoi NguonChiDao { get; set; }

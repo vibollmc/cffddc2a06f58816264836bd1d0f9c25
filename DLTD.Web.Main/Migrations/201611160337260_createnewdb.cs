@@ -127,9 +127,10 @@ namespace DLTD.Web.Main.Migrations
                         IdNguoiChiDao = c.Int(nullable: false),
                         IdNguoiTheoDoi = c.Int(nullable: false),
                         IsTralai = c.Int(),
-                        LydoTraLai = c.Int(),
+                        LydoTraLai = c.String(),
                         NgayTra = c.DateTime(),
-                        TinhHinhThucHienNoiBo = c.Int(),
+                        GhiChu = c.String(),
+                        TinhHinhThucHienNoiBo = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.T_DonVi", t => t.IdDonVi)

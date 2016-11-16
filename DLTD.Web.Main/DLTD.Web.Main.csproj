@@ -243,9 +243,9 @@
     <Compile Include="DAL\TinhHinhPhoiHopManagement.cs" />
     <Compile Include="DAL\TinhHinhThucHienManagement.cs" />
     <Compile Include="DAL\VanBanChiDaoManagement.cs" />
-    <Compile Include="Migrations\201611020420004_createnewdb.cs" />
-    <Compile Include="Migrations\201611020420004_createnewdb.Designer.cs">
-      <DependentUpon>201611020420004_createnewdb.cs</DependentUpon>
+    <Compile Include="Migrations\201611160337260_createnewdb.cs" />
+    <Compile Include="Migrations\201611160337260_createnewdb.Designer.cs">
+      <DependentUpon>201611160337260_createnewdb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DonViPhoihop.cs" />
@@ -2043,8 +2043,8 @@
     <Content Include="Reports\VanBanChiDao.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611020420004_createnewdb.resx">
-      <DependentUpon>201611020420004_createnewdb.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611160337260_createnewdb.resx">
+      <DependentUpon>201611160337260_createnewdb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
