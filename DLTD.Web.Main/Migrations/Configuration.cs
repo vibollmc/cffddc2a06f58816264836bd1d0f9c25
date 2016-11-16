@@ -9,7 +9,7 @@ namespace DLTD.Web.Main.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(DLTD.Web.Main.DAL.MainDbContext context)
