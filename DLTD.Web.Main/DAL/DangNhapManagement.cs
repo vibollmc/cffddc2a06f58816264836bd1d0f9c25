@@ -73,7 +73,7 @@ namespace DLTD.Web.Main.DAL
         {
             return
                 await
-                    _dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien)
+                    _dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien || x.NhomNguoiDung == NhomNguoiDung.LanhDaoPhong)
                         .OrderBy(x => x.Ten)
                         .ToListAsync();
         }

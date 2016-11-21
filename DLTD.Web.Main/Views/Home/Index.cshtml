@@ -18,7 +18,7 @@
 <div fixedsize="true" class="row">
     <div class="col-lg-8">
         <button class="btn btn-primary btn-sm btn-flat button-box" id="btnThemNhiemvu" onclick="window.open('@System.Web.Configuration.WebConfigurationManager.AppSettings["ServerQLVBOauthPath"]/Vanbandi', '_blank');return false;">
-            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Thêm Nhiệm vụ
+            <i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm Nhiệm vụ
         </button>
         @*@if (((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.QuanTriHeThong && ((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.ChuyenVien)
             {*@
@@ -26,11 +26,11 @@
             <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Tình hình Thực hiện
         </button>
         @*}*@
-        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display: @ViewBag.HoanThanh">
-            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Hoàn Thành
+        <button class="btn btn-success btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display: @ViewBag.HoanThanh">
+            <i class="glyphicon glyphicon-check"></i>&nbsp;Hoàn Thành
         </button>
-        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnDelete" disabled style="display:@ViewBag.HoanThanh">
-            <i class="glyphicons glyphicons-remove-circle"></i>&nbsp;Xóa văn bản
+        <button class="btn btn-danger btn-sm btn-flat button-box" id="btnDelete" disabled style="display:@ViewBag.HoanThanh">
+            <i class="glyphicon glyphicon-remove-circle"></i>&nbsp;Xóa văn bản
         </button>
     </div>
     <div class="col-lg-4">
@@ -395,6 +395,7 @@
 
                 $('#btnTinhHinhXuLy').removeAttr('disabled');
                 $("#btnHoanThanh").removeAttr('disabled');
+                $("#btnDelete").removeAttr('disabled');
                 idVanbanSelected = id;
                 return id;
             });
@@ -402,6 +403,7 @@
             if (selected.length === 0) {
                 $('#btnTinhHinhXuLy').attr('disabled', 'disabled');
                 $('#btnHoanThanh').attr('disabled', 'disabled');
+                $('#btnDelete').attr('disabled', 'disabled');
             }
         }
 

@@ -27,17 +27,18 @@ namespace DLTD.Web.Main.DAL
                     .HasRequired(m => m.NguoiGui)
                     .WithMany(t => t.VanBanChiDao)
                     .HasForeignKey(m => m.UserId)
-                    .WillCascadeOnDelete(false);
+                    .WillCascadeOnDelete(true);
             modelBuilder.Entity<VanBanChiDao>()
                     .HasRequired(m => m.NguoiChiDao)
                     .WithMany(t => t.VanBanLanhDao)
                     .HasForeignKey(m => m.IdNguoiChiDao)
-                    .WillCascadeOnDelete(false);
+                    .WillCascadeOnDelete(true);
             modelBuilder.Entity<VanBanChiDao>()
                     .HasRequired(m => m.NguoiTheoDoi)
                     .WithMany(t => t.VanBanTheoDoi)
                     .HasForeignKey(m => m.IdNguoiTheoDoi)
-                    .WillCascadeOnDelete(false);
+                    .WillCascadeOnDelete(true);
+            
         }
 
     }

@@ -24,98 +24,104 @@ function makeid() {
 
 function buildButton() {
     idButton = makeid();
-    var buttonHtml = "<button data-toggle='modal' data-target='#"+ idButton +"Modal' class='btn btn-sm btn-warning btn-flat button-box' type='button' style='display:normal' id='" + idButton + "'>";
+    var buttonHtml = "<button class='btn btn-sm btn-warning btn-flat button-box' type='button' style='display:normal' id='" + idButton + "'>";
     buttonHtml += "<i class='glyphicon glyphicon-send'></i>";
     buttonHtml += "&nbsp;CSDL Theo dõi";
     buttonHtml += "</button>";
 
-    var modalHtml = "<div id='" + idButton + "Modal' class='modal fade' role='dialog'>";
-    modalHtml += "<div class='modal-dialog'>";
-    modalHtml += "<div class='modal-content'>";
-    modalHtml += "<div class='modal-header'>";
-    modalHtml += "<button type='button' class='close' data-dismiss='modal'>&times;</button>";
-    modalHtml += "<h4 class='modal-title'>NHẬP CSDL THEO DÕI</h4>";
+    var modalHtml = "<div id='" + idButton + "Modal'>";
+    modalHtml += "<div class='box' style='position: fixed; width: 580px; z-index: 1000; left: 0px; top: 26px;'>";
+    modalHtml += "<header>";
+    modalHtml += "<nav style='padding: 3px;'>";
+    modalHtml += "<button type='button' style='width:100px;' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu văn bản</button>";
+    modalHtml += "<span> <input id='" + idButton + "AnotherOne' type='checkbox'> Phân công cho đơn vị khác</span>";
+    modalHtml += "</nav>";
+    modalHtml += "</header>";
     modalHtml += "</div>";
 
-    modalHtml += "<div class='modal-footer'>";
-    modalHtml += "<span>Phân công cho nhiều đơn vị <input id='" + idButton + "AnotherOne' type='checkbox'>  </span>";
-    modalHtml += "<button type='button' style='width:60px;' class='btn btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu </button>";
-    modalHtml += "<button type='button' class='btn btn-default' data-dismiss='modal'>Đóng</button>";
+    modalHtml += "<div class='modal-body' style='margin-top: 25px;'>";
+
+    modalHtml += "<div id='" + idButton + "Notification' class='alert alert-success'>";
+    modalHtml += "<strong>Success!</strong> thông báo ở đây";
     modalHtml += "</div>";
 
-    modalHtml += "<div class='modal-body'>";
-    modalHtml += "<form id='"+idButton+"Form' method='post' enctype='multipart/form-data'>";
-    modalHtml += "<div class='form-group'>";
+    modalHtml += "<form id='" + idButton + "Form' method='post' enctype='multipart/form-data'>";
+    modalHtml += "<table class='responsive-table'>";
+    modalHtml += "<tbody>";
+
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
     modalHtml += "<label class='control-label'>Văn bản:</label>";
-    modalHtml += "<p class='control-label' id='"+ idButton + "VanBan'></p>";
-    modalHtml += "</div>";
+    modalHtml += "<p class='control-label' id='" + idButton + "VanBan'></p>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    modalHtml += "<div class='form-group'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
     modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label>";
     modalHtml += "<select name='IdDonVi' id='" + idButton + "DonVi' style='width: 100%' placeholder='Chọn đơn vị xử lý chính...'>";
-    //modalHtml += "<option></option>";
     modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
-    modalHtml += "</div>";
-    //design all input here
-    modalHtml += "<div class='form-group'>";
-    modalHtml += "<label class='control-label'>Nội dung cần thực hiện:</label>";
-    modalHtml += "<textarea type='text' name='YKienChiDao' rows='2' class='form-control' id='" + idButton + "YKCD'></textarea>";
-    modalHtml += "</div>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    modalHtml += "<div class='form-group row'>";
-    modalHtml += "<div class='col-md-6'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
+    modalHtml += "<label class='control-label'>Nội dung cần thực hiện:</label>";
+    modalHtml += "<textarea type='text' name='YKienChiDao' rows='2' class='form-control' id='" + idButton + "YKCD' style='padding:2px 1px;'></textarea>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
+
+    modalHtml += "<tr>";
+    modalHtml += "<td>";
     modalHtml += "<label class='control-label'>Thời hạn xử lý:</label><br/>";
     modalHtml += "<input name='ThoiHanXuLy' class='form-control' id='" + idButton + "HanXL'>";
-    modalHtml += "</div>";
-    modalHtml += "<div class='col-md-6'>";
+    modalHtml += "</td>";
+
+    modalHtml += "<td>";
     modalHtml += "<label class='control-label'>Độ khẩn:</label><br/>";
     modalHtml += "<input name='DoKhan' class='form-control' id='" + idButton + "DoKhan'>";
-    modalHtml += "</div>";
-    modalHtml += "</div>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    //modalHtml += "<div class='form-group'>";
-    //modalHtml += "<label class='control-label'>Độ khẩn:</label><br/>";
-    //modalHtml += "<input name='DoKhan' class='form-control' id='" + idButton + "DoKhan'>";
-    //modalHtml += "</div>";  
-
-    //modalHtml += "<div class='form-group'>";
-    //modalHtml += "<label class='control-label'>Nguồn chỉ đạo:</label><br/>";
-    //modalHtml += "<input name='NguonChiDao' class='form-control' id='" + idButton + "NguonChiDao'>";
-    //modalHtml += "</div>";
-
-    modalHtml += "<div class='form-group'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
     modalHtml += "<label class='control-label'>Nguồn chỉ đạo:</label>";
     modalHtml += "<select name='idKhoi' id='" + idButton + "NguonChiDao' style='width: 100%' placeholder='Chọn nguồn chỉ đạo...'>";
-    //modalHtml += "<option></option>";
     modalHtml += "{{KHOI}}";
     modalHtml += "</select>";
-    modalHtml += "</div>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    modalHtml += "<div class='form-group'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
     modalHtml += "<label class='control-label'>Đơn vị Phối hợp:</label>";
     modalHtml += "<select name='IdDonViPhoiHop' id='" + idButton + "DonViPhoiHop' multiple='multiple'  data-placeholder='Chọn đơn vị phối hợp xử lý...'>";
     modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
-    modalHtml += "</div>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    modalHtml += "<div class='form-group row'>";
-    modalHtml += "<div class='col-md-6'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td>";
     modalHtml += "<label class='control-label'>Người chỉ đạo:</label><br/>";
     modalHtml += "<select name='NguoiChiDao' class='form-control' id='" + idButton + "NguoiChiDao'>";
     modalHtml += "{{NGUOICHIDAO}}";
     modalHtml += "</select>";
-    modalHtml += "</div>";
+    modalHtml += "</td>";
 
-    modalHtml += "<div class='col-md-6'>";
+    modalHtml += "<td>";
     modalHtml += "<label class='control-label'>Người theo dõi:</label><br/>";
     modalHtml += "<select name='NguoiTheoDoi' class='form-control' id='" + idButton + "NguoiTheoDoi'>";
     modalHtml += "{{NGUOITHEODOI}}";
     modalHtml += "</select>";
-    modalHtml += "</div>";
- 
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
 
-    modalHtml += "<div class='form-group' id='" + idButton + "groupAttachment'>";
+    modalHtml += "<tr>";
+    modalHtml += "<td colspan='2'>";
+    modalHtml += "<br>";
+    modalHtml += "<div class='rơw' id='" + idButton + "groupAttachment'>";
     modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><span class='glyphicons glyphicons-plus'></span> Thêm file đính kèm</button><br><br>";
     modalHtml += "<label for='" + idButton + "File' class='btn btn-default'>";
     modalHtml += "<i class='glyphicon glyphicon-paperclip'></i> Đính kèm file";
@@ -123,6 +129,11 @@ function buildButton() {
     modalHtml += " <span title='Xóa file đã chọn' style='display:none; cursor:pointer' class='glyphicon glyphicon-remove' id='" + idButton + "RemoveFile'></span>";
     modalHtml += "<input name='FileDinhKem' id='" + idButton + "File' type='file' style='display:none'/><div style='height:10px;width:100%'></div>";
     modalHtml += "</div>";
+    modalHtml += "</td>";
+    modalHtml += "</tr>";
+
+    modalHtml += "</tbody>";
+    modalHtml += "</table>";
 
     modalHtml += "<input type='hidden' name='IdVanBan' id='" + idButton + "IdVanBan'>";
     modalHtml += "<input type='hidden' name='Ngayky' id='" + idButton + "Ngayky'>";    
@@ -133,15 +144,11 @@ function buildButton() {
 
     //end input
     modalHtml += "</form>";
-
-    modalHtml += "<div id='" + idButton + "Notification' class='alert alert-success'>";
-    modalHtml += "<strong>Success!</strong> thông báo ở đây";
-    modalHtml += "</div>";
-
     modalHtml += "</div>";//end modal-body
 
-    modalHtml += "</div>";
-    modalHtml += "</div>";
+    //modalHtml += "<div class='modal-footer'>";
+    //modalHtml += "<button type='button' class='btn btn-default' data-dismiss='modal'>Đóng</button>";
+    //modalHtml += "</div>";
     modalHtml += "</div>";
     $(dltd.elementContainerButton).append(buttonHtml);
     $("body").append(modalHtml);
@@ -186,13 +193,13 @@ function addAttachment(number) {
 function checkValidData() {
     var message = "<ul>";
     var valid = true;
-    var comboDonvi = $("#" + idButton + "DonVi").data("kendoComboBox"); // Đối với mấy thằng xài kendo thì vầy
+    var comboDonvi = $("#" + idButton + "DonVi").data("kendoComboBox");
     if (comboDonvi.value() == "") {
         valid = false;
         message += "<li>Yêu cầu chọn đơn vị xử lý chính.</li>";
     }
 
-    var ykcd = $("#" + idButton + "YKCD"); // Mấy thằng bình thường thì xài kiểu này. 
+    var ykcd = $("#" + idButton + "YKCD");
     if ($.trim(ykcd.val()) == "") {
         valid = false;
         message += "<li>Yêu cầu nhập ý kiến chỉ đạo.</li>";
@@ -229,12 +236,15 @@ function getUserId() {
                     .html("<strong>Yêu cầu!</strong> Bạn chưa đăng nhập vào hệ thống dữ liệu theo dõi. <a href='" + dltd.urlLogin + "' target='_blank' onclick='$('#' + idButton + 'Modal').modal('hide');'>Đăng nhập ngay</a>")
                     .show();
 
-                $("#" + idButton + "Modal .form-group").hide();
-                $("#" + idButton + "btnSend").hide();
-                $("#" + idButton + "AnotherOne").parent().hide();
+                $("#" + idButton + "Modal .responsive-table").hide();
+                $("#" + idButton + "btnSend").parent().parent().parent().hide();
+                //$("#" + idButton + "btnSend").hide();
+                //$("#" + idButton + "AnotherOne").parent().hide();
             }
             else {
                 $("#" + idButton + "UserId").val(data);
+                $("#" + idButton + "Modal .responsive-table").show();
+                $("#" + idButton + "btnSend").parent().parent().parent().show();
                 if ($("#" + idButton + "NguoiTheoDoi").find("option[value='" + data + "']").length > 0) {
                     var comboNguoiTheoDoi = $("#" + idButton + "NguoiTheoDoi").data("kendoComboBox");
                     comboNguoiTheoDoi.value(data);
@@ -260,6 +270,35 @@ function getAttachments(id) {
         type: "GET",
         success: function (response) {
             if (response.length > 0 && response.indexOf("THÔNG TIN VĂN BẢN") >= 0) {
+                //get nguoi soan
+
+                var tdNguoiSoan = $(response).find('tr:nth-child(2) td:nth-child(2)');
+                if (tdNguoiSoan) {
+                    $("#" + idButton + "NguoiTheoDoi").find("option").each(function() {
+                        if ($(this).html() == tdNguoiSoan.html()) {
+                            var comboNguoiTheoDoi = $("#" + idButton + "NguoiTheoDoi").data("kendoComboBox");
+                            comboNguoiTheoDoi.value($(this).attr("value"));
+                            $("#" + idButton + "NguoiTheoDoi").val($(this).attr("value"));
+                        }
+                    });
+                }
+                
+                //get noi nhan
+
+                var tdNoiNhan = $(response).find('tr:nth-child(10) td:nth-child(2)');
+                if (tdNoiNhan) {
+                    var noiNhan = $.trim(tdNoiNhan.html());
+                    noiNhan = noiNhan.substring(0, noiNhan.indexOf(","));
+                    $("#" + idButton + "DonVi").find("option").each(function() {
+                        if ($(this).html() == noiNhan) {
+                            var comboDonVi = $("#" + idButton + "DonVi").data("kendoComboBox");
+                            comboDonVi.value($(this).attr("value"));
+                            $("#" + idButton + "DonVi").val($(this).attr("value"));
+                        }
+                    });
+                }
+
+                //get all attachments
                 var tdFile = $(response).find("#strfileattach");
                 tdFile.find("a").each(function () {
                     if ($(this).attr("href").indexOf("javascript") === -1) {
@@ -309,6 +348,16 @@ function getVanBanDen(id) {
 
 $(document).ready(function() {
     buildButton();
+
+    $("#" + idButton + "Modal").kendoWindow({
+        width: "600px",
+        height: "500px",
+        title: "NHẬP CƠ SỠ DỮ LIỆU THEO DÕI",
+        visible: false,
+        actions: [
+            "Close"
+        ]
+    }).data("kendoWindow").center();
 
     $("#" + idButton + "HanXL").kendoDatePicker();
 
@@ -371,22 +420,29 @@ $(document).ready(function() {
 
         $("#" + idButton + "Notification").hide();
 
+        $('#' + idButton + "Modal").data("kendoWindow").open();
+
         if ($(dltd.elementDocument).length === 0) {
 
-            $("#" + idButton + "Modal .form-group").hide();
-            $("#" + idButton + "btnSend").hide();
-            $("#" + idButton + "AnotherOne").parent().hide();
+            $("#" + idButton + "Modal .responsive-table").hide();
+            $("#" + idButton + "btnSend").parent().parent().parent().hide();
+            //$("#" + idButton + "btnSend").hide();
+            //$("#" + idButton + "AnotherOne").parent().hide();
 
-            $("#" + idButton + "VanBan").html("Yêu cầu chọn văn bản để gửi.");
+            $("#" + idButton + "Notification")
+                    .attr("class", "alert alert-warning")
+                    .html("<strong>Yêu cầu!</strong> Bạn chưa chọn văn bản để gửi.")
+                    .show();
 
-            $("#" + idButton + "Modal .form-group:first").show();
-            $("#" + idButton + "Modal .form-group:first label").hide();
             return;
         }
        
         $("#" + idButton + "YKCD").val("");
         $("#" + idButton + "HanXL").val("");
+
         comboDoKhan.value("0");
+        $("#" + idButton + "DoKhan").val("0");
+
         comboNguonChiDao.value("");
         comboDonvi.value("");
         comboNguoiChiDao.value("");
@@ -397,11 +453,13 @@ $(document).ready(function() {
         getUserId();
 
         $("#" + idButton + "RemoveFile").trigger("click");
-
-        $("#" + idButton + "Modal .form-group").show();
-        $("#" + idButton + "AnotherOne").parent().show();
-        $("#" + idButton + "btnSend").show();
-        $("#" + idButton + "Modal .form-group:first label").show();
+        
+        $("#" + idButton + "Modal .responsive-table").show();
+        $("#" + idButton + "btnSend").parent().parent().parent().show();
+        //$("#" + idButton + "Modal .form-group").show();
+        //$("#" + idButton + "AnotherOne").parent().show();
+        //$("#" + idButton + "btnSend").show();
+        //$("#" + idButton + "Modal .form-group:first label").show();
 
         var idVanBan = $.trim($(dltd.elementDocument).find("td").eq(0).html());
         getAttachments(idVanBan);
@@ -433,7 +491,10 @@ $(document).ready(function() {
 
         if (isProcessing) return false;
 
-        if (!checkValidData()) return false;
+        if (!checkValidData()) {
+            $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
+            return false;
+        }
 
         isProcessing = true;
         $("#" + idButton + "btnSend").attr("disabled", "disabled");
@@ -459,19 +520,24 @@ $(document).ready(function() {
                         //TODO: May be need implement some business here
                     } else {
                         //Close modal now
-                        setTimeout("$('#' + idButton + 'Modal').modal('hide');", 3000);
+                        setTimeout("$('#' + idButton + 'Modal').data('kendoWindow').close();", 3000);
+
                     }
                 } else {
                     $("#" + idButton + "Notification")
                         .attr("class", "alert alert-danger")
                         .html("<strong>Lỗi!</strong> " + response)
                         .show();
+
                 }
+
             },
             complete: function() {
                 isProcessing = false;
                 $("#" + idButton + "btnSend").removeAttr("disabled");
                 $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Lưu");
+
+                $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
             },
             cache: false,
             contentType: false,

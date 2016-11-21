@@ -23,7 +23,7 @@ namespace DLTD.Web.Main
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js", 
                       "~/Scripts/toastr.min.js",
-                      "~/Scripts/bootbox.js"));
+                      "~/Scripts/bootbox.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

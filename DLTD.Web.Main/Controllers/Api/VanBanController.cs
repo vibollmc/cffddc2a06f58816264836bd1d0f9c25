@@ -52,7 +52,7 @@ namespace DLTD.Web.Main.Controllers.Api
 
                         fileName = postedFile.FileName;
                         fileUrl = string.Format("{0}/{1}", fileUrl, fileName);
-                        filePath = string.Format("{0}/{1}", folderUpload, fileName);
+                        filePath = string.Format("{0}\\{1}", folderUpload, fileName);
 
                         postedFile.SaveAs(filePath);
 
@@ -152,21 +152,21 @@ namespace DLTD.Web.Main.Controllers.Api
         {
             var dateTime = DateTime.Now;
 
-            folderUpload = HttpContext.Current.Server.MapPath("~/Uploads/");
-            fileUrl = "Uploads/";
+            folderUpload = HttpContext.Current.Server.MapPath("~/Uploads");
+            fileUrl = "Uploads";
             if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
 
-            folderUpload = string.Format("{0}/{1}", folderUpload, dateTime.Year);
+            folderUpload = string.Format("{0}\\{1}", folderUpload, dateTime.Year);
             fileUrl = string.Format("{0}/{1}", fileUrl, dateTime.Year);
 
             if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
 
-            folderUpload = string.Format("{0}/{1:00}", folderUpload, dateTime.Month);
+            folderUpload = string.Format("{0}\\{1:00}", folderUpload, dateTime.Month);
             fileUrl = string.Format("{0}/{1:00}", fileUrl, dateTime.Month);
 
             if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
 
-            folderUpload = string.Format("{0}/{1:00}", folderUpload, dateTime.Day);
+            folderUpload = string.Format("{0}\\{1:00}", folderUpload, dateTime.Day);
             fileUrl = string.Format("{0}/{1:00}", fileUrl, dateTime.Day);
 
             if (!Directory.Exists(folderUpload)) Directory.CreateDirectory(folderUpload);
@@ -183,7 +183,7 @@ namespace DLTD.Web.Main.Controllers.Api
                     this.CreatePathUpload(out folderUpload, out fileUrl);
 
                     fileUrl = string.Format("{0}/{1}", fileUrl, fileName);
-                    var filePath = string.Format("{0}/{1}", folderUpload, fileName);
+                    var filePath = string.Format("{0}\\{1}", folderUpload, fileName);
 
 
                     webClient.DownloadFile(new Uri(url), filePath);
