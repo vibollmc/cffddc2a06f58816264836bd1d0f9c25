@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using DLTD.Web.Main.Models;
 
 namespace DLTD.Web.Main.DAL
@@ -23,22 +24,9 @@ namespace DLTD.Web.Main.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer<MainDbContext>(null);
-            modelBuilder.Entity<VanBanChiDao>()
-                    .HasRequired(m => m.NguoiGui)
-                    .WithMany(t => t.VanBanChiDao)
-                    .HasForeignKey(m => m.UserId)
-                    .WillCascadeOnDelete(true);
-            modelBuilder.Entity<VanBanChiDao>()
-                    .HasRequired(m => m.NguoiChiDao)
-                    .WithMany(t => t.VanBanLanhDao)
-                    .HasForeignKey(m => m.IdNguoiChiDao)
-                    .WillCascadeOnDelete(true);
-            modelBuilder.Entity<VanBanChiDao>()
-                    .HasRequired(m => m.NguoiTheoDoi)
-                    .WithMany(t => t.VanBanTheoDoi)
-                    .HasForeignKey(m => m.IdNguoiTheoDoi)
-                    .WillCascadeOnDelete(true);
-            
+
+            modelBuilder.Conventions.Add<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Add<ManyToManyCascadeDeleteConvention>();
         }
 
     }

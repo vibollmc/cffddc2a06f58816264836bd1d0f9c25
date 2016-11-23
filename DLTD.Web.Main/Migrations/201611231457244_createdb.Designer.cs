@@ -7,13 +7,13 @@ namespace DLTD.Web.Main.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.0-20911")]
-    public sealed partial class createnewdb : IMigrationMetadata
+    public sealed partial class createdb : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(createnewdb));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(createdb));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611160337260_createnewdb"; }
+            get { return "201611231457244_createdb"; }
         }
         
         string IMigrationMetadata.Source

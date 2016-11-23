@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using DLTD.Web.Main.Common;
 using DLTD.Web.Main.DAL;
@@ -18,7 +20,7 @@ namespace DLTD.Web.Main.Controllers
     public class HomeController : BaseController
     {
       
-        public ActionResult Index(TrangThaiVanBan? trangThai)
+        public async Task<ActionResult> Index(TrangThaiVanBan? trangThai)
         {
             ViewBag.TrangThai = trangThai;
             //ViewBag.Nhom = GroupUserLogin;
@@ -53,9 +55,50 @@ namespace DLTD.Web.Main.Controllers
          
             else
             {
-                return Index(TrangThaiVanBan.Undefined);
+                return await Index(TrangThaiVanBan.Undefined);
 
             }
+
+
+            var donVi = await DonViManagement.Go.GetDonViByKhoi(6, 7, 9);
+            var khoi = await DonViManagement.Go.GetNguonChiDaoByKhoi();
+            var htmlOption = new StringBuilder("<option></option>");
+            foreach (var item in donVi.OrderBy(x => x.Ten))
+            {
+                htmlOption.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
+            }
+
+            ViewBag.OptionsDonVi = htmlOption.ToString();
+
+            htmlOption = new StringBuilder("<option></option>");
+
+            foreach (var item in khoi.OrderBy(x => x.Ten))
+            {
+                htmlOption.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
+            }
+
+            ViewBag.OptionsKhoi = htmlOption.ToString();
+
+            htmlOption = new StringBuilder("<option></option>");
+            var nguoiChiDao = await DangNhapManagement.Go.GetNguoiChiDao(WebConfigurationManager.AppSettings["IDDonViTrucThuocLanhDao"].ToIntExt());
+            if (nguoiChiDao != null)
+                foreach (var item in nguoiChiDao)
+                {
+                    htmlOption.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
+                }
+
+            ViewBag.OptionsNguoiChiDao = htmlOption.ToString();
+
+            htmlOption = new StringBuilder("<option></option>");
+            var nguoiTheoDoi = await DangNhapManagement.Go.GetNguoiTheoDoi();
+            if (nguoiTheoDoi != null)
+                foreach (var item in nguoiTheoDoi)
+                {
+                    htmlOption.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
+                }
+
+            ViewBag.OptionsNguoiTheoDoi = htmlOption.ToString();
+
             return View();
 
         }

@@ -3,7 +3,7 @@ namespace DLTD.Web.Main.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class createnewdb : DbMigration
+    public partial class createdb : DbMigration
     {
         public override void Up()
         {
@@ -111,7 +111,7 @@ namespace DLTD.Web.Main.Migrations
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
-                        UserId = c.Int(nullable: false),
+                        UserId = c.Int(),
                         Trichyeu = c.String(),
                         SoKH = c.String(maxLength: 512),
                         YKienChiDao = c.String(maxLength: 2048),
@@ -124,13 +124,16 @@ namespace DLTD.Web.Main.Migrations
                         IdDonVi = c.Int(),
                         DoKhan = c.Int(nullable: false),
                         IdNguonChiDao = c.Int(),
-                        IdNguoiChiDao = c.Int(nullable: false),
-                        IdNguoiTheoDoi = c.Int(nullable: false),
+                        IdNguoiChiDao = c.Int(),
+                        IdNguoiTheoDoi = c.Int(),
                         IsTralai = c.Int(),
                         LydoTraLai = c.String(),
                         NgayTra = c.DateTime(),
                         GhiChu = c.String(),
                         TinhHinhThucHienNoiBo = c.Int(nullable: false),
+                        DangNhap_Id = c.Int(),
+                        DangNhap_Id1 = c.Int(),
+                        DangNhap_Id2 = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.T_DonVi", t => t.IdDonVi)
@@ -138,11 +141,17 @@ namespace DLTD.Web.Main.Migrations
                 .ForeignKey("dbo.T_DangNhap", t => t.UserId)
                 .ForeignKey("dbo.T_DangNhap", t => t.IdNguoiTheoDoi)
                 .ForeignKey("dbo.T_Khoi", t => t.IdNguonChiDao)
+                .ForeignKey("dbo.T_DangNhap", t => t.DangNhap_Id)
+                .ForeignKey("dbo.T_DangNhap", t => t.DangNhap_Id1)
+                .ForeignKey("dbo.T_DangNhap", t => t.DangNhap_Id2)
                 .Index(t => t.IdDonVi)
                 .Index(t => t.IdNguoiChiDao)
                 .Index(t => t.UserId)
                 .Index(t => t.IdNguoiTheoDoi)
-                .Index(t => t.IdNguonChiDao);
+                .Index(t => t.IdNguonChiDao)
+                .Index(t => t.DangNhap_Id)
+                .Index(t => t.DangNhap_Id1)
+                .Index(t => t.DangNhap_Id2);
             
             CreateTable(
                 "dbo.T_FileDinhKem",
@@ -195,6 +204,9 @@ namespace DLTD.Web.Main.Migrations
         
         public override void Down()
         {
+            DropForeignKey("dbo.T_VanBanChiDao", "DangNhap_Id2", "dbo.T_DangNhap");
+            DropForeignKey("dbo.T_VanBanChiDao", "DangNhap_Id1", "dbo.T_DangNhap");
+            DropForeignKey("dbo.T_VanBanChiDao", "DangNhap_Id", "dbo.T_DangNhap");
             DropForeignKey("dbo.T_TinhHinhPhoiHop", "UserId", "dbo.T_DangNhap");
             DropForeignKey("dbo.T_FileDinhKem", "IdTinhHinhPhoiHop", "dbo.T_TinhHinhPhoiHop");
             DropForeignKey("dbo.T_TinhHinhPhoiHop", "IdDonViPhoiHop", "dbo.T_DonViPhoiHop");
@@ -211,6 +223,9 @@ namespace DLTD.Web.Main.Migrations
             DropForeignKey("dbo.T_FileDinhKem", "IdVanBanChiDao", "dbo.T_VanBanChiDao");
             DropForeignKey("dbo.T_VanBanChiDao", "IdDonVi", "dbo.T_DonVi");
             DropForeignKey("dbo.T_DangNhap", "IdDonVi", "dbo.T_DonViTrucThuoc");
+            DropIndex("dbo.T_VanBanChiDao", new[] { "DangNhap_Id2" });
+            DropIndex("dbo.T_VanBanChiDao", new[] { "DangNhap_Id1" });
+            DropIndex("dbo.T_VanBanChiDao", new[] { "DangNhap_Id" });
             DropIndex("dbo.T_TinhHinhPhoiHop", new[] { "UserId" });
             DropIndex("dbo.T_FileDinhKem", new[] { "IdTinhHinhPhoiHop" });
             DropIndex("dbo.T_TinhHinhPhoiHop", new[] { "IdDonViPhoiHop" });

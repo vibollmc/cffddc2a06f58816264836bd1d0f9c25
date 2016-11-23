@@ -34,14 +34,21 @@
         </button>
     </div>
     <div class="col-lg-4">
-        <div id="custom-search-input">
-            <div class="input-group col-md-12">
-                <input type="text" class="form-control" placeholder="Tìm kiếm nhiệm vụ" id="txtSearch" autocomplete="off" value="" />
-                <span class="input-group-btn">
-                    <button class="btn btn-info btn-lg" type="button" id="btnSearch">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
-                </span>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm nhiệm vụ" id="txtSearch" autocomplete="off" value="" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-sm" type="button" id="btnSearch">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                            <button class="btn btn-info btn-sm" type="button" id="btnSearchPlus">
+                                Nâng cao
+                            </button>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,11 +135,147 @@
     </div>
 </div>
 <!-- End modal attachments-->
+
+<!-- Begin modal advance search-->
+<div class="modal fade" id="modalSearch" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class='glyphicon glyphicon-search'></i> Tìm kiếm nâng cao</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Ngày ký từ</label><br/>
+                        <input class="form-control" name="ngaykytu" id="ngaykytu"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Ngày ký đến</label><br/>
+                        <input class="form-control" name="ngaykyden" id="ngaykyden" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Số/Ký hiệu</label>
+                        <input class="form-control" name="kyhieu" id="kyhieu" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Đơn vị xử lý</label>
+                        <select class="form-control" name="donvixuly" id="donvixuly" style='width: 100%'>
+                            @Html.Raw(ViewBag.OptionsDonVi)
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Người chỉ đạo</label>
+                        <select class="form-control" name="nguoichidao" id="nguoichidao" style='width: 100%'>
+                            @Html.Raw(ViewBag.OptionsNguoiChiDao)
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Người theo dõi</label>
+                        <select class="form-control" name="nguoitheodoi" id="nguoitheodoi" style='width: 100%'>
+                            @Html.Raw(ViewBag.OptionsNguoiTheoDoi)
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Thời hạn xử lý từ</label><br/>
+                        <input class="form-control" name="thoihanxltu" id="thoihanxltu" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Thời hạn xử lý đến</label><br/>
+                        <input class="form-control" name="thoihanxlden" id="thoihanxlden" />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Độ ưu tiên</label><br/>
+                        <input class="form-control" name="douutien" id="douutien"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Đơn vị phối hợp</label>
+                        <select class="form-control" name="donviphoihop" id="donviphoihop" style='width: 100%'>
+                            @Html.Raw(ViewBag.OptionsDonVi)
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <label class="control-label">Nguồn chỉ đạo</label>
+                        <select class="form-control" name="nguonchidao" id="nguonchidao" style='width: 100%'>
+                            @Html.Raw(ViewBag.OptionsKhoi)
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="control-label">Trích yếu nội dung</label>
+                        <input class="form-control" name="noidung" id="noidung"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">Ý kiến chỉ đạo</label>
+                        <input class="form-control" name="ykienchidao" id="ykienchidao" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Tìm kiếm</button>
+                <button type="button" class="btn btn-primary">Làm mới</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal advance search-->
 @section scripts {
     <script type="text/javascript">
         var idVanbanSelected = '';
         var isProcessing = false;
 
+        $("#ngaykytu").kendoDatePicker();
+        $("#ngaykyden").kendoDatePicker();
+        $("#thoihanxltu").kendoDatePicker();
+        $("#thoihanxlden").kendoDatePicker();
+
+        var cboDouuTien = $("#douutien").kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [
+                            { text: "", value: "" },
+                            { text: "Thường", value: "0" },
+                            { text: "Hỏa tốc", value: "1" }
+            ],
+            index: 0
+        }).data("kendoDropDownList");
+
+        var comboDonvi = $("#donvixuly").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
+
+        var comboNguonChiDao = $("#nguonchidao").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
+
+        var comboNguoiChiDao = $("#nguoichidao").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
+
+        var comboNguoiTheoDoi = $("#nguoitheodoi").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
+
+        var combodonViPhoiHop = $("#donviphoihop").kendoComboBox({
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
 
         function openAttachments(id) {
             if (isProcessing) return false;
@@ -154,6 +297,10 @@
             return true;
         }
 
+        $("#btnSearchPlus").click(function() {
+            $("#modalSearch").modal("show");
+        });
+
         $("#btnDelete").click(function () {
             if (isProcessing) return false;
 
@@ -166,7 +313,7 @@
                 buttons: {
                     cancel: {
                         label: '<i class="fa fa-times"></i> Hủy',
-                        className: 'btn-success'
+                        className: 'btn-default'
                     },
                     confirm: {
                         label: '<i class="fa fa-check"></i> Xóa',
@@ -196,6 +343,8 @@
                     }
                 }
             });
+
+            return false;
         });
 
         $("#btnHoanThanh").click(function () {
@@ -208,19 +357,38 @@
                 return false;
             }
 
-            $.ajax({
-                url: "@Url.Action("UpdateCompleteVanBan")",
-                type: "POST",
-                data: { id: idVanbanSelected },
-                success: function (response) {
-                    if (response.Code === 1) {
-                        isProcessing = false;
-                        $("#btnSearch").click();
+            bootbox.confirm({
+                title: "Xác nhận",
+                message: "Bạn muốn chuyển trạng thái văn bản?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Hủy',
+                        className: 'btn-default'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Hoàn thành',
+                        className: 'btn-danger'
                     }
-
                 },
-                complete: function () {
-                    isProcessing = false;
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                                url: "@Url.Action("UpdateCompleteVanBan")",
+                                type: "POST",
+                            data: { id: idVanbanSelected },
+                            success: function (response) {
+                                if (response.Code === 1) {
+                                    isProcessing = false;
+                                    $("#btnSearch").click();
+                                }
+
+                            },
+                            complete: function () {
+                                isProcessing = false;
+                            }
+                        });
+                    }
+                    else {isProcessing = false;}
                 }
             });
 
@@ -390,12 +558,18 @@
                 var trangThai = grid.dataItem(row).TrangThaiVB;
                 var trichYeu = grid.dataItem(row).Trichyeu;
 
+
                 $('#TrichYeuVanBan').html(trichYeu);
                 $('#IdVanBan').val(id);
 
                 $('#btnTinhHinhXuLy').removeAttr('disabled');
-                $("#btnHoanThanh").removeAttr('disabled');
-                $("#btnDelete").removeAttr('disabled');
+                if (trangThai.toLowerCase() === "hoàn thành") {
+                    $('#btnHoanThanh').attr('disabled', 'disabled');
+                    $('#btnDelete').attr('disabled', 'disabled');
+                } else {
+                    $("#btnHoanThanh").removeAttr('disabled');
+                    $("#btnDelete").removeAttr('disabled');
+                }
                 idVanbanSelected = id;
                 return id;
             });
