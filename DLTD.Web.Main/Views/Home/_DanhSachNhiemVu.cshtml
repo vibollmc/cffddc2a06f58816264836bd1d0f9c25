@@ -1,6 +1,7 @@
 ﻿@using DLTD.Web.Main.Common
 @using DLTD.Web.Main.ViewModels
 @using Kendo.Mvc.UI
+@model SearchVanBanModel
 
 @(Html.Kendo().Grid<VanBanChiDaoViewModel>()
       .Name("grid")
@@ -24,7 +25,7 @@
           columns.Bound(p => p.Ngayky).Width(90);
           columns.Bound(p => p.Trichyeu).Width("20%").Encoded(false);
           columns.Bound(p => p.TenDonVi).Width(100);
-          columns.Bound(p => p.NguoiGui);
+          columns.Bound(p => p.NguoiTheoDoi);
           columns.Bound(p => p.YKienChiDao).Width("20%").Encoded(false); ;
           columns.Bound(p => p.ThoiHanXuLy).Width(90);
           columns.Bound(p => p.DoKhan).Width(60);      
@@ -47,7 +48,7 @@
           .Ajax()
           //.Group(g=>g.Add(x=>x.Trichyeu))
           .PageSize(10)
-          .Read(read => read.Action("GetVanBanChiDao", "Home", new {search = ViewBag.SearchText, trangThai = ViewBag.TrangThai}))
+          .Read(read => read.Action("GetVanBanChiDao", "Home", new {search = Model, trangThai = ViewBag.TrangThai}))
       )
     .Events(events => events.Change("gridSelected").DataBound("gridDataBound"))
 

@@ -1,5 +1,4 @@
-﻿@using DLTD.Web.Main.Models.Enum;
-@{
+﻿@{
     ViewBag.Title = @ViewBag.TieuDe;
 }
 
@@ -223,8 +222,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Tìm kiếm</button>
-                <button type="button" class="btn btn-primary">Làm mới</button>
+                <button type="button" class="btn btn-primary" id="btnSearchPlusFind">Tìm kiếm</button>
+                <button type="button" class="btn btn-primary" id="btnSearchPlusReset">Làm mới</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -276,6 +275,44 @@
             filter: "contains",
             suggest: true
         }).data("kendoComboBox");
+
+        $("#btnSearchPlusReset").click(function() {
+            $("#ngaykytu").val("");
+            $("#ngaykyden").val("");
+            $("#thoihanxltu").val("");
+            $("#thoihanxlden").val("");
+            $("#kyhieu").val("");
+            $("#noidung").val("");
+            $("#ykienchidao").val("");
+            cboDouuTien.value("");
+            comboDonvi.value("");
+            combodonViPhoiHop.value("");
+            comboNguoiTheoDoi.value("");
+            comboNguoiChiDao.value("");
+            comboNguonChiDao.value("");
+        });
+
+        $("#btnSearchPlusFind").click(function() {
+            var objSearch = {
+                NgayKyTu: $("#ngaykytu").val(),
+                NgayKyDen: $("#ngaykyden").val(),
+                KyHieu: $("#kyhieu").val(),
+                DonViXuLy: comboDonvi.value(),
+                NguoiChiDao: comboNguoiChiDao.value(),
+                NguoiTheoDoi: comboNguoiTheoDoi.value(),
+                ThoiHanXuLyTu: $("#thoihanxltu").val(),
+                ThoiHanXuLyDen: $("#thoihanxlden").val(),
+                DoUuTien: cboDouuTien.value(),
+                DonViPhoiHop: combodonViPhoiHop.value(),
+                NguonChiDao: comboNguonChiDao.value(),
+                NoiDung: $("#noidung").val(),
+                YKienChiDao: $("#ykienchidao").val()
+            };
+
+            $("#txtSearch").val("");
+
+            return searchVanBan(objSearch);
+        });
 
         function openAttachments(id) {
             if (isProcessing) return false;
@@ -397,7 +434,7 @@
 
         function buildHtmlTHTH(data, idContainer) {
 
-            if (idContainer == undefined || idContainer == null || idContainer == "") idContainer = "#danhsachbaocao";
+            if (idContainer == undefined || idContainer === "") idContainer = "#danhsachbaocao";
 
             if (data.Code < 1) {
                 $(idContainer).html(data.Message);
@@ -451,6 +488,8 @@
                     isProcessing = false;
                 }
             });
+
+            return false;
         }
 
         $("#FileDinhKem").change(function () {
@@ -583,24 +622,35 @@
 
 
         $("#btnSearch").click(function () {
+
+            $("#btnSearchPlusReset").click();
+
+            return searchVanBan();
+        });
+
+        function searchVanBan(objSearch) {
             if (isProcessing) return false;
 
             isProcessing = true;
 
+            if (objSearch) objSearch.trangThai = '@ViewBag.TrangThai';
+            else objSearch = { SearchText: $("#txtSearch").val(), trangThai: '@ViewBag.TrangThai' }
+
             $.ajax({
                 url: "@Url.Action("DanhSachNhiemVu")",
                 type: 'POST',
-                data: { search: $("#txtSearch").val(), trangThai: '@ViewBag.TrangThai' },
+                data: objSearch,
                 success: function (data) {
                     $('#DanhSachNhiemVu').html(data);
                 },
                 complete: function () {
                     isProcessing = false;
+                    $("#modalSearch").modal("hide");
                 }
             });
 
             return false;
-        });
+        }
 
         function setGridHeight() {
             var height = $(window).innerHeight();

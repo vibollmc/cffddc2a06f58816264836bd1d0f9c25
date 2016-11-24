@@ -117,37 +117,20 @@ namespace DLTD.Web.Main.Controllers
             return View();
         }
 
-        public ActionResult DanhSachNhiemVu(string search, TrangThaiVanBan? trangThai)
+        public ActionResult DanhSachNhiemVu(SearchVanBanModel search, TrangThaiVanBan? trangThai)
         {
-            ViewBag.SearchText = search;
+            ViewBag.SearchText = search.SearchText;
             ViewBag.TrangThai = trangThai;
-            return PartialView("_DanhSachNhiemVu");
+            return PartialView("_DanhSachNhiemVu", search);
         }
 
-        public async Task<ActionResult> GetVanBanChiDao([DataSourceRequest]DataSourceRequest request, string search, TrangThaiVanBan? trangThai)
+        public async Task<ActionResult> GetVanBanChiDao([DataSourceRequest]DataSourceRequest request, SearchVanBanModel search, TrangThaiVanBan? trangThai)
         {
-            var data = await VanBanChiDaoManagement.Go.GetVanBanChiDao(UserIdLogin, GroupUserLogin, trangThai);
+            var data = await VanBanChiDaoManagement.Go.GetVanBanChiDao(UserIdLogin, GroupUserLogin, search, trangThai);
 
             var dataViewModel = data.Select(x => x.Transform());
 
-            if(string.IsNullOrWhiteSpace(search)) return Json(dataViewModel.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
-
-            search = search.ToLower();
-
-            var dateSearch = search.ToDateTimeExt();
-
-            var viewModel =
-                dataViewModel.Where(
-                    x =>                      
-                        x.ThoiHanXuLy == dateSearch ||
-                        x.SoKH.ToLower().Contains(search) ||
-                        x.Trichyeu.ToLower().Contains(search) ||
-                        x.TenDonVi.ToLower().Contains(search) ||
-                        x.NguoiGui.ToLower().Contains(search) ||
-                        x.YKienChiDao.ToLower().Contains(search)
-                    );
-
-            return Json(viewModel.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+            return Json(dataViewModel.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> UpdateCompleteVanBan(int? id)

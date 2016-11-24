@@ -216,7 +216,7 @@ namespace DLTD.Web.Main.Common
                 NgayTao = data.NgayTao,
                 FileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.Count : 0,
                 LinkFileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.FirstOrDefault().Url : null,
-                NguoiGui = data.NguoiGui.Ten,
+                NguoiTheoDoi = data.NguoiTheoDoi.Ten,
                 TenDonVi = data.DonVi.Ten,
                 NgayHoanThanh = data.NgayHoanThanh,
                 DoKhan = data.DoKhan,

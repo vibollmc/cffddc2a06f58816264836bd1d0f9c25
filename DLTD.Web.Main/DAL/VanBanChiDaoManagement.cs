@@ -87,65 +87,81 @@ namespace DLTD.Web.Main.DAL
             }
         }
 
-        public async Task<IEnumerable<VanBanChiDao>> GetVanBanChiDao(int? userId, NhomNguoiDung nhomNguoiDung, TrangThaiVanBan? trangthai)
+        public async Task<IEnumerable<VanBanChiDao>> GetVanBanChiDao(int? userId, NhomNguoiDung nhomNguoiDung, SearchVanBanModel searchObj, TrangThaiVanBan? trangthai)
         {
-            if (nhomNguoiDung != NhomNguoiDung.QuanTriHeThong)
-            {
-                var data =
-                    await
-                        _dbContext.VanBanChiDao.Where(
-                            x =>
-                                ((trangthai == TrangThaiVanBan.HoanThanh && x.NgayHoanThanh != null)
-                                 ||
-                                 (trangthai == TrangThaiVanBan.Moi && x.NgayHoanThanh == null &&
-                                  x.ThoiHanXuLy >= DateTime.Now && x.TrangThai != TrangThaiVanBan.DangXuLy)
-                                 ||
+            var data =
+                    _dbContext.VanBanChiDao.Where(
+                        x =>
+                            (
+                                (trangthai == TrangThaiVanBan.HoanThanh && x.NgayHoanThanh != null)
+                                    ||
+                                    (trangthai == TrangThaiVanBan.Moi && x.NgayHoanThanh == null &&
+                                    x.ThoiHanXuLy >= DateTime.Now && x.TrangThai != TrangThaiVanBan.DangXuLy)
+                                    ||
                                 (trangthai == TrangThaiVanBan.DangXuLy && x.NgayHoanThanh == null &&
-                                  x.ThoiHanXuLy >= DateTime.Now && x.TrangThai == TrangThaiVanBan.DangXuLy)
-                                 ||
-                                 (trangthai == TrangThaiVanBan.QuaHan && x.NgayHoanThanh == null && x.ThoiHanXuLy != null &&
-                                  x.ThoiHanXuLy < DateTime.Now)
-                                 || trangthai == TrangThaiVanBan.Undefined)
-                                 &&
-                                 ((x.UserId == userId || x.IdNguoiChiDao == userId || x.IdNguoiTheoDoi == userId)
+                                    x.ThoiHanXuLy >= DateTime.Now && x.TrangThai == TrangThaiVanBan.DangXuLy)
+                                    ||
+                                    (trangthai == TrangThaiVanBan.QuaHan && x.NgayHoanThanh == null && x.ThoiHanXuLy != null &&
+                                    x.ThoiHanXuLy < DateTime.Now)
+                                    || trangthai == TrangThaiVanBan.Undefined
+                                )
+                                &&
+                                (
+                                    x.UserId == userId || x.IdNguoiChiDao == userId || x.IdNguoiTheoDoi == userId || nhomNguoiDung == NhomNguoiDung.QuanTriHeThong)
+                                )
+                        .OrderBy(x => x.IdVanBan).ThenByDescending(x => x.NgayTao)
+                        .Include(x => x.DonVi)
+                        .Include(x => x.NguoiTheoDoi)
+                        .Include(x => x.FileDinhKem);
 
-                                 ))
-                    //||( GroupUserLogin == NhomNguoiDung.QuanTriHeThong) )
-                            .OrderBy(x => x.IdVanBan).ThenByDescending(x => x.NgayTao)
-                            .Include(x => x.DonVi)
-                            .Include(x => x.NguoiGui)
-                            .Include(x => x.FileDinhKem)
-                            .ToListAsync();
-
-                return data;
-            }
-            else
+            if (searchObj.IsNormalSearch)
             {
-                var data1 =
-                             await
-                                 _dbContext.VanBanChiDao.Where(
-                                     x =>
-                                         ((trangthai == TrangThaiVanBan.HoanThanh && x.NgayHoanThanh != null)
-                                          ||
-                                          (trangthai == TrangThaiVanBan.Moi && x.NgayHoanThanh == null &&
-                                           x.ThoiHanXuLy >= DateTime.Now && x.TrangThai != TrangThaiVanBan.DangXuLy)
-                                          ||
-                                         (trangthai == TrangThaiVanBan.DangXuLy && x.NgayHoanThanh == null &&
-                                           x.ThoiHanXuLy >= DateTime.Now && x.TrangThai == TrangThaiVanBan.DangXuLy)
-                                          ||
-                                          (trangthai == TrangThaiVanBan.QuaHan && x.NgayHoanThanh == null && x.ThoiHanXuLy != null &&
-                                           x.ThoiHanXuLy < DateTime.Now)
-                                          || trangthai == TrangThaiVanBan.Undefined)
-                                        )
-                    //||( GroupUserLogin == NhomNguoiDung.QuanTriHeThong) )
-                                     .OrderBy(x => x.IdVanBan).ThenByDescending(x => x.NgayTao)
-                                     .Include(x => x.DonVi)
-                                     .Include(x => x.NguoiGui)
-                                     .Include(x => x.FileDinhKem)
-                                     .ToListAsync();
+                var search = searchObj.SearchText.ToLower();
+                var dateSearch = searchObj.SearchText.ToDateTimeExt();
 
-                return data1;
+                data = data.Where(x => x.SoKH.ToLower().Contains(search) ||
+                                       x.Trichyeu.ToLower().Contains(search) ||
+                                       x.DonVi.Ten.ToLower().Contains(search) ||
+                                       x.NguoiTheoDoi.Ten.ToLower().Contains(search) ||
+                                       x.YKienChiDao.ToLower().Contains(search) ||
+                                       x.Ngayky == dateSearch ||
+                                       x.ThoiHanXuLy == dateSearch
+                    );
             }
+            else if (searchObj.IsAdvanceSearch)
+            {
+                data = data.Where(
+                        x =>
+                        (string.IsNullOrWhiteSpace(searchObj.NgayKyTu) || !searchObj.NgayKyTu.ToDateTimeExt().HasValue || x.Ngayky >= searchObj.NgayKyTu.ToDateTimeExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.NgayKyDen) || !searchObj.NgayKyDen.ToDateTimeExt().HasValue || x.Ngayky <= searchObj.NgayKyDen.ToDateTimeExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.KyHieu) || x.SoKH.ToLower().Contains(searchObj.KyHieu.ToLower()))
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.DonViXuLy) || x.IdDonVi == searchObj.DonViXuLy.ToIntExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.NguoiChiDao) || x.IdNguoiChiDao == searchObj.NguoiChiDao.ToIntExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.NguoiTheoDoi) || x.IdNguoiTheoDoi == searchObj.NguoiTheoDoi.ToIntExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.ThoiHanXuLyTu) || !searchObj.ThoiHanXuLyTu.ToDateTimeExt().HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy >= searchObj.ThoiHanXuLyTu.ToDateTimeExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.ThoiHanXuLyDen) || !searchObj.ThoiHanXuLyDen.ToDateTimeExt().HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy <= searchObj.ThoiHanXuLyDen.ToDateTimeExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.DoUuTien) || x.DoKhan == (DoKhan)searchObj.DoUuTien.ToIntExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.DonViPhoiHop) || x.DonViPhoihop.Any(y => y.IdDonvi == searchObj.DonViPhoiHop.ToIntExt()))
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.NguonChiDao) || x.IdNguonChiDao == searchObj.NguonChiDao.ToIntExt())
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.NoiDung) || x.Trichyeu.ToLower().Contains(searchObj.NoiDung.ToLower()))
+                        &&
+                        (string.IsNullOrWhiteSpace(searchObj.YKienChiDao) || x.YKienChiDao.ToLower().Contains(searchObj.YKienChiDao.ToLower()))
+                    );
+            }
+
+            return await data.ToArrayAsync();
+            
         }
 
         public async Task<VanBanChiDao> GetVanBanChiDaoById(int? id)

@@ -12,7 +12,7 @@ namespace DLTD.Web.Main.ViewModels
         [Display(Name = "User Id")]
         public int? UserId { get; set; }
         [Display(Name = "Người theo dõi")]
-        public string NguoiGui { get; set; }
+        public string NguoiTheoDoi { get; set; }
 
         [Display(Name = "Ngày ký")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
