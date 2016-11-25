@@ -1,4 +1,6 @@
-﻿namespace DLTD.Web.Main.ViewModels
+﻿using DLTD.Web.Main.Models.Enum;
+
+namespace DLTD.Web.Main.ViewModels
 {
     public class SearchVanBanModel
     {
@@ -16,6 +18,7 @@
         public string NoiDung { get; set; }
         public string YKienChiDao { get; set; }
         public string SearchText { get; set; }
+        public TrangThaiVanBan? TrangThai { get; set; }
 
         public bool IsNormalSearch 
         {

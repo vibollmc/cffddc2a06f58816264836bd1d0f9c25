@@ -247,6 +247,10 @@
     <Compile Include="Migrations\201611231457244_createdb.Designer.cs">
       <DependentUpon>201611231457244_createdb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611250421108_update1.cs" />
+    <Compile Include="Migrations\201611250421108_update1.Designer.cs">
+      <DependentUpon>201611250421108_update1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DonViPhoihop.cs" />
     <Compile Include="Models\Enum\DoKhan.cs" />
@@ -291,6 +295,7 @@
     <Compile Include="ViewModels\FileDinhKemViewModel.cs" />
     <Compile Include="ViewModels\ListDonViViewModel.cs" />
     <Compile Include="ViewModels\ListTonghopVanBanChiDaoViewModel.cs" />
+    <Compile Include="ViewModels\SearchVanBanModel.cs" />
     <Compile Include="ViewModels\TonghopTinhhinhXulyViewModel.cs" />
     <Compile Include="ViewModels\ListKhoiViewModel.cs" />
     <Compile Include="ViewModels\TinhHinhThucHienViewModel.cs" />
@@ -2045,6 +2050,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611231457244_createdb.resx">
       <DependentUpon>201611231457244_createdb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611250421108_update1.resx">
+      <DependentUpon>201611250421108_update1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

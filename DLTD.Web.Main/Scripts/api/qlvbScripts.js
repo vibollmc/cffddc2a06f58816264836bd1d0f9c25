@@ -11,6 +11,28 @@
 var idButton = "";
 var isProcessing = false;
 var indexAttachment = 0;
+var dataDonVi = [
+    {{DATADONVI}}
+];
+var dataDonViFiltered = [];
+
+function makeDataDonViFiltered(filterText) {
+    if (filterText || $.trim(filterText) === "" || $.trim(filterText) === ",") Object.assign(dataDonVi, dataDonViFiltered);
+
+    var arr = filterText.split(", ");
+
+    dataDonViFiltered = [];
+
+    arr.forEach(function(item) {
+
+        dataDonVi.forEach(function(data) {
+
+            if (data.text === item) {
+                dataDonViFiltered.push(data);
+            }
+        });
+    });
+}
 
 function makeid() {
     var text = "";
@@ -58,9 +80,9 @@ function buildButton() {
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
-    modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label>";
+    modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label><span> <input id='" + idButton + "AllDonVi' type='checkbox'> Hiện tất cả</span>";
     modalHtml += "<select name='IdDonVi' id='" + idButton + "DonVi' style='width: 100%' placeholder='Chọn đơn vị xử lý chính...'>";
-    modalHtml += "{{DONVI}}";
+    //modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
@@ -288,14 +310,18 @@ function getAttachments(id) {
                 var tdNoiNhan = $(response).find('tr:nth-child(10) td:nth-child(2)');
                 if (tdNoiNhan) {
                     var noiNhan = $.trim(tdNoiNhan.html());
-                    noiNhan = noiNhan.substring(0, noiNhan.indexOf(","));
-                    $("#" + idButton + "DonVi").find("option").each(function() {
-                        if ($(this).html() == noiNhan) {
-                            var comboDonVi = $("#" + idButton + "DonVi").data("kendoComboBox");
-                            comboDonVi.value($(this).attr("value"));
-                            $("#" + idButton + "DonVi").val($(this).attr("value"));
-                        }
-                    });
+
+                    makeDataDonViFiltered(noiNhan);
+
+                    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
+                        dataTextField: "text",
+                        dataValueField: "value",
+                        dataSource: dataDonViFiltered,
+                        filter: "contains",
+                        suggest: true
+                    }).data("kendoComboBox");
+
+                    comboDonvi.value("");
                 }
 
                 //get all attachments
@@ -371,11 +397,6 @@ $(document).ready(function() {
         index: 0
     }).data("kendoDropDownList");
 
-    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
-            filter: "contains",
-            suggest: true
-        }).data("kendoComboBox");
-
     var comboNguonChiDao = $("#" + idButton + "NguonChiDao").kendoComboBox({
             filter: "contains",
             suggest: true
@@ -442,9 +463,8 @@ $(document).ready(function() {
 
         comboDoKhan.value("0");
         $("#" + idButton + "DoKhan").val("0");
-
+        $("#" + idButton + "AllDonVi").attr('checked', false);
         comboNguonChiDao.value("");
-        comboDonvi.value("");
         comboNguoiChiDao.value("");
         comboNguoiTheoDoi.value("");
         combodonViPhoiHop.dataSource.filter({});
@@ -485,6 +505,20 @@ $(document).ready(function() {
     });
     $("#" + idButton + "NguonChiDao").change(function () {
         $("#" + idButton + "Notification").hide();
+    });
+
+    $("#" + idButton + "AllDonVi").click(function() {
+        var data = this.checked ? dataDonVi : dataDonViFiltered;
+
+        var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: data,
+            filter: "contains",
+            suggest: true
+        }).data("kendoComboBox");
+
+        comboDonvi.value("");
     });
 
     $("#" + idButton + "btnSend").click(function () {

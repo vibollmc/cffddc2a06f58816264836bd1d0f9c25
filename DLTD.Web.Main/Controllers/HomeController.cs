@@ -52,11 +52,13 @@ namespace DLTD.Web.Main.Controllers
             else if (trangThai == TrangThaiVanBan.Undefined)
             {
                 ViewBag.TieuDe = "Tất cả nhiệm vụ"; }
-         
+            else if (trangThai == TrangThaiVanBan.TraLai)
+            {
+                ViewBag.TieuDe = "Nhiệm vụ đã trả lại";
+            }
             else
             {
                 return await Index(TrangThaiVanBan.Undefined);
-
             }
 
 
@@ -117,16 +119,14 @@ namespace DLTD.Web.Main.Controllers
             return View();
         }
 
-        public ActionResult DanhSachNhiemVu(SearchVanBanModel search, TrangThaiVanBan? trangThai)
+        public ActionResult DanhSachNhiemVu(SearchVanBanModel search)
         {
-            ViewBag.SearchText = search.SearchText;
-            ViewBag.TrangThai = trangThai;
             return PartialView("_DanhSachNhiemVu", search);
         }
 
-        public async Task<ActionResult> GetVanBanChiDao([DataSourceRequest]DataSourceRequest request, SearchVanBanModel search, TrangThaiVanBan? trangThai)
+        public async Task<ActionResult> GetVanBanChiDao([DataSourceRequest]DataSourceRequest request, SearchVanBanModel search)
         {
-            var data = await VanBanChiDaoManagement.Go.GetVanBanChiDao(UserIdLogin, GroupUserLogin, search, trangThai);
+            var data = await VanBanChiDaoManagement.Go.GetVanBanChiDao(UserIdLogin, GroupUserLogin, search);
 
             var dataViewModel = data.Select(x => x.Transform());
 
@@ -272,6 +272,13 @@ namespace DLTD.Web.Main.Controllers
         public async Task<ActionResult> DeleteVanBan(int id)
         {
             var result = await VanBanChiDaoManagement.Go.DeleteVanBan(id);
+            return Json(new {Result = result}, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> TraVanBan(int id, string lydo)
+        {
+            var result = await VanBanChiDaoManagement.Go.TraVanBan(id, lydo);
+
             return Json(new {Result = result}, JsonRequestBehavior.AllowGet);
         }
 

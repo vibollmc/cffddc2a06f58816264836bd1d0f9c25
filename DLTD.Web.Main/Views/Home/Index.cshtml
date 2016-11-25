@@ -28,6 +28,9 @@
         <button class="btn btn-success btn-sm btn-flat button-box" id="btnHoanThanh" disabled style="display: @ViewBag.HoanThanh">
             <i class="glyphicon glyphicon-check"></i>&nbsp;Hoàn Thành
         </button>
+        <button class="btn btn-success btn-sm btn-flat button-box" id="btnTraLai" disabled style="display: @ViewBag.TinhHinhThucHien" data-toggle="modal" data-target="#modalTraLai">
+            <i class="glyphicon glyphicon-check"></i>&nbsp;Trả lại
+        </button>
         <button class="btn btn-danger btn-sm btn-flat button-box" id="btnDelete" disabled style="display:@ViewBag.HoanThanh">
             <i class="glyphicon glyphicon-remove-circle"></i>&nbsp;Xóa văn bản
         </button>
@@ -109,7 +112,7 @@
                     <a href="#"><i class="glyphicon glyphicon-paperclip"></i> File đính kèm</a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
@@ -128,12 +131,43 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 <!-- End modal attachments-->
+
+<!-- Begin modal tralai-->
+<div class="modal fade" id="modalTraLai" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class='glyphicon glyphicon-paperclip'></i> Nội dung văn bản</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Văn bản</label><br/>
+                        <p class="control-label" id="pvanban"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Lý do trả lại</label>
+                        <textarea class="form-control" name="lydotralai" id="lydotralai"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="btnTraLaiSubmit">Trả lại</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal tralai-->
 
 <!-- Begin modal advance search-->
 <div class="modal fade" id="modalSearch" role="dialog">
@@ -224,7 +258,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btnSearchPlusFind">Tìm kiếm</button>
                 <button type="button" class="btn btn-primary" id="btnSearchPlusReset">Làm mới</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
@@ -312,6 +346,26 @@
             $("#txtSearch").val("");
 
             return searchVanBan(objSearch);
+        });
+
+        $("#btnTraLaiSubmit").click(function() {
+            if (isProcessing) return false;
+            isProcessing = true;
+
+            $.ajax({
+                url: "@Url.Action("TraVanBan")",
+                type: "POST",
+                data: { id: idVanbanSelected, lydo: $("#lydotralai").val()},
+                success: function (response) {
+                    $('#modalTraLai').modal('hide');
+                },
+                complete: function () {
+                    isProcessing = false;
+                    searchVanBan();
+                }
+            });
+
+            return false;
         });
 
         function openAttachments(id) {
@@ -599,15 +653,18 @@
 
 
                 $('#TrichYeuVanBan').html(trichYeu);
+                $('#pvanban').html(trichYeu);
                 $('#IdVanBan').val(id);
 
                 $('#btnTinhHinhXuLy').removeAttr('disabled');
                 if (trangThai.toLowerCase() === "hoàn thành") {
                     $('#btnHoanThanh').attr('disabled', 'disabled');
                     $('#btnDelete').attr('disabled', 'disabled');
+                    $('#btnTraLai').attr('disabled', 'disabled');
                 } else {
                     $("#btnHoanThanh").removeAttr('disabled');
                     $("#btnDelete").removeAttr('disabled');
+                    $("#btnTraLai").removeAttr('disabled');
                 }
                 idVanbanSelected = id;
                 return id;
@@ -633,8 +690,8 @@
 
             isProcessing = true;
 
-            if (objSearch) objSearch.trangThai = '@ViewBag.TrangThai';
-            else objSearch = { SearchText: $("#txtSearch").val(), trangThai: '@ViewBag.TrangThai' }
+            if (objSearch) objSearch.TrangThai = '@ViewBag.TrangThai';
+            else objSearch = { SearchText: $("#txtSearch").val(), TrangThai: '@ViewBag.TrangThai' }
 
             $.ajax({
                 url: "@Url.Action("DanhSachNhiemVu")",
@@ -686,13 +743,16 @@
                     $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("đang thực hiện") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0000cd");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0000ff");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trễ hạn") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#dc143c");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#c71585");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("mới") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#cd853f");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#4b0082");
+                }
+                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trả lại") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#b22222");
                 }
                 else {
                     $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");

@@ -20,10 +20,14 @@ namespace DLTD.Web.Main.Controllers
             var khoi = await DonViManagement.Go.GetNguonChiDaoByKhoi();
             var htmlOption = new StringBuilder();
             var htmlOptionkhoi = new StringBuilder();
+            var htmlDataDonVi = new StringBuilder();
             foreach (var item in donVi.OrderBy(x => x.Ten))
             {
                 htmlOption.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
+
+                htmlDataDonVi.AppendFormat("{{text: '{0}', value:{1}}},", item.Ten, item.Id);
             }
+
             foreach (var item in khoi.OrderBy(x => x.Ten))
             {
                 htmlOptionkhoi.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
@@ -34,6 +38,7 @@ namespace DLTD.Web.Main.Controllers
             js = js.Replace("{{DONVI}}", htmlOption.ToString())
                 .Replace("{{URI}}", dltdUri)
                 .Replace("{{KHOI}}", htmlOptionkhoi.ToString())
+                .Replace("{{DATADONVI}}", htmlDataDonVi.ToString())
                 .Replace("{{QLVBURI}}", qlvbUri);
 
             htmlOption = new StringBuilder();

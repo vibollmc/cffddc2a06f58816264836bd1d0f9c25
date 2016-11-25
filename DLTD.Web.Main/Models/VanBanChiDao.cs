@@ -13,6 +13,7 @@ namespace DLTD.Web.Main.Models
         {
             NgayTao = DateTime.Now;
             this.TinhHinhThucHienNoiBo = TrangThaiVanBan.Undefined;
+            this.IsTralai = false;
         }
         [Key]
         public long? Id { get; set; }
@@ -46,7 +47,7 @@ namespace DLTD.Web.Main.Models
         public int? IdNguoiChiDao { get; set; }
         [ForeignKey("NguoiTheoDoi")]
         public int? IdNguoiTheoDoi { get; set; }
-        public int? IsTralai { get; set; }
+        public bool? IsTralai { get; set; }
         public string LydoTraLai { get; set; }
         public DateTime? NgayTra { get; set; }
         public string GhiChu { get; set; }

@@ -62,6 +62,8 @@ namespace DLTD.Web.Main.ViewModels
         {
             get
             {
+                if (this.TrangThai == TrangThaiVanBan.TraLai) return "Trả lại";
+
                 if (this.NgayHoanThanh.HasValue && (this.ThoiHanXuLy != null && this.ThoiHanXuLy >= this.NgayHoanThanh))
                     return "Hoàn thành";
 

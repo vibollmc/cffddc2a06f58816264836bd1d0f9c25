@@ -87,34 +87,39 @@ namespace DLTD.Web.Main.DAL
             }
         }
 
-        public async Task<IEnumerable<VanBanChiDao>> GetVanBanChiDao(int? userId, NhomNguoiDung nhomNguoiDung, SearchVanBanModel searchObj, TrangThaiVanBan? trangthai)
+        public async Task<IEnumerable<VanBanChiDao>> GetVanBanChiDao(int? userId, NhomNguoiDung nhomNguoiDung, SearchVanBanModel searchObj)
         {
+            TrangThaiVanBan? trangthai = TrangThaiVanBan.Undefined;
+            if (searchObj != null) trangthai = searchObj.TrangThai;
+
             var data =
                     _dbContext.VanBanChiDao.Where(
                         x =>
-                            (
-                                (trangthai == TrangThaiVanBan.HoanThanh && x.NgayHoanThanh != null)
-                                    ||
+                                (
+                                    (trangthai == TrangThaiVanBan.TraLai && x.IsTralai == true)
+                                        ||
+                                    (trangthai == TrangThaiVanBan.HoanThanh && x.NgayHoanThanh != null)
+                                        ||
                                     (trangthai == TrangThaiVanBan.Moi && x.NgayHoanThanh == null &&
-                                    x.ThoiHanXuLy >= DateTime.Now && x.TrangThai != TrangThaiVanBan.DangXuLy)
-                                    ||
-                                (trangthai == TrangThaiVanBan.DangXuLy && x.NgayHoanThanh == null &&
-                                    x.ThoiHanXuLy >= DateTime.Now && x.TrangThai == TrangThaiVanBan.DangXuLy)
-                                    ||
+                                        x.ThoiHanXuLy >= DateTime.Now && x.TrangThai != TrangThaiVanBan.DangXuLy)
+                                        ||
+                                    (trangthai == TrangThaiVanBan.DangXuLy && x.NgayHoanThanh == null &&
+                                        x.ThoiHanXuLy >= DateTime.Now && x.TrangThai == TrangThaiVanBan.DangXuLy)
+                                        ||
                                     (trangthai == TrangThaiVanBan.QuaHan && x.NgayHoanThanh == null && x.ThoiHanXuLy != null &&
-                                    x.ThoiHanXuLy < DateTime.Now)
-                                    || trangthai == TrangThaiVanBan.Undefined
+                                        x.ThoiHanXuLy < DateTime.Now)
+                                        || 
+                                    (trangthai == TrangThaiVanBan.Undefined)
                                 )
                                 &&
-                                (
-                                    x.UserId == userId || x.IdNguoiChiDao == userId || x.IdNguoiTheoDoi == userId || nhomNguoiDung == NhomNguoiDung.QuanTriHeThong)
-                                )
+                                (x.UserId == userId || x.IdNguoiChiDao == userId || x.IdNguoiTheoDoi == userId || nhomNguoiDung == NhomNguoiDung.QuanTriHeThong)
+                            )
                         .OrderBy(x => x.IdVanBan).ThenByDescending(x => x.NgayTao)
                         .Include(x => x.DonVi)
                         .Include(x => x.NguoiTheoDoi)
                         .Include(x => x.FileDinhKem);
 
-            if (searchObj.IsNormalSearch)
+            if (searchObj != null && searchObj.IsNormalSearch)
             {
                 var search = searchObj.SearchText.ToLower();
                 var dateSearch = searchObj.SearchText.ToDateTimeExt();
@@ -128,36 +133,49 @@ namespace DLTD.Web.Main.DAL
                                        x.ThoiHanXuLy == dateSearch
                     );
             }
-            else if (searchObj.IsAdvanceSearch)
+            else if (searchObj != null && searchObj.IsAdvanceSearch)
             {
+                var ngaykyTu = searchObj.NgayKyTu.ToDateTimeExt();
+                var ngaykyDen = searchObj.NgayKyDen.ToDateTimeExt();
+                var donviXuly = searchObj.DonViXuLy.ToIntExt();
+                var nguoiChiDao = searchObj.NguoiChiDao.ToIntExt();
+                var nguoiTheoDoi = searchObj.NguoiTheoDoi.ToIntExt();
+                var thoihanXlTu = searchObj.ThoiHanXuLyTu.ToDateTimeExt();
+                var thoihanXlDen = searchObj.ThoiHanXuLyDen.ToDateTimeExt();
+                var doUuTien = searchObj.DoUuTien.ToIntExt();
+                var donviPhoiHop = searchObj.DonViPhoiHop.ToIntExt();
+                var nguonChiDao = searchObj.NguonChiDao.ToIntExt();
+
                 data = data.Where(
                         x =>
-                        (string.IsNullOrWhiteSpace(searchObj.NgayKyTu) || !searchObj.NgayKyTu.ToDateTimeExt().HasValue || x.Ngayky >= searchObj.NgayKyTu.ToDateTimeExt())
+                        (!ngaykyTu.HasValue || x.Ngayky >= ngaykyTu)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.NgayKyDen) || !searchObj.NgayKyDen.ToDateTimeExt().HasValue || x.Ngayky <= searchObj.NgayKyDen.ToDateTimeExt())
+                        (!ngaykyDen.HasValue || x.Ngayky <= ngaykyDen)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.KyHieu) || x.SoKH.ToLower().Contains(searchObj.KyHieu.ToLower()))
+                        (searchObj.KyHieu == null  || searchObj.KyHieu.Trim() == string.Empty || x.SoKH.ToLower().Contains(searchObj.KyHieu.ToLower()))
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.DonViXuLy) || x.IdDonVi == searchObj.DonViXuLy.ToIntExt())
+                        (!donviXuly.HasValue || x.IdDonVi == donviXuly)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.NguoiChiDao) || x.IdNguoiChiDao == searchObj.NguoiChiDao.ToIntExt())
+                        (!nguoiChiDao.HasValue || x.IdNguoiChiDao == nguoiChiDao)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.NguoiTheoDoi) || x.IdNguoiTheoDoi == searchObj.NguoiTheoDoi.ToIntExt())
+                        (!nguoiTheoDoi.HasValue || x.IdNguoiTheoDoi == nguoiTheoDoi)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.ThoiHanXuLyTu) || !searchObj.ThoiHanXuLyTu.ToDateTimeExt().HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy >= searchObj.ThoiHanXuLyTu.ToDateTimeExt())
+                        (!thoihanXlTu.HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy >= thoihanXlTu)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.ThoiHanXuLyDen) || !searchObj.ThoiHanXuLyDen.ToDateTimeExt().HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy <= searchObj.ThoiHanXuLyDen.ToDateTimeExt())
+                        (!thoihanXlDen.HasValue || !x.ThoiHanXuLy.HasValue || x.ThoiHanXuLy <= thoihanXlDen)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.DoUuTien) || x.DoKhan == (DoKhan)searchObj.DoUuTien.ToIntExt())
+                        (!donviPhoiHop.HasValue || x.DonViPhoihop.Any(y => y.IdDonvi == donviPhoiHop))
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.DonViPhoiHop) || x.DonViPhoihop.Any(y => y.IdDonvi == searchObj.DonViPhoiHop.ToIntExt()))
+                        (!nguonChiDao.HasValue || x.IdNguonChiDao == nguonChiDao)
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.NguonChiDao) || x.IdNguonChiDao == searchObj.NguonChiDao.ToIntExt())
+                        (searchObj.NoiDung == null || searchObj.NoiDung.Trim() == string.Empty || x.Trichyeu.ToLower().Contains(searchObj.NoiDung.ToLower()))
                         &&
-                        (string.IsNullOrWhiteSpace(searchObj.NoiDung) || x.Trichyeu.ToLower().Contains(searchObj.NoiDung.ToLower()))
-                        &&
-                        (string.IsNullOrWhiteSpace(searchObj.YKienChiDao) || x.YKienChiDao.ToLower().Contains(searchObj.YKienChiDao.ToLower()))
+                        (searchObj.YKienChiDao == null || searchObj.YKienChiDao.Trim() == string.Empty || x.YKienChiDao.ToLower().Contains(searchObj.YKienChiDao.ToLower()))
                     );
+
+                if (doUuTien.HasValue)
+                    data = data.Where(
+                        x => x.DoKhan == (DoKhan)doUuTien.Value);
             }
 
             return await data.ToArrayAsync();
@@ -533,6 +551,20 @@ namespace DLTD.Web.Main.DAL
             if (vb == null) return true;
 
             this._dbContext.VanBanChiDao.Remove(vb);
+            await this._dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> TraVanBan(int id, string lydo)
+        {
+            var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
+            if (vb == null) return true;
+
+            vb.IsTralai = true;
+            vb.LydoTraLai = lydo;
+            vb.TrangThai = TrangThaiVanBan.TraLai;
+
             await this._dbContext.SaveChangesAsync();
 
             return true;

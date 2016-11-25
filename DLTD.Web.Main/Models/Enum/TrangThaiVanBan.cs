@@ -16,6 +16,8 @@ namespace DLTD.Web.Main.Models.Enum
         [Display(Name = "Hoàn thành")]
         HoanThanh = 4,
         [Display(Name = "Hoàn thành trễ hạn")]
-        HoanThanhTreHan = 5
+        HoanThanhTreHan = 5,
+        [Display(Name = "Trả lại")]
+        TraLai = 6
     }
 }

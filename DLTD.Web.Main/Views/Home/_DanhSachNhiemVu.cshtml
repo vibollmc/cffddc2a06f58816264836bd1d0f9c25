@@ -26,7 +26,7 @@
           columns.Bound(p => p.Trichyeu).Width("20%").Encoded(false);
           columns.Bound(p => p.TenDonVi).Width(100);
           columns.Bound(p => p.NguoiTheoDoi);
-          columns.Bound(p => p.YKienChiDao).Width("20%").Encoded(false); ;
+          columns.Bound(p => p.YKienChiDao).Width("20%").Encoded(false);
           columns.Bound(p => p.ThoiHanXuLy).Width(90);
           columns.Bound(p => p.DoKhan).Width(60);      
           columns.Bound(p => p.TrangThaiVB).Width(50);
@@ -48,7 +48,7 @@
           .Ajax()
           //.Group(g=>g.Add(x=>x.Trichyeu))
           .PageSize(10)
-          .Read(read => read.Action("GetVanBanChiDao", "Home", new {search = Model, trangThai = ViewBag.TrangThai}))
+          .Read(read => read.Action("GetVanBanChiDao", "Home", Model))
       )
     .Events(events => events.Change("gridSelected").DataBound("gridDataBound"))
 
