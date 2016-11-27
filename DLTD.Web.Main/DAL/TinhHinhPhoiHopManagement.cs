@@ -44,6 +44,14 @@ namespace DLTD.Web.Main.DAL
 
                     if (donViPhoiHop == null) return false;
 
+                    var vb = await _dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == data.IdVanBanChiDao);
+
+                    if (vb == null) return false;
+
+                    vb.TrangThai = data.TrangThai;
+
+                    await _dbContext.SaveChangesAsync();
+
                     var thph = new TinhHinhPhoiHop
                     {
                         IdDonViPhoiHop = donViPhoiHop.Id,

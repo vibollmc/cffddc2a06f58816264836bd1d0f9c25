@@ -178,7 +178,7 @@ namespace DLTD.Web.Main.DAL
                         x => x.DoKhan == (DoKhan)doUuTien.Value);
             }
 
-            return await data.ToArrayAsync();
+            return await data.ToListAsync();
             
         }
 

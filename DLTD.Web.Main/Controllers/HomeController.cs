@@ -200,8 +200,14 @@ namespace DLTD.Web.Main.Controllers
                     FileUrl = fileUrl,
                     IdVanBanChiDao = idVanBanChiDao,
                     NgayBaoCao = DateTime.Now,
-                    NoiDungBaoCao = noidungbaocao
+                    NoiDungBaoCao = noidungbaocao,
+                    TrangThai = TrangThaiVanBan.DangXuLy
                 };
+
+                if (Request.Form["TrangThai"].ToIntExt().HasValue)
+                {
+                    input.TrangThai = (TrangThaiVanBan)Request.Form["TrangThai"].ToIntExt();
+                }
 
                 var results = donvi.HasValue
                     ? await TinhHinhPhoiHopManagement.Go.SaveTinhHinhPhoiHop(input)

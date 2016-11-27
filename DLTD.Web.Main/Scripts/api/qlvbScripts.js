@@ -73,83 +73,100 @@ function buildButton() {
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Văn bản:</label>";
     modalHtml += "<p class='control-label' id='" + idButton + "VanBan'></p>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label><span> <input id='" + idButton + "AllDonVi' type='checkbox'> Hiện tất cả</span>";
     modalHtml += "<select name='IdDonVi' id='" + idButton + "DonVi' style='width: 100%' placeholder='Chọn đơn vị xử lý chính...'>";
     //modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Nội dung cần thực hiện:</label>";
     modalHtml += "<textarea type='text' name='YKienChiDao' rows='2' class='form-control' id='" + idButton + "YKCD' style='padding:2px 1px;'></textarea>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Thời hạn xử lý:</label><br/>";
     modalHtml += "<input name='ThoiHanXuLy' class='form-control' id='" + idButton + "HanXL'>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
 
     modalHtml += "<td>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Độ khẩn:</label><br/>";
     modalHtml += "<input name='DoKhan' class='form-control' id='" + idButton + "DoKhan'>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
-    modalHtml += "<label class='control-label'>Nguồn chỉ đạo:</label>";
-    modalHtml += "<select name='idKhoi' id='" + idButton + "NguonChiDao' style='width: 100%' placeholder='Chọn nguồn chỉ đạo...'>";
+    modalHtml += "<div class='form-group'>";
+    modalHtml += "<label class='control-label'>Nguồn chỉ đạo:</label><br>";
+    modalHtml += "<select name='idKhoi' id='" + idButton + "NguonChiDao' style='width: 200px' placeholder='Chọn nguồn chỉ đạo...'>";
     modalHtml += "{{KHOI}}";
     modalHtml += "</select>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Đơn vị Phối hợp:</label>";
     modalHtml += "<select name='IdDonViPhoiHop' id='" + idButton + "DonViPhoiHop' multiple='multiple'  data-placeholder='Chọn đơn vị phối hợp xử lý...'>";
     modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Người chỉ đạo:</label><br/>";
     modalHtml += "<select name='NguoiChiDao' class='form-control' id='" + idButton + "NguoiChiDao'>";
     modalHtml += "{{NGUOICHIDAO}}";
     modalHtml += "</select>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
 
     modalHtml += "<td>";
+    modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Người theo dõi:</label><br/>";
     modalHtml += "<select name='NguoiTheoDoi' class='form-control' id='" + idButton + "NguoiTheoDoi'>";
     modalHtml += "{{NGUOITHEODOI}}";
     modalHtml += "</select>";
+    modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
 
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
-    modalHtml += "<br>";
-    modalHtml += "<div class='rơw' id='" + idButton + "groupAttachment'>";
-    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><span class='glyphicons glyphicons-plus'></span> Thêm file đính kèm</button><br><br>";
-    modalHtml += "<label for='" + idButton + "File' class='btn btn-default'>";
-    modalHtml += "<i class='glyphicon glyphicon-paperclip'></i> Đính kèm file";
-    modalHtml += "</label>";
-    modalHtml += " <span title='Xóa file đã chọn' style='display:none; cursor:pointer' class='glyphicon glyphicon-remove' id='" + idButton + "RemoveFile'></span>";
-    modalHtml += "<input name='FileDinhKem' id='" + idButton + "File' type='file' style='display:none'/><div style='height:10px;width:100%'></div>";
+    modalHtml += "<div class='rơw form-group' id='" + idButton + "groupAttachment'>";
+    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "AddAttachment'><i class='glyphicon glyphicon-paperclip'></i> Thêm file đính kèm</button><br><br>";
+    //modalHtml += "<label for='" + idButton + "File' class='btn btn-default'>";
+    //modalHtml += "<i class='glyphicon glyphicon-paperclip'></i> Đính kèm file";
+    //modalHtml += "</label>";
+    //modalHtml += " <span title='Xóa file đã chọn' style='display:none; cursor:pointer' class='glyphicon glyphicon-remove' id='" + idButton + "RemoveFile'></span>";
+    //modalHtml += "<input name='FileDinhKem' id='" + idButton + "File' type='file' style='display:none'/><div style='height:10px;width:100%'></div>";
     modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
@@ -210,6 +227,7 @@ function addAttachment(number) {
         $(this).remove();
     });
 
+    $("#" + idButton + "File" + number).click();
 }
 
 function checkValidData() {
