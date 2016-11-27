@@ -46,6 +46,7 @@
       .HtmlAttributes(new { style = "height:100%;" })
       .DataSource(dataSource => dataSource
           .Ajax()
+          .
           //.Group(g=>g.Add(x=>x.Trichyeu))
           .PageSize(10)
           .Read(read => read.Action("GetVanBanChiDao", "Home", Model))
