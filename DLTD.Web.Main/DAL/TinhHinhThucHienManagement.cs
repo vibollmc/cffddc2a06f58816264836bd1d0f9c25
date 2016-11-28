@@ -53,7 +53,7 @@ namespace DLTD.Web.Main.DAL
 
                     if (vanban != null)
                     {
-                        vanban.TrangThai = TrangThaiVanBan.DangXuLy;
+                        vanban.TrangThai = data.TrangThai;
                         await _dbContext.SaveChangesAsync();
                     }
                     if (string.IsNullOrWhiteSpace(data.FileDinhKem)

@@ -21,7 +21,7 @@
         </button>
         @*@if (((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.QuanTriHeThong && ((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.ChuyenVien)
             {*@
-        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnTinhHinhXuLy" style="display:@ViewBag.TinhHinhThucHien;" data-toggle="modal" data-target="#modalTinhHinhXuLy">
+        <button class="btn btn-primary btn-sm btn-flat button-box" id="btnTinhHinhXuLy" disabled style="display:@ViewBag.TinhHinhThucHien;" data-toggle="modal" data-target="#modalTinhHinhXuLy">
             <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Tình hình Thực hiện
         </button>
         @*}*@
@@ -29,7 +29,7 @@
             <i class="glyphicon glyphicon-check"></i>&nbsp;Hoàn Thành
         </button>
         <button class="btn btn-success btn-sm btn-flat button-box" id="btnTraLai" disabled style="display: @ViewBag.TinhHinhThucHien" data-toggle="modal" data-target="#modalTraLai">
-            <i class="glyphicon glyphicon-check"></i>&nbsp;Trả lại
+            <i class="glyphicon glyphicon-new-window"></i>&nbsp;Trả lại
         </button>
         <button class="btn btn-danger btn-sm btn-flat button-box" id="btnDelete" disabled style="display:@ViewBag.HoanThanh">
             <i class="glyphicon glyphicon-remove-circle"></i>&nbsp;Xóa văn bản
@@ -63,7 +63,7 @@
 
 <!-- Modal Tinh Hinh Xu Ly -->
 <div class="modal fade" id="modalTinhHinhXuLy" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -81,7 +81,13 @@
                         <select style="width: 100%" name="DonVi" id="selectDonVi"></select>
                     </div>
                     <div class="form-group">
-                        <label class="control-label">Tình hình thực hiện:</label>
+                        <div class="form-group">
+                            <label class="control-label">Tình hình thực hiện:</label>
+                            <select name="TrangThai" id="trangthai" class="form-control" style="width:146px">
+                                <option value="2">Đang thực hiện</option>
+                                <option value="4">Hoàn thành</option>
+                            </select>
+                        </div>
                         <input type="text" name="TinhHinhXuLy" class="form-control" id="TinhHinhXuLy">
                     </div>
                     <div class="form-group">
@@ -91,9 +97,6 @@
                     </div>
                     <div class="form-group" style="text-align: right">
                         <button type="button" class="btn btn-primary" id="btnSave"><i class="glyphicon glyphicon-floppy-disk"></i> Gửi phản hồi</button>
-                    </div>
-                    <div id="Notification" class="alert alert-success">
-                        <strong>Success!</strong> thông báo ở đây
                     </div>
                     <input type="hidden" name="IdVanBan" id="IdVanBan" />
                 </form>
@@ -309,6 +312,8 @@
             filter: "contains",
             suggest: true
         }).data("kendoComboBox");
+
+        var comboTrangThai = $("#trangthai").kendoDropDownList().data("kendoDropDownList");
 
         $("#btnSearchPlusReset").click(function() {
             $("#ngaykytu").val("");
@@ -561,7 +566,7 @@
         });
 
         $("#btnTinhHinhXuLy").click(function () {
-            var comboDonvi = $("#selectDonVi").kendoComboBox({
+            var comboDonvi = $("#selectDonVi").kendoDropDownList({
                 placeholder: "Chọn đơn vị",
                 dataTextField: "Name",
                 dataValueField: "Id",
@@ -577,14 +582,13 @@
                         }
                     }
                 }
-            }).data("kendoComboBox");
+            }).data("kendoDropDownList");
 
             comboDonvi.value("");
             $('#TinhHinhXuLy').val("");
             var file = document.getElementById("FileDinhKem");
             file.value = file.defaultValue;
             $('#danhsachbaocao').empty();
-            $('#Notification').hide();
 
             $.ajax({
                 url: "@Url.Action("GetTinhHinhThucHien")" + "?idVanBanChiDao=" + $("#IdVanBan").val(),
@@ -615,15 +619,9 @@
                 async: false,
                 success: function (response) {
                     if (response.Code === 1) {
-                        $("#Notification")
-                            .attr("class", "alert alert-success")
-                            .html("<strong>Thành công!</strong> Gửi báo cáo thành công.")
-                            .show();
+                        toastr.success("Gửi báo cáo thành công.", "Thành công");
                     } else {
-                        $("#" + idButton + "Notification")
-                            .attr("class", "alert alert-danger")
-                            .html("<strong>Lỗi!</strong> " + response.Message)
-                            .show();
+                        toastr.error(response.Message, "Có lỗi xảy ra");
                     }
 
                     buildHtmlTHTH(response);
@@ -633,7 +631,6 @@
                     $("#btnSave").removeAttr("disabled");
                     $("#btnSave").html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Gửi phản hồi");
 
-                    setTimeout("$('#Notification').hide();", 5000);
                 },
                 cache: false,
                 contentType: false,
@@ -656,16 +653,30 @@
                 $('#pvanban').html(trichYeu);
                 $('#IdVanBan').val(id);
 
-                $('#btnTinhHinhXuLy').removeAttr('disabled');
                 if (trangThai.toLowerCase() === "hoàn thành") {
                     $('#btnHoanThanh').attr('disabled', 'disabled');
                     $('#btnDelete').attr('disabled', 'disabled');
                     $('#btnTraLai').attr('disabled', 'disabled');
-                } else {
+                    $('#btnTinhHinhXuLy').removeAttr('disabled');
+
+                    comboTrangThai.enable(false);
+                    comboTrangThai.value("4");
+                } else if (trangThai.toLowerCase() === "trả lại") {
+                    $('#btnTinhHinhXuLy').attr('disabled', 'disabled');
+                    $('#btnHoanThanh').attr('disabled', 'disabled');
+                    $('#btnTraLai').attr('disabled', 'disabled');
+                    $("#btnDelete").removeAttr('disabled');
+                }
+                else {
                     $("#btnHoanThanh").removeAttr('disabled');
                     $("#btnDelete").removeAttr('disabled');
                     $("#btnTraLai").removeAttr('disabled');
+                    $('#btnTinhHinhXuLy').removeAttr('disabled');
+
+                    comboTrangThai.enable();
+                    comboTrangThai.value("2");
                 }
+
                 idVanbanSelected = id;
                 return id;
             });
@@ -674,6 +685,7 @@
                 $('#btnTinhHinhXuLy').attr('disabled', 'disabled');
                 $('#btnHoanThanh').attr('disabled', 'disabled');
                 $('#btnDelete').attr('disabled', 'disabled');
+                $('#btnTraLai').attr('disabled', 'disabled');
             }
         }
 
@@ -743,19 +755,19 @@
                     $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("đang thực hiện") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0000ff");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0219fb");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trễ hạn") >= 0) {
                     $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#c71585");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("mới") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#4b0082");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#fba002");
                 }
                 else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trả lại") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#b22222");
-                }
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#707071");
+                }            
                 else {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#b9b9ba");
                 }
             }
         }

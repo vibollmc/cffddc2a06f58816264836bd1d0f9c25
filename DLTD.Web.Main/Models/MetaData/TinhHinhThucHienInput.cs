@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DLTD.Web.Main.Models.Enum;
+using System;
 
 namespace DLTD.Web.Main.Models.MetaData
 {
@@ -13,5 +14,7 @@ namespace DLTD.Web.Main.Models.MetaData
 
         public string FileDinhKem { get; set; }
         public string FileUrl { get; set; }
+
+        public TrangThaiVanBan TrangThai { get; set; }
     }
 }

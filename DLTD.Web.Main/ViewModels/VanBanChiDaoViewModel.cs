@@ -70,7 +70,9 @@ namespace DLTD.Web.Main.ViewModels
                 if (this.NgayHoanThanh.HasValue && this.ThoiHanXuLy != null && this.ThoiHanXuLy < this.NgayHoanThanh)
                     return "Hoàn thành trễ hạn";
 
-                if (this.TrangThai == TrangThaiVanBan.DangXuLy &&!this.NgayHoanThanh.HasValue &&(this.ThoiHanXuLy != null || this.ThoiHanXuLy >= DateTime.Today))
+                if (this.TrangThai == TrangThaiVanBan.DangXuLy &&!this.NgayHoanThanh.HasValue 
+                    &&(this.ThoiHanXuLy != null || this.ThoiHanXuLy >= DateTime.Today))
+
                     return "Đang thực hiện";
 
                 if (!this.NgayHoanThanh.HasValue && this.ThoiHanXuLy != null && this.ThoiHanXuLy < DateTime.Today)
