@@ -11,7 +11,7 @@ namespace QLVB.Donvi
         // UBND tỉnh Đồng Nai
         //oY4Rfm2Aazi8l9qbvb+9QLubD+F+O5NZV3N9dYe0V+0=
         //UBND tỉnh Đồng Nai  -  00.02.H19.e-doc.vn
-        private static string strtendonvi = "UBND PHƯỜNG QUYẾT THẮNG TP. BIÊN HÒA";
+        private static string strtendonvi = "VĂN PHÒN UBND TỈNH ĐỒNG NAI";
 
         // mã định danh theo vb 3158/UBND-TTTH ngày 25/04/2013
         private static string MaDinhDanh = "00.02.H19.e-doc.vn";
