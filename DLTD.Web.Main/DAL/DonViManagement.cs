@@ -12,12 +12,8 @@ namespace DLTD.Web.Main.DAL
     public class DonViManagement
     {
         private readonly MainDbContext _dbContext;
-        private static DonViManagement _instance;
 
-        public static DonViManagement Go
-        {
-            get { return _instance ?? (_instance = new DonViManagement()); }
-        }
+        public static DonViManagement Go => new DonViManagement();
 
         public DonViManagement()
         {

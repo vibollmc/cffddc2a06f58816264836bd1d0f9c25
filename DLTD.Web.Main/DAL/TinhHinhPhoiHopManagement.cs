@@ -11,12 +11,9 @@ namespace DLTD.Web.Main.DAL
     public class TinhHinhPhoiHopManagement
     {
         private readonly MainDbContext _dbContext;
-        private static TinhHinhPhoiHopManagement _instance;
 
-        public static TinhHinhPhoiHopManagement Go
-        {
-            get { return _instance ?? (_instance = new TinhHinhPhoiHopManagement()); }
-        }
+        public static TinhHinhPhoiHopManagement Go => new TinhHinhPhoiHopManagement();
+
         public TinhHinhPhoiHopManagement()
         {
             _dbContext = new MainDbContext();

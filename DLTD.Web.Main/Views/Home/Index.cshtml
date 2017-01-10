@@ -115,7 +115,7 @@
                     <a href="#"><i class="glyphicon glyphicon-paperclip"></i> File đính kèm</a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCloseTHTH">Đóng</button>
                 </div>
             </div>
         </div>
@@ -425,8 +425,14 @@
                             success: function(response) {
                                 if (response.Result) {
                                     isProcessing = false;
-                                    $("#btnSearch").click();
+
+                                    toastr.success("Xóa văn bản thành công.", "Thành công");
+
+                                    searchVanBan();
+                                } else {
+                                    toastr.error("Xóa văn bản không thành công.", "Có lỗi xảy ra");
                                 }
+                                
 
                             },
                             complete: function() {
@@ -630,7 +636,7 @@
                     isProcessing = false;
                     $("#btnSave").removeAttr("disabled");
                     $("#btnSave").html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Gửi phản hồi");
-
+                    searchVanBan();
                 },
                 cache: false,
                 contentType: false,

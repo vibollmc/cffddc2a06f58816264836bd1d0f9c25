@@ -15,17 +15,13 @@ namespace DLTD.Web.Main.DAL
     public class VanBanChiDaoManagement
     {
         private readonly MainDbContext _dbContext;
-        private static VanBanChiDaoManagement _instance;
 
         public VanBanChiDaoManagement()
         {
             _dbContext = new MainDbContext();
         }
 
-        public static VanBanChiDaoManagement Go
-        {
-            get { return _instance ?? (_instance = new VanBanChiDaoManagement()); }
-        }
+        public static VanBanChiDaoManagement Go => new VanBanChiDaoManagement();
 
         public async Task<bool> SaveVanBanChiDaoFromApi(VanBanChiDaoInput vanBan)
         {
@@ -547,13 +543,77 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<bool> DeleteVanBan(int id)
         {
-            var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
-            if (vb == null) return true;
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
+                    if (vb == null) return true;
 
-            this._dbContext.VanBanChiDao.Remove(vb);
-            await this._dbContext.SaveChangesAsync();
+                    var donviPhoiHop = vb.DonViPhoihop;
 
-            return true;
+                    if (donviPhoiHop != null && donviPhoiHop.Count > 0)
+                    {
+                        foreach (var donvi in donviPhoiHop)
+                        {
+                            var tinhhinhPhoiHop = donvi.TinhHinhPhoiHop;
+                            if (tinhhinhPhoiHop != null && tinhhinhPhoiHop.Count > 0)
+                            {
+                                foreach (var phoihop in tinhhinhPhoiHop)
+                                {
+                                    var file = phoihop.FileDinhKem;
+                                    if (file != null && file.Count > 0)
+                                    {
+                                        _dbContext.FileTinhHinhPhoiHop.RemoveRange(file);
+                                        await _dbContext.SaveChangesAsync();
+                                    }
+                                }
+                                _dbContext.TinhHinhPhoiHop.RemoveRange(tinhhinhPhoiHop);
+                                await _dbContext.SaveChangesAsync();
+                            }
+                        }
+                        _dbContext.DonViPhoiHop.RemoveRange(donviPhoiHop);
+                        await _dbContext.SaveChangesAsync();
+
+                    }
+
+                    var tinhhinhThucHien = vb.TinhHinhThucHien;
+                    if (tinhhinhThucHien != null && tinhhinhThucHien.Count > 0)
+                    {
+                        foreach (var thucHien in tinhhinhThucHien)
+                        {
+                            var file = thucHien.FileDinhKem;
+                            if (file != null && file.Count > 0)
+                            {
+                                _dbContext.FileTinhHinhThucHien.RemoveRange(file);
+                                await _dbContext.SaveChangesAsync();
+                            }
+                        }
+
+                        _dbContext.TinhHinhThucHien.RemoveRange(tinhhinhThucHien);
+                        await _dbContext.SaveChangesAsync();
+                    }
+
+                    var filevb = vb.FileDinhKem;
+                    if (filevb != null && filevb.Count > 0)
+                    {
+                        _dbContext.FileVanBanChiDao.RemoveRange(filevb);
+                        await _dbContext.SaveChangesAsync();
+                    }
+
+                    this._dbContext.VanBanChiDao.Remove(vb);
+                    await this._dbContext.SaveChangesAsync();
+
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+
+            }
         }
 
         public async Task<bool> TraVanBan(int id, string lydo)

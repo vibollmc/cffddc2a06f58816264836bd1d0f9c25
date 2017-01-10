@@ -126,7 +126,7 @@ namespace DLTD.Web.Main.Migrations
                         IdNguonChiDao = c.Int(),
                         IdNguoiChiDao = c.Int(),
                         IdNguoiTheoDoi = c.Int(),
-                        IsTralai = c.Int(),
+                        IsTralai = c.Boolean(),
                         LydoTraLai = c.String(),
                         NgayTra = c.DateTime(),
                         GhiChu = c.String(),

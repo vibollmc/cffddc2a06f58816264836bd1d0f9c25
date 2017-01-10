@@ -78,6 +78,24 @@ namespace DLTD.Web.Main.DAL
 
         private async Task<bool> DeleteExistsData()
         {
+            _dbContext.FileTinhHinhPhoiHop.RemoveRange(_dbContext.FileTinhHinhPhoiHop);
+            await _dbContext.SaveChangesAsync();
+
+            _dbContext.FileTinhHinhThucHien.RemoveRange(_dbContext.FileTinhHinhThucHien);
+            await _dbContext.SaveChangesAsync();
+
+            _dbContext.FileVanBanChiDao.RemoveRange(_dbContext.FileVanBanChiDao);
+            await _dbContext.SaveChangesAsync();
+
+            _dbContext.TinhHinhPhoiHop.RemoveRange(_dbContext.TinhHinhPhoiHop);
+            await _dbContext.SaveChangesAsync();
+
+            _dbContext.TinhHinhThucHien.RemoveRange(_dbContext.TinhHinhThucHien);
+            await _dbContext.SaveChangesAsync();
+
+            _dbContext.DonViPhoiHop.RemoveRange(_dbContext.DonViPhoiHop);
+            await _dbContext.SaveChangesAsync();
+
             _dbContext.VanBanChiDao.RemoveRange(_dbContext.VanBanChiDao);
             await _dbContext.SaveChangesAsync();
 

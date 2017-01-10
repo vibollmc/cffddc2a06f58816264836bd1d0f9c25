@@ -12,12 +12,9 @@ namespace DLTD.Web.Main.DAL
     public class TinhHinhThucHienManagement
     {
         private readonly MainDbContext _dbContext;
-        private static TinhHinhThucHienManagement _instance;
 
-        public static TinhHinhThucHienManagement Go
-        {
-            get { return _instance ?? (_instance = new TinhHinhThucHienManagement()); }
-        }
+        public static TinhHinhThucHienManagement Go => new TinhHinhThucHienManagement();
+
         public TinhHinhThucHienManagement()
         {
             _dbContext = new MainDbContext();
@@ -39,23 +36,25 @@ namespace DLTD.Web.Main.DAL
             {
                 try
                 {
+                    //cap nhat trang thai dang xu ly cho vanban
+                   
+                    var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(
+                        x => 
+                            x.Id == data.IdVanBanChiDao &&
+                            x.TrangThai != TrangThaiVanBan.DangXuLy &&
+                            x.TrangThai != TrangThaiVanBan.HoanThanh);
+
+                    if (vb != null)
+                    {
+                        vb.TrangThai = data.TrangThai;
+                        await _dbContext.SaveChangesAsync();
+                    }
+
                     var thth = data.Transform();
                     _dbContext.TinhHinhThucHien.Add(thth);
 
                     await _dbContext.SaveChangesAsync();
-                    //cap nhat trang thai dang xu ly cho vanban
-                    var vanban =
-                        await
-                            _dbContext.VanBanChiDao.SingleOrDefaultAsync(
-                                p =>
-                                    p.Id == data.IdVanBanChiDao && p.TrangThai != TrangThaiVanBan.DangXuLy &&
-                                    p.TrangThai != TrangThaiVanBan.HoanThanh);
 
-                    if (vanban != null)
-                    {
-                        vanban.TrangThai = data.TrangThai;
-                        await _dbContext.SaveChangesAsync();
-                    }
                     if (string.IsNullOrWhiteSpace(data.FileDinhKem)
                         || string.IsNullOrWhiteSpace(data.FileUrl))
                     {
@@ -73,6 +72,7 @@ namespace DLTD.Web.Main.DAL
                     await _dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
+                    
                     return true;
                 }
                 catch

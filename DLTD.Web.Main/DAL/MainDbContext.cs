@@ -24,9 +24,6 @@ namespace DLTD.Web.Main.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer<MainDbContext>(null);
-
-            modelBuilder.Conventions.Add<OneToManyCascadeDeleteConvention>();
-            modelBuilder.Conventions.Add<ManyToManyCascadeDeleteConvention>();
         }
 
     }

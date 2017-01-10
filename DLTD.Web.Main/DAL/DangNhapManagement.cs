@@ -11,12 +11,8 @@ namespace DLTD.Web.Main.DAL
     public class DangNhapManagement
     {
         private readonly MainDbContext _dbContext;
-        private static DangNhapManagement _instance;
 
-        public static DangNhapManagement Go
-        {
-            get { return _instance ?? (_instance = new DangNhapManagement()); }
-        }
+        public static DangNhapManagement Go => new DangNhapManagement();
 
         public DangNhapManagement()
         {

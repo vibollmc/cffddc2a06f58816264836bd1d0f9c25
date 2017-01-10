@@ -243,13 +243,9 @@
     <Compile Include="DAL\TinhHinhPhoiHopManagement.cs" />
     <Compile Include="DAL\TinhHinhThucHienManagement.cs" />
     <Compile Include="DAL\VanBanChiDaoManagement.cs" />
-    <Compile Include="Migrations\201611231457244_createdb.cs" />
-    <Compile Include="Migrations\201611231457244_createdb.Designer.cs">
-      <DependentUpon>201611231457244_createdb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611250421108_update1.cs" />
-    <Compile Include="Migrations\201611250421108_update1.Designer.cs">
-      <DependentUpon>201611250421108_update1.cs</DependentUpon>
+    <Compile Include="Migrations\201612121442581_createdb.cs" />
+    <Compile Include="Migrations\201612121442581_createdb.Designer.cs">
+      <DependentUpon>201612121442581_createdb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DonViPhoihop.cs" />
@@ -2048,11 +2044,8 @@
     <Content Include="Reports\VanBanChiDao.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201611231457244_createdb.resx">
-      <DependentUpon>201611231457244_createdb.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611250421108_update1.resx">
-      <DependentUpon>201611250421108_update1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612121442581_createdb.resx">
+      <DependentUpon>201612121442581_createdb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
