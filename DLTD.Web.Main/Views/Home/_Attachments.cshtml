@@ -34,6 +34,10 @@
                 }
                 @item.FileName
             </a>
+            @if (item.FileName.ToLower().EndsWith(".pdf"))
+            {
+                <a href="@Url.Content("~/ViewerJS/index.html?zoom=page-width")#../@item.FileUrl" target="_blank">(Xem trước)</a>
+            }
         </li>
     }
 </ul>

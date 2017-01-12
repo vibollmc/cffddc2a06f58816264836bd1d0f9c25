@@ -10,22 +10,21 @@ namespace DLTD.Web.Main.DAL
 {
     public class DangNhapManagement
     {
-        private readonly MainDbContext _dbContext;
-
+        private static DangNhapManagement _instance;
         public static DangNhapManagement Go
         {
-            get { return new DangNhapManagement(); }
-        }
-
-        public DangNhapManagement()
-        {
-            _dbContext = new MainDbContext();
+            get
+            {
+                if (_instance == null) _instance = new DangNhapManagement();
+                return _instance;
+            }
         }
 
         public async Task<DangNhap> SaveUserLoginWithThirdParty(DangNhap input)
         {
+            var dbContext = new MainDbContext();
             var user =
-                await _dbContext.DangNhap.SingleOrDefaultAsync(
+                await dbContext.DangNhap.SingleOrDefaultAsync(
                     x => x.TenDangNhap == input.TenDangNhap && x.DangNhapTu == input.DangNhapTu);
             if (user != null)
             {
@@ -41,28 +40,31 @@ namespace DLTD.Web.Main.DAL
                 user.DangNhapTu = input.DangNhapTu;
                 user.TrangThai = input.TrangThai;
 
-                await _dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
                 return user;
             }
             
-            _dbContext.DangNhap.Add(input);
-            await _dbContext.SaveChangesAsync();    
+            dbContext.DangNhap.Add(input);
+            await dbContext.SaveChangesAsync();    
             
             return input;
         }
 
         public async Task<DangNhap> Login(string username, string password)
         {
-            string passwordinMD5 = CryptServices.HashMD5(password);
-            var user = await _dbContext.DangNhap.SingleOrDefaultAsync(x => x.TenDangNhap == username && x.MatKhau == passwordinMD5);
+            var dbContext = new MainDbContext();
+            string passwordinMd5 = CryptServices.HashMD5(password);
+            var user = await dbContext.DangNhap.SingleOrDefaultAsync(x => x.TenDangNhap == username && x.MatKhau == passwordinMd5);
 
             return user;
         }
         public async Task<IEnumerable<DangNhap>> GetNguoiChiDao(int? donvi)
         {
+            var dbContext = new MainDbContext();
+
             return
                 await
-                    _dbContext.DangNhap.Where(
+                    dbContext.DangNhap.Where(
                         x =>
                             x.IdDonVi == donvi &&
                             x.NhomNguoiDung == NhomNguoiDung.LanhDao).OrderBy(x => x.Ten).ToListAsync();
@@ -70,19 +72,23 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<IEnumerable<DangNhap>> GetNguoiTheoDoi()
         {
+            var dbContext = new MainDbContext();
+
             return
                 await
-                    _dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien || x.NhomNguoiDung == NhomNguoiDung.LanhDaoPhong)
+                    dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien || x.NhomNguoiDung == NhomNguoiDung.LanhDaoPhong)
                         .OrderBy(x => x.Ten)
                         .ToListAsync();
         }
         public IEnumerable<DangNhapViewModel> GetTonghopNguoitheoDoi()
         {
-            return _dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien).OrderBy(x => x.Ten).Select(x => new DangNhapViewModel { Id = x.Id, Ten = x.Ten });
+            var dbContext = new MainDbContext();
+            return dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien).OrderBy(x => x.Ten).Select(x => new DangNhapViewModel { Id = x.Id, Ten = x.Ten });
         }
         public IEnumerable<DangNhapViewModel> GetTonghopNguoichidao()
         {
-            return _dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.LanhDao).OrderBy(x => x.Ten).Select(x => new DangNhapViewModel { Id = x.Id, Ten = x.Ten });
+            var dbContext = new MainDbContext();
+            return dbContext.DangNhap.Where(x => x.NhomNguoiDung == NhomNguoiDung.LanhDao).OrderBy(x => x.Ten).Select(x => new DangNhapViewModel { Id = x.Id, Ten = x.Ten });
         }
 
     }

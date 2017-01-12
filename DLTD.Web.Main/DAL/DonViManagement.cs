@@ -11,27 +11,28 @@ namespace DLTD.Web.Main.DAL
 {
     public class DonViManagement
     {
-        private readonly MainDbContext _dbContext;
-
+        private static DonViManagement _instance;
         public static DonViManagement Go
         {
-            get { return new DonViManagement(); }
-        }
-
-        public DonViManagement()
-        {
-            _dbContext = new MainDbContext();
+            get
+            {
+                if (_instance == null) _instance = new DonViManagement();
+                return _instance;
+            }
         }
 
         public async Task<IEnumerable<DonVi>> GetDonViByKhoi(params int[] idKhoi)
         {
+            var dbContext = new MainDbContext();
+
             if (idKhoi == null || idKhoi.Length == 0) 
-                return await _dbContext.DonVi.Where(x=> x.TrangThai == TrangThai.Active).ToListAsync();
-            return await _dbContext.DonVi.Where(x => x.TrangThai == TrangThai.Active && idKhoi.Contains(x.IdKhoi.Value)).ToListAsync();
+                return await dbContext.DonVi.Where(x=> x.TrangThai == TrangThai.Active).ToListAsync();
+            return await dbContext.DonVi.Where(x => x.TrangThai == TrangThai.Active && idKhoi.Contains(x.IdKhoi.Value)).ToListAsync();
         }
         public async Task<IEnumerable<Khoi>> GetNguonChiDaoByKhoi()
         {
-                     return await _dbContext.Khoi.Where(x => x.NguonChiDao == true).ToListAsync();
+            var dbContext = new MainDbContext();
+            return await dbContext.Khoi.Where(x => x.NguonChiDao == true).ToListAsync();
         }
         //public ListKhoiViewModel GetNguonChiDao()
         //{
@@ -42,11 +43,13 @@ namespace DLTD.Web.Main.DAL
         //}
         public IEnumerable<KhoiViewModel> GetNguonChiDao()
         {
-            return _dbContext.Khoi.Where(x => x.NguonChiDao == true).Select(x => new KhoiViewModel { Id = x.Id, Ten = x.Ten });
+            var dbContext = new MainDbContext();
+            return dbContext.Khoi.Where(x => x.NguonChiDao == true).Select(x => new KhoiViewModel { Id = x.Id, Ten = x.Ten });
         }
         public IEnumerable<DonViViewModel> GetDonViTheoDoi(int? idKhoi, string filter)
         {
-            var donVi =  _dbContext.DonVi.Where(
+            var dbContext = new MainDbContext();
+            var donVi =  dbContext.DonVi.Where(
                 x => (x.Khoi.Id == 6 || x.Khoi.Id == 7 || x.Khoi.Id == 9) && x.TrangThai == TrangThai.Active && (idKhoi == null || x.Khoi.Id == idKhoi));
             return !string.IsNullOrWhiteSpace(filter)
                 ? donVi.Where(x => x.Ten.Contains(filter)).Select(x => new DonViViewModel {Id = x.Id, Ten = x.Ten})
@@ -55,7 +58,8 @@ namespace DLTD.Web.Main.DAL
 
         public IEnumerable<KhoiViewModel> GetKhoi(params int[] idKhoi)
         {
-            return _dbContext.Khoi.Where(x => idKhoi.Contains(x.Id.Value)).Select(x => new KhoiViewModel { Id = x.Id, Ten = x.Ten });
+            var dbContext = new MainDbContext();
+            return dbContext.Khoi.Where(x => idKhoi.Contains(x.Id.Value)).Select(x => new KhoiViewModel { Id = x.Id, Ten = x.Ten });
         }
     }
 }

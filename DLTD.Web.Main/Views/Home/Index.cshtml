@@ -267,6 +267,7 @@
     </div>
 </div>
 <!-- End modal advance search-->
+
 @section scripts {
     <script type="text/javascript">
         var idVanbanSelected = '';
@@ -281,9 +282,9 @@
             dataTextField: "text",
             dataValueField: "value",
             dataSource: [
-                            { text: "", value: "" },
-                            { text: "Thường", value: "0" },
-                            { text: "Hỏa tốc", value: "1" }
+                { text: "", value: "" },
+                { text: "Thường", value: "0" },
+                { text: "Hỏa tốc", value: "1" }
             ],
             index: 0
         }).data("kendoDropDownList");
@@ -360,11 +361,11 @@
             $.ajax({
                 url: "@Url.Action("TraVanBan")",
                 type: "POST",
-                data: { id: idVanbanSelected, lydo: $("#lydotralai").val()},
-                success: function (response) {
+                data: { id: idVanbanSelected, lydo: $("#lydotralai").val() },
+                success: function(response) {
                     $('#modalTraLai').modal('hide');
                 },
-                complete: function () {
+                complete: function() {
                     isProcessing = false;
                     searchVanBan();
                 }
@@ -381,11 +382,11 @@
                 url: "@Url.Action("GetVanBanDetail")",
                 type: "POST",
                 data: { id: id },
-                success: function (response) {
+                success: function(response) {
                     $('#modalAttachments .modal-body').html(response);
                     $('#modalAttachments').modal('show');
                 },
-                complete: function () {
+                complete: function() {
                     isProcessing = false;
                 }
             });
@@ -397,7 +398,7 @@
             $("#modalSearch").modal("show");
         });
 
-        $("#btnDelete").click(function () {
+        $("#btnDelete").click(function() {
             if (isProcessing) return false;
 
             isProcessing = true;
@@ -416,7 +417,7 @@
                         className: 'btn-danger'
                     }
                 },
-                callback: function (result) {
+                callback: function(result) {
                     if (result) {
                         $.ajax({
                             url: "@Url.Action("DeleteVanBan")",
@@ -432,15 +433,14 @@
                                 } else {
                                     toastr.error("Xóa văn bản không thành công.", "Có lỗi xảy ra");
                                 }
-                                
+
 
                             },
                             complete: function() {
                                 isProcessing = false;
                             }
                         });
-                    }
-                    else {
+                    } else {
                         isProcessing = false;
                     }
                 }
@@ -449,7 +449,7 @@
             return false;
         });
 
-        $("#btnHoanThanh").click(function () {
+        $("#btnHoanThanh").click(function() {
             if (isProcessing) return false;
 
             isProcessing = true;
@@ -472,25 +472,26 @@
                         className: 'btn-danger'
                     }
                 },
-                callback: function (result) {
+                callback: function(result) {
                     if (result) {
                         $.ajax({
-                                url: "@Url.Action("UpdateCompleteVanBan")",
-                                type: "POST",
+                            url: "@Url.Action("UpdateCompleteVanBan")",
+                            type: "POST",
                             data: { id: idVanbanSelected },
-                            success: function (response) {
+                            success: function(response) {
                                 if (response.Code === 1) {
                                     isProcessing = false;
                                     $("#btnSearch").click();
                                 }
 
                             },
-                            complete: function () {
+                            complete: function() {
                                 isProcessing = false;
                             }
                         });
+                    } else {
+                        isProcessing = false;
                     }
-                    else {isProcessing = false;}
                 }
             });
 
@@ -523,8 +524,13 @@
                 html += '<div class="row">';
                 html += '<div class="col-lg-11">';
                 if (data.Results[i].FileDinhKem != null && data.Results[i].FileDinhKem !== '' &&
-                    data.Results[i].FileUrl != null && data.Results[i].FileUrl !== '')
+                    data.Results[i].FileUrl != null && data.Results[i].FileUrl !== '') {
                     html += '<a href="' + data.Results[i].FileUrl + '"><i class="glyphicon glyphicon-paperclip"></i> ' + data.Results[i].FileDinhKem + '</a>';
+
+                    if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf')) {
+                        html += '<a href="@Url.Content("~/ViewerJS/index.html?zoom=page-width#..")' + data.Results[i].FileUrl + '" target="_blank">(Xem trước)</a>';
+                    }
+                }
                 html += '</div>';
                 html += '<div class="col-lg-1" style="text-align: right">';
                 html += '<span onclick="deleteBaoCaoTHTH(' + data.Results[i].Id + ',' + data.Results[i].LoaiBaoCao + ');" style="cursor:pointer" data-toggle="tooltip" title="Xóa" class="glyphicon glyphicon-trash"> </span>';
@@ -546,10 +552,10 @@
                 url: "@Url.Action("DeleteTinhHinhThucHien")",
                 type: "POST",
                 data: { id: id, loaiBaoCao: loaiBaoCao, idVanBan: $("#IdVanBan").val() },
-                success: function (response) {
+                success: function(response) {
                     buildHtmlTHTH(response);
                 },
-                complete: function () {
+                complete: function() {
                     isProcessing = false;
                 }
             });
@@ -557,12 +563,12 @@
             return false;
         }
 
-        $("#FileDinhKem").change(function () {
+        $("#FileDinhKem").change(function() {
             $("label[for=FileDinhKem]").html("<i class=\"glyphicon glyphicon-paperclip\"></i> " + $(this).val());
             $("#RemoveFile").show();
         });
 
-        $("#RemoveFile").click(function () {
+        $("#RemoveFile").click(function() {
             var file = document.getElementById("FileDinhKem");
             file.value = file.defaultValue;
 
@@ -571,7 +577,7 @@
             $(this).hide();
         });
 
-        $("#btnTinhHinhXuLy").click(function () {
+        $("#btnTinhHinhXuLy").click(function() {
             var comboDonvi = $("#selectDonVi").kendoDropDownList({
                 placeholder: "Chọn đơn vị",
                 dataTextField: "Name",
@@ -599,7 +605,7 @@
             $.ajax({
                 url: "@Url.Action("GetTinhHinhThucHien")" + "?idVanBanChiDao=" + $("#IdVanBan").val(),
                 type: "GET",
-                success: function (response) {
+                success: function(response) {
                     buildHtmlTHTH(response);
                 }
             });
@@ -607,14 +613,14 @@
 
         var isProcessing = false;
 
-        $("#btnSave").click(function () {
+        $("#btnSave").click(function() {
             if (isProcessing) return false;
 
             isProcessing = true;
 
             $(this).attr("disabled", "disabled");
             $(this).html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Đang thực hiện");
-            $("#trangthai").val(comboTrangThai.value());
+
             var formData = new FormData($("form#FormInput")[0]);
 
 
@@ -623,7 +629,7 @@
                 type: "POST",
                 data: formData,
                 async: false,
-                success: function (response) {
+                success: function(response) {
                     if (response.Code === 1) {
                         toastr.success("Gửi báo cáo thành công.", "Thành công");
                     } else {
@@ -632,7 +638,7 @@
 
                     buildHtmlTHTH(response);
                 },
-                complete: function () {
+                complete: function() {
                     isProcessing = false;
                     $("#btnSave").removeAttr("disabled");
                     $("#btnSave").html("<i class=\"glyphicon glyphicon-floppy-disk\"></i> Gửi phản hồi");
@@ -647,7 +653,7 @@
         });
 
         function gridSelected(arg) {
-            var selected = $.map(this.select(), function (item) {
+            var selected = $.map(this.select(), function(item) {
                 var grid = $("#grid").data("kendoGrid");
                 var row = grid.select();
                 var id = grid.dataItem(row).Id;
@@ -672,8 +678,7 @@
                     $('#btnHoanThanh').attr('disabled', 'disabled');
                     $('#btnTraLai').attr('disabled', 'disabled');
                     $("#btnDelete").removeAttr('disabled');
-                }
-                else {
+                } else {
                     $("#btnHoanThanh").removeAttr('disabled');
                     $("#btnDelete").removeAttr('disabled');
                     $("#btnTraLai").removeAttr('disabled');
@@ -696,7 +701,7 @@
         }
 
 
-        $("#btnSearch").click(function () {
+        $("#btnSearch").click(function() {
 
             $("#btnSearchPlusReset").click();
 
@@ -715,10 +720,10 @@
                 url: "@Url.Action("DanhSachNhiemVu")",
                 type: 'POST',
                 data: objSearch,
-                success: function (data) {
+                success: function(data) {
                     $('#DanhSachNhiemVu').html(data);
                 },
-                complete: function () {
+                complete: function() {
                     isProcessing = false;
                     $("#modalSearch").modal("hide");
                 }
@@ -730,7 +735,7 @@
         function setGridHeight() {
             var height = $(window).innerHeight();
             var used = 70;
-            $('div[fixedsize=true]').each(function () {
+            $('div[fixedsize=true]').each(function() {
                 used += $(this).outerHeight();
             });
             var girdHeaderAndFooter = $('#DanhSachNhiemVu .k-grid-pager').outerHeight() + $('#DanhSachNhiemVu .k-grid-header').outerHeight();
@@ -738,7 +743,7 @@
             $('#DanhSachNhiemVu .k-grid-content').css("height", height - used - girdHeaderAndFooter);
         }
 
-        $("#txtSearch").keypress(function (e) {
+        $("#txtSearch").keypress(function(e) {
             if (e.keyCode === 13) {
                 $("#btnSearch").click();
             }
@@ -747,35 +752,48 @@
         //    window.open("http://192.168.2.114:800/Vanbandi", "_blank");
         //    return false;
         //});
-        $(document).ready(function () {
+        $(document).ready(function() {
             setGridHeight();
         });
-        $(window).resize(function () {
+        $(window).resize(function() {
             setGridHeight();
         });
+
         function gridDataBound(arg) {
             var dataView = this.dataSource.view();
             for (var i = 0; i < dataView.length; i++) {
                 var uid = dataView[i].uid;
                 if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("hoàn thành") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#000000");
-                }
-                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("đang thực hiện") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#0219fb");
-                }
-                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trễ hạn") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#c71585");
-                }
-                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("mới") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#fba002");
-                }
-                else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trả lại") >= 0) {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#707071");
-                }            
-                else {
-                    $("#grid tbody").find("tr[data-uid=" + uid + "]").css("color", "#b9b9ba");
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('hoanthanh');
+                } else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("đang thực hiện") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('dangthuchien');
+                } else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trễ hạn") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('trehan');
+                } else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("mới") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('moi');
+                } else if (dataView[i].TrangThaiVB.toLocaleLowerCase().indexOf("trả lại") >= 0) {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('tralai');
+                } else {
+                    $("#grid tbody").find("tr[data-uid=" + uid + "]").addClass('khac');
                 }
             }
         }
     </script>
+}
+@section style {
+    <style>
+        .hoanthanh { color: #000000 }
+        .dangthuchien { color: #0219fb }
+        .trehan { color: #c71585 }
+        .moi { color: #fba002 }
+        .tralai { color: #707071 }
+        .khac { color: #b9b9ba }
+
+        .k-state-selected.hoanthanh,
+        .k-state-selected.dangthuchien,
+        .k-state-selected.trehan,
+        .k-state-selected.moi,
+        .k-state-selected.tralai,
+        .k-state-selected.khac { color: #fff }
+    </style>
 }

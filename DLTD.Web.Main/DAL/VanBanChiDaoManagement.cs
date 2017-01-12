@@ -14,34 +14,33 @@ namespace DLTD.Web.Main.DAL
 {
     public class VanBanChiDaoManagement
     {
-        private readonly MainDbContext _dbContext;
-
-        public VanBanChiDaoManagement()
-        {
-            _dbContext = new MainDbContext();
-        }
-
+        private static VanBanChiDaoManagement _instance;
         public static VanBanChiDaoManagement Go
         {
-            get { return new VanBanChiDaoManagement(); }
+            get
+            {
+                if(_instance ==null) _instance= new VanBanChiDaoManagement();
+                return _instance;
+            }
         }
 
         public async Task<bool> SaveVanBanChiDaoFromApi(VanBanChiDaoInput vanBan)
         {
-            using (var dbTransaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
                     var vanBanChiDao = vanBan.Transform();
-                    _dbContext.VanBanChiDao.Add(vanBanChiDao);
-                    await _dbContext.SaveChangesAsync();
+                    dbContext.VanBanChiDao.Add(vanBanChiDao);
+                    await dbContext.SaveChangesAsync();
 
                     if (!string.IsNullOrWhiteSpace(vanBan.DonViPhoiHop))
                     {
                         var arrIdDonVi = vanBan.DonViPhoiHop.Split(',');
                         foreach (var s in arrIdDonVi)
                         {
-                            _dbContext.DonViPhoiHop.Add(new DonViPhoiHop
+                            dbContext.DonViPhoiHop.Add(new DonViPhoiHop
                             {
                                 TrangThai = TrangThai.Active,
                                 IdDonvi = s.ToIntExt(),
@@ -49,7 +48,7 @@ namespace DLTD.Web.Main.DAL
                             });
                         }
 
-                        await _dbContext.SaveChangesAsync();
+                        await dbContext.SaveChangesAsync();
                     }
 
 
@@ -69,10 +68,10 @@ namespace DLTD.Web.Main.DAL
                             Url = file.UrlFile,
                             IdVanBanChiDao = vanBanChiDao.Id
                         };
-                        _dbContext.FileVanBanChiDao.Add(fileDinhKem);
+                        dbContext.FileVanBanChiDao.Add(fileDinhKem);
                     }
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
 
@@ -91,8 +90,10 @@ namespace DLTD.Web.Main.DAL
             TrangThaiVanBan? trangthai = TrangThaiVanBan.Undefined;
             if (searchObj != null) trangthai = searchObj.TrangThai;
 
+            var dbContext = new MainDbContext();
+
             var data =
-                    _dbContext.VanBanChiDao.Where(
+                    dbContext.VanBanChiDao.Where(
                         x =>
                                 (
                                     (trangthai == TrangThaiVanBan.TraLai && x.IsTralai == true)
@@ -183,7 +184,8 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<VanBanChiDao> GetVanBanChiDaoById(int? id)
         {
-            return await _dbContext.VanBanChiDao.SingleOrDefaultAsync(x => x.Id == id);
+            var dbContext = new MainDbContext();
+            return await dbContext.VanBanChiDao.SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<VanBanChiDao>> GetVanBanChiDao(
@@ -191,7 +193,8 @@ namespace DLTD.Web.Main.DAL
             DateTime? tuNgay, 
             DateTime? denNgay)
         {
-            var data = await _dbContext.VanBanChiDao.Where(x => (tuNgay == null || x.NgayTao >= tuNgay)&&(denNgay==null||x.NgayTao<=denNgay))
+            var dbContext = new MainDbContext();
+            var data = await dbContext.VanBanChiDao.Where(x => (tuNgay == null || x.NgayTao >= tuNgay)&&(denNgay==null||x.NgayTao<=denNgay))
                 .Include(x => x.DonVi)
                 .Include(x => x.NguoiGui)
                 .Include(x => x.FileDinhKem)
@@ -200,7 +203,8 @@ namespace DLTD.Web.Main.DAL
         }
         public async Task<IEnumerable<VanBanChiDao>> ThongKeVanBanChiDao(DateTime? tuNgay, DateTime? denNgay, int? idKhoi, int? idDonvi, int? idnguoitheodoi, int?idnguoichidao)
         {
-            var data = await _dbContext.VanBanChiDao.Where(x => (tuNgay == null || x.NgayTao >= tuNgay)
+            var dbContext = new MainDbContext();
+            var data = await dbContext.VanBanChiDao.Where(x => (tuNgay == null || x.NgayTao >= tuNgay)
                 && (denNgay == null || x.NgayTao <= denNgay) && (idKhoi == null || x.IdNguonChiDao== idKhoi)
                 && (idDonvi == null || x.IdDonVi == idDonvi)&&(idnguoitheodoi==null)||(x.IdNguoiTheoDoi==idnguoitheodoi)
                 &&(idnguoichidao==null)||(x.IdNguoiChiDao==idnguoichidao))
@@ -212,19 +216,19 @@ namespace DLTD.Web.Main.DAL
         }
         public async Task<bool> UpdateCompleteVanBan(int? id)
         {
-            var vanban = await _dbContext.VanBanChiDao.SingleOrDefaultAsync(x => x.Id == id);
+            var dbContext = new MainDbContext();
+            var vanban = await dbContext.VanBanChiDao.SingleOrDefaultAsync(x => x.Id == id);
 
             vanban.TrangThai = TrangThaiVanBan.HoanThanh;
             vanban.NgayHoanThanh = DateTime.Now;
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
             return true;
         }
         public IList<FileDinhKemViewModel> GetFileVanBanChiDao(int idVanBan)
         {
-            return
-                
-                    _dbContext.FileVanBanChiDao.Where(x => x.IdVanBanChiDao == idVanBan)
+            var dbContext = new MainDbContext();
+            return dbContext.FileVanBanChiDao.Where(x => x.IdVanBanChiDao == idVanBan)
                         .Select(x => new FileDinhKemViewModel
                         {
                             FileName = x.Name,
@@ -303,7 +307,8 @@ namespace DLTD.Web.Main.DAL
           int? idKhoi,
           TrangThaiVanBan? trangthai)
         {
-            var nguonChiDao = _dbContext.Khoi.Where(x => x.NguonChiDao == true && (idKhoi == null || x.Id == idKhoi))
+            var dbContext = new MainDbContext();
+            var nguonChiDao = dbContext.Khoi.Where(x => x.NguonChiDao == true && (idKhoi == null || x.Id == idKhoi))
                 .Include(
                     x => x.VanBanChiDao);
             var results = new List<TinhHinhXuLyViewModel>();
@@ -331,32 +336,32 @@ namespace DLTD.Web.Main.DAL
                 obj.Id = item.Id;
 
                 var sum = vanBanChiDao.Count();
-                var sumDangXL =
+                var sumDangXl =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy <= DateTime.Today));
-                var sumDangXLQuaHan =
+                var sumDangXlQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy > DateTime.Today));
 
-                var sumHT =
+                var sumHt =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy >= x.NgayHoanThanh));
-                var sumHTQuaHan =
+                var sumHtQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy < x.NgayHoanThanh));
 
-                obj.HoanThanh = sumHT;
-                obj.DangThucHien = sumDangXL;
-                obj.QuaHan = sumDangXLQuaHan;
-                obj.HoanThanhQuaHan = sumHTQuaHan;
+                obj.HoanThanh = sumHt;
+                obj.DangThucHien = sumDangXl;
+                obj.QuaHan = sumDangXlQuaHan;
+                obj.HoanThanhQuaHan = sumHtQuaHan;
                 obj.TongNhiemVu = sum;
 
                 results.Add(obj);
@@ -372,9 +377,10 @@ namespace DLTD.Web.Main.DAL
             int? idKhoiDonVi, 
             int? idDonVi)
         {
+            var dbContext = new MainDbContext();
             var results = new List<TinhHinhXuLyViewModel>();
             var lstKhoi = new List<int> {6, 7, 9};
-            var donVi = _dbContext.DonVi.Where(x => x.TrangThai == TrangThai.Active 
+            var donVi = dbContext.DonVi.Where(x => x.TrangThai == TrangThai.Active 
                 && lstKhoi.Contains(x.IdKhoi.Value)
                 && (idKhoiDonVi == null || x.Khoi.Id == idKhoiDonVi)
                 && (idDonVi == null || x.Id == idDonVi))
@@ -394,32 +400,32 @@ namespace DLTD.Web.Main.DAL
                 obj.Id = item.Id;
 
                 var sum = vanBanChiDao.Count();
-                var sumDangXL =
+                var sumDangXl =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy <= DateTime.Today));
-                var sumDangXLQuaHan =
+                var sumDangXlQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy > DateTime.Today));
 
-                var sumHT =
+                var sumHt =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy >= x.NgayHoanThanh));
-                var sumHTQuaHan =
+                var sumHtQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy < x.NgayHoanThanh));
 
-                obj.HoanThanh = sumHT;
-                obj.DangThucHien = sumDangXL;
-                obj.QuaHan = sumDangXLQuaHan;
-                obj.HoanThanhQuaHan = sumHTQuaHan;
+                obj.HoanThanh = sumHt;
+                obj.DangThucHien = sumDangXl;
+                obj.QuaHan = sumDangXlQuaHan;
+                obj.HoanThanhQuaHan = sumHtQuaHan;
                 obj.TongNhiemVu = sum;
 
                 results.Add(obj);
@@ -433,8 +439,9 @@ namespace DLTD.Web.Main.DAL
             DateTime? denNgay, 
             int? idnguoitheodoi)
         {
+            var dbContext = new MainDbContext();
             var results = new List<TinhHinhXuLyViewModel>();
-            var nguoitheodoi = _dbContext.DangNhap.Where(
+            var nguoitheodoi = dbContext.DangNhap.Where(
                 x => x.NhomNguoiDung == NhomNguoiDung.ChuyenVien && (idnguoitheodoi == null || x.Id == idnguoitheodoi))
                 .Include(x => x.VanBanChiDao);
 
@@ -452,32 +459,32 @@ namespace DLTD.Web.Main.DAL
                 obj.Id = item.Id;
 
                 var sum = vanBanChiDao.Count();
-                var sumDangXL =
+                var sumDangXl =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy <= DateTime.Today));
-                var sumDangXLQuaHan =
+                var sumDangXlQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy > DateTime.Today));
 
-                var sumHT =
+                var sumHt =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy >= x.NgayHoanThanh));
-                var sumHTQuaHan =
+                var sumHtQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy < x.NgayHoanThanh));
 
-                obj.HoanThanh = sumHT;
-                obj.DangThucHien = sumDangXL;
-                obj.QuaHan = sumDangXLQuaHan;
-                obj.HoanThanhQuaHan = sumHTQuaHan;
+                obj.HoanThanh = sumHt;
+                obj.DangThucHien = sumDangXl;
+                obj.QuaHan = sumDangXlQuaHan;
+                obj.HoanThanhQuaHan = sumHtQuaHan;
                 obj.TongNhiemVu = sum;
 
                 results.Add(obj);
@@ -491,8 +498,9 @@ namespace DLTD.Web.Main.DAL
             DateTime? denNgay, 
             int? idnguoichidao)
         {
+            var dbContext = new MainDbContext();
             var results = new List<TinhHinhXuLyViewModel>();
-            var nguoichidao = _dbContext.DangNhap.Where(
+            var nguoichidao = dbContext.DangNhap.Where(
                 x => x.NhomNguoiDung == NhomNguoiDung.LanhDao && (idnguoichidao == null || x.Id == idnguoichidao))
                 .Include(x => x.VanBanChiDao);
 
@@ -510,32 +518,32 @@ namespace DLTD.Web.Main.DAL
                 obj.Id = item.Id;
 
                 var sum = vanBanChiDao.Count();
-                var sumDangXL =
+                var sumDangXl =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy <= DateTime.Today));
-                var sumDangXLQuaHan =
+                var sumDangXlQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai != TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy > DateTime.Today));
 
-                var sumHT =
+                var sumHt =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy == null || x.ThoiHanXuLy >= x.NgayHoanThanh));
-                var sumHTQuaHan =
+                var sumHtQuaHan =
                     vanBanChiDao.Count(
                         x =>
                             x.TrangThai == TrangThaiVanBan.HoanThanh &&
                             (x.ThoiHanXuLy != null && x.ThoiHanXuLy < x.NgayHoanThanh));
 
-                obj.HoanThanh = sumHT;
-                obj.DangThucHien = sumDangXL;
-                obj.QuaHan = sumDangXLQuaHan;
-                obj.HoanThanhQuaHan = sumHTQuaHan;
+                obj.HoanThanh = sumHt;
+                obj.DangThucHien = sumDangXl;
+                obj.QuaHan = sumDangXlQuaHan;
+                obj.HoanThanhQuaHan = sumHtQuaHan;
                 obj.TongNhiemVu = sum;
 
                 results.Add(obj);
@@ -546,11 +554,12 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<bool> DeleteVanBan(int id)
         {
-            using (var transaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+            using (var transaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
+                    var vb = await dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
                     if (vb == null) return true;
 
                     var donviPhoiHop = vb.DonViPhoihop;
@@ -567,16 +576,16 @@ namespace DLTD.Web.Main.DAL
                                     var file = phoihop.FileDinhKem;
                                     if (file != null && file.Count > 0)
                                     {
-                                        _dbContext.FileTinhHinhPhoiHop.RemoveRange(file);
-                                        await _dbContext.SaveChangesAsync();
+                                        dbContext.FileTinhHinhPhoiHop.RemoveRange(file);
+                                        await dbContext.SaveChangesAsync();
                                     }
                                 }
-                                _dbContext.TinhHinhPhoiHop.RemoveRange(tinhhinhPhoiHop);
-                                await _dbContext.SaveChangesAsync();
+                                dbContext.TinhHinhPhoiHop.RemoveRange(tinhhinhPhoiHop);
+                                await dbContext.SaveChangesAsync();
                             }
                         }
-                        _dbContext.DonViPhoiHop.RemoveRange(donviPhoiHop);
-                        await _dbContext.SaveChangesAsync();
+                        dbContext.DonViPhoiHop.RemoveRange(donviPhoiHop);
+                        await dbContext.SaveChangesAsync();
 
                     }
 
@@ -588,24 +597,24 @@ namespace DLTD.Web.Main.DAL
                             var file = thucHien.FileDinhKem;
                             if (file != null && file.Count > 0)
                             {
-                                _dbContext.FileTinhHinhThucHien.RemoveRange(file);
-                                await _dbContext.SaveChangesAsync();
+                                dbContext.FileTinhHinhThucHien.RemoveRange(file);
+                                await dbContext.SaveChangesAsync();
                             }
                         }
 
-                        _dbContext.TinhHinhThucHien.RemoveRange(tinhhinhThucHien);
-                        await _dbContext.SaveChangesAsync();
+                        dbContext.TinhHinhThucHien.RemoveRange(tinhhinhThucHien);
+                        await dbContext.SaveChangesAsync();
                     }
 
                     var filevb = vb.FileDinhKem;
                     if (filevb != null && filevb.Count > 0)
                     {
-                        _dbContext.FileVanBanChiDao.RemoveRange(filevb);
-                        await _dbContext.SaveChangesAsync();
+                        dbContext.FileVanBanChiDao.RemoveRange(filevb);
+                        await dbContext.SaveChangesAsync();
                     }
 
-                    this._dbContext.VanBanChiDao.Remove(vb);
-                    await this._dbContext.SaveChangesAsync();
+                    dbContext.VanBanChiDao.Remove(vb);
+                    await dbContext.SaveChangesAsync();
 
                     transaction.Commit();
                     return true;
@@ -621,14 +630,16 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<bool> TraVanBan(int id, string lydo)
         {
-            var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
+            var dbContext = new MainDbContext();
+
+            var vb = await dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == id);
             if (vb == null) return true;
 
             vb.IsTralai = true;
             vb.LydoTraLai = lydo;
             vb.TrangThai = TrangThaiVanBan.TraLai;
 
-            await this._dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }

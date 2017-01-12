@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,23 +12,23 @@ namespace DLTD.Web.Main.DAL
 {
     public class TinhHinhThucHienManagement
     {
-        private readonly MainDbContext _dbContext;
-
+        private static TinhHinhThucHienManagement _instance;
         public static TinhHinhThucHienManagement Go
         {
-            get { return new TinhHinhThucHienManagement(); }
-        }
-
-        public TinhHinhThucHienManagement()
-        {
-            _dbContext = new MainDbContext();
+            get
+            {
+                if(_instance == null) _instance = new TinhHinhThucHienManagement();
+                return _instance;
+            }
         }
 
         public async Task<IEnumerable<TinhHinhThucHien>> GetTinhHinhThucHien(int? idVanBanChiDao)
         {
+            var dbContext = new MainDbContext();
+
             return
                 await
-                    _dbContext.TinhHinhThucHien.Where(x => x.IdVanBanChiDao == idVanBanChiDao)
+                    dbContext.TinhHinhThucHien.Where(x => x.IdVanBanChiDao == idVanBanChiDao)
                         .Include(x => x.VanBanChiDao)
                         .OrderByDescending(x => x.NgayBaoCao)
                         .ToListAsync();
@@ -35,28 +36,36 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<bool> SaveTinhHinhThucHien(TinhHinhThucHienInput data)
         {
-            using (var dbTransaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
                     //cap nhat trang thai dang xu ly cho vanban
                    
-                    var vb = await this._dbContext.VanBanChiDao.FirstOrDefaultAsync(
+                    var vb = await dbContext.VanBanChiDao.FirstOrDefaultAsync(
                         x => 
                             x.Id == data.IdVanBanChiDao &&
-                            x.TrangThai != TrangThaiVanBan.DangXuLy &&
-                            x.TrangThai != TrangThaiVanBan.HoanThanh);
+                            (
+                                (data.TrangThai == TrangThaiVanBan.DangXuLy && x.TrangThai != TrangThaiVanBan.DangXuLy)
+                                ||
+                                (data.TrangThai == TrangThaiVanBan.HoanThanh && x.TrangThai != TrangThaiVanBan.HoanThanh)
+                            ));
 
                     if (vb != null)
                     {
                         vb.TrangThai = data.TrangThai;
-                        await _dbContext.SaveChangesAsync();
+                        if (vb.TrangThai == TrangThaiVanBan.HoanThanh)
+                            vb.NgayHoanThanh = DateTime.Now;
+                        
+                        await dbContext.SaveChangesAsync();
                     }
 
                     var thth = data.Transform();
-                    _dbContext.TinhHinhThucHien.Add(thth);
+                    dbContext.TinhHinhThucHien.Add(thth);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     if (string.IsNullOrWhiteSpace(data.FileDinhKem)
                         || string.IsNullOrWhiteSpace(data.FileUrl))
@@ -65,14 +74,14 @@ namespace DLTD.Web.Main.DAL
                         return true;
                     }
 
-                    _dbContext.FileTinhHinhThucHien.Add(new FileTinhHinhThucHien
+                    dbContext.FileTinhHinhThucHien.Add(new FileTinhHinhThucHien
                     {
                         IdTinhHinhThucHien = thth.Id,
                         Name = data.FileDinhKem,
                         Url = data.FileUrl
                     });
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
                     
@@ -88,22 +97,23 @@ namespace DLTD.Web.Main.DAL
 
         public async Task<bool> DeleteTinhHinhThucHien(int? id)
         {
-            using (var dbTransaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
                     var fileDinhKem =
-                        _dbContext.FileTinhHinhThucHien.Where(x => x.IdTinhHinhThucHien == id);
+                        dbContext.FileTinhHinhThucHien.Where(x => x.IdTinhHinhThucHien == id);
 
-                    _dbContext.FileTinhHinhThucHien.RemoveRange(fileDinhKem);
+                    dbContext.FileTinhHinhThucHien.RemoveRange(fileDinhKem);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
-                    var thth = _dbContext.TinhHinhThucHien.Where(x => x.Id == id);
+                    var thth = dbContext.TinhHinhThucHien.Where(x => x.Id == id);
 
-                    _dbContext.TinhHinhThucHien.RemoveRange(thth);
+                    dbContext.TinhHinhThucHien.RemoveRange(thth);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
                     return true;

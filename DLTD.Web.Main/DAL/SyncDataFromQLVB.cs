@@ -13,14 +13,6 @@ namespace DLTD.Web.Main.DAL
 {
     public class SyncDataFromQlvb
     {
-        private readonly QLVBDatabase _qlvbDatabase;
-        private readonly MainDbContext _dbContext;
-        public SyncDataFromQlvb()
-        {
-            this._qlvbDatabase = new QLVBDatabase();
-            this._dbContext = new MainDbContext();
-        }
-
         public static async Task<bool> Sync()
         {
             var syncDataFromQlvb = new SyncDataFromQlvb();
@@ -46,19 +38,21 @@ namespace DLTD.Web.Main.DAL
 
         private async Task<bool> MarkedSync()
         {
+            var dbContext = new MainDbContext();
+
             var connectionString = WebConfigurationManager.ConnectionStrings["QLVBDatabase"].ToString();
 
-            _dbContext.MarkedDatabaseChange.RemoveRange(_dbContext.MarkedDatabaseChange);
+            dbContext.MarkedDatabaseChange.RemoveRange(dbContext.MarkedDatabaseChange);
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.MarkedDatabaseChange.Add(new MarkedDatabaseChange
+            dbContext.MarkedDatabaseChange.Add(new MarkedDatabaseChange
             {
                 ConnectionString = connectionString,
                 IsSyncData = true
             });
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
@@ -66,9 +60,9 @@ namespace DLTD.Web.Main.DAL
         private async Task<bool> CheckSynced()
         {
             var connectionString = WebConfigurationManager.ConnectionStrings["QLVBDatabase"].ToString();
-
+            var dbContext = new MainDbContext();
             var checkSync = await 
-                _dbContext.MarkedDatabaseChange.FirstOrDefaultAsync(
+                dbContext.MarkedDatabaseChange.FirstOrDefaultAsync(
                     x => x.ConnectionString.ToLower() == connectionString.ToLower());
 
 
@@ -78,45 +72,49 @@ namespace DLTD.Web.Main.DAL
 
         private async Task<bool> DeleteExistsData()
         {
-            _dbContext.FileTinhHinhPhoiHop.RemoveRange(_dbContext.FileTinhHinhPhoiHop);
-            await _dbContext.SaveChangesAsync();
+            var dbContext = new MainDbContext();
 
-            _dbContext.FileTinhHinhThucHien.RemoveRange(_dbContext.FileTinhHinhThucHien);
-            await _dbContext.SaveChangesAsync();
+            dbContext.FileTinhHinhPhoiHop.RemoveRange(dbContext.FileTinhHinhPhoiHop);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.FileVanBanChiDao.RemoveRange(_dbContext.FileVanBanChiDao);
-            await _dbContext.SaveChangesAsync();
+            dbContext.FileTinhHinhThucHien.RemoveRange(dbContext.FileTinhHinhThucHien);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.TinhHinhPhoiHop.RemoveRange(_dbContext.TinhHinhPhoiHop);
-            await _dbContext.SaveChangesAsync();
+            dbContext.FileVanBanChiDao.RemoveRange(dbContext.FileVanBanChiDao);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.TinhHinhThucHien.RemoveRange(_dbContext.TinhHinhThucHien);
-            await _dbContext.SaveChangesAsync();
+            dbContext.TinhHinhPhoiHop.RemoveRange(dbContext.TinhHinhPhoiHop);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.DonViPhoiHop.RemoveRange(_dbContext.DonViPhoiHop);
-            await _dbContext.SaveChangesAsync();
+            dbContext.TinhHinhThucHien.RemoveRange(dbContext.TinhHinhThucHien);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.VanBanChiDao.RemoveRange(_dbContext.VanBanChiDao);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DonViPhoiHop.RemoveRange(dbContext.DonViPhoiHop);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.DangNhap.RemoveRange(_dbContext.DangNhap);
-            await _dbContext.SaveChangesAsync();
+            dbContext.VanBanChiDao.RemoveRange(dbContext.VanBanChiDao);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.DonViTrucThuoc.RemoveRange(_dbContext.DonViTrucThuoc);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DangNhap.RemoveRange(dbContext.DangNhap);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.DonVi.RemoveRange(_dbContext.DonVi);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DonViTrucThuoc.RemoveRange(dbContext.DonViTrucThuoc);
+            await dbContext.SaveChangesAsync();
 
-            _dbContext.Khoi.RemoveRange(_dbContext.Khoi);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DonVi.RemoveRange(dbContext.DonVi);
+            await dbContext.SaveChangesAsync();
+
+            dbContext.Khoi.RemoveRange(dbContext.Khoi);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
         private async Task<bool> SyncKhoiPhatHanh()
         {
-            var khoiPhatHanh = this._qlvbDatabase.Khoiphathanhs.Select(x => new Khoi
+            var qlvbDatabase = new QlvbDatabase();
+            var dbContext = new MainDbContext();
+            var khoiPhatHanh = qlvbDatabase.Khoiphathanhs.Select(x => new Khoi
             {
                 Id = x.intid,
                 KyHieu = x.strkyhieu,
@@ -125,15 +123,18 @@ namespace DLTD.Web.Main.DAL
                 MacDinh = x.IsDefault
             });
 
-            _dbContext.Khoi.AddRange(khoiPhatHanh);
-            await _dbContext.SaveChangesAsync();
+            dbContext.Khoi.AddRange(khoiPhatHanh);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
         private async Task<bool> SyncDonVi()
         {
-            var donvi = this._qlvbDatabase.Tochucdoitacs.Select(x => new DonVi
+            var qlvbDatabase = new QlvbDatabase();
+            var dbContext = new MainDbContext();
+
+            var donvi = qlvbDatabase.Tochucdoitacs.Select(x => new DonVi
             {
                 Id = x.intid,
                 IdKhoi = x.intidkhoi,
@@ -147,15 +148,18 @@ namespace DLTD.Web.Main.DAL
                 Fax = x.strfax
             });
 
-            _dbContext.DonVi.AddRange(donvi);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DonVi.AddRange(donvi);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
         private async Task<bool> SyncDonViTrucThuoc()
         {
-            var donviTructhuoc = this._qlvbDatabase.Donvitructhuocs.Select(x => new DonViTrucThuoc
+            var qlvbDatabase = new QlvbDatabase();
+            var dbContext = new MainDbContext();
+
+            var donviTructhuoc = qlvbDatabase.Donvitructhuocs.Select(x => new DonViTrucThuoc
             {
                 Id = x.Id,
                 Level = x.intlevel,
@@ -165,15 +169,18 @@ namespace DLTD.Web.Main.DAL
                 ParentId = x.ParentId
             });
 
-            _dbContext.DonViTrucThuoc.AddRange(donviTructhuoc);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DonViTrucThuoc.AddRange(donviTructhuoc);
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
         private async Task<bool> SyncCanBo()
         {
-            var canbo = await this._qlvbDatabase.Canbos
+            var qlvbDatabase = new QlvbDatabase();
+            var dbContext = new MainDbContext();
+
+            var canbo = await qlvbDatabase.Canbos
                 .Where(x => !string.IsNullOrEmpty(x.strusername) && x.inttrangthai == 1)
                 .Select(x => new DangNhap
                 {
@@ -192,8 +199,8 @@ namespace DLTD.Web.Main.DAL
                     UrlImage = x.strImageProfile
                 }).ToListAsync();
 
-            _dbContext.DangNhap.AddRange(canbo);
-            await _dbContext.SaveChangesAsync();
+            dbContext.DangNhap.AddRange(canbo);
+            await dbContext.SaveChangesAsync();
             return true;
         }
     }

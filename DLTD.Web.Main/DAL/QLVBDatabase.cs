@@ -3,11 +3,11 @@ using DLTD.Web.Main.Models.QLVB;
 
 namespace DLTD.Web.Main.DAL
 {
-    public class QLVBDatabase : DbContext
+    public class QlvbDatabase : DbContext
     {
-        static QLVBDatabase()
+        static QlvbDatabase()
         {
-            Database.SetInitializer<QLVBDatabase>(null); // must be turned off before mini profiler runs
+            Database.SetInitializer<QlvbDatabase>(null); // must be turned off before mini profiler runs
         }
 
         #region DbSet

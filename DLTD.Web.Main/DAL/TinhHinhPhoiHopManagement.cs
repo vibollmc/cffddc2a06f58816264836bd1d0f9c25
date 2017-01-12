@@ -10,47 +10,48 @@ namespace DLTD.Web.Main.DAL
 {
     public class TinhHinhPhoiHopManagement
     {
-        private readonly MainDbContext _dbContext;
-
+        private static TinhHinhPhoiHopManagement _instance;
         public static TinhHinhPhoiHopManagement Go
         {
-            get { return new TinhHinhPhoiHopManagement(); }
-        }
-
-        public TinhHinhPhoiHopManagement()
-        {
-            _dbContext = new MainDbContext();
+            get
+            {
+                if (_instance == null) _instance = new TinhHinhPhoiHopManagement();
+                return _instance;
+            }
         }
 
         public async Task<IEnumerable<TinhHinhPhoiHop>> GetTinhHinhPhoiHop(int? idVanBanChiDao)
         {
-            return await _dbContext.TinhHinhPhoiHop.Where(x => x.DonViPhoiHop.IdVanBan == idVanBanChiDao).OrderByDescending(x=>x.NgayXuLy).ToListAsync();
+            var dbContext = new MainDbContext();
+            return await dbContext.TinhHinhPhoiHop.Where(x => x.DonViPhoiHop.IdVanBan == idVanBanChiDao).OrderByDescending(x=>x.NgayXuLy).ToListAsync();
         }
         public async Task<IEnumerable<DonViPhoiHop>> GetDonViPhoiHop(int? idVanBan)
         {
-            return await _dbContext.DonViPhoiHop.Where(x => x.IdVanBan == idVanBan).ToListAsync();
+            var dbContext = new MainDbContext();
+            return await dbContext.DonViPhoiHop.Where(x => x.IdVanBan == idVanBan).ToListAsync();
         }
         public async Task<bool> SaveTinhHinhPhoiHop(TinhHinhThucHienInput data)
         {
-            using (var dbTransaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
 
                     var donViPhoiHop =
                         await
-                            _dbContext.DonViPhoiHop.SingleOrDefaultAsync(
+                            dbContext.DonViPhoiHop.SingleOrDefaultAsync(
                                 x => x.IdDonvi == data.IdDonVi && x.IdVanBan == data.IdVanBanChiDao);
 
                     if (donViPhoiHop == null) return false;
 
-                    var vb = await _dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == data.IdVanBanChiDao);
+                    var vb = await dbContext.VanBanChiDao.FirstOrDefaultAsync(x => x.Id == data.IdVanBanChiDao);
 
                     if (vb == null) return false;
 
                     vb.TrangThai = data.TrangThai;
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     var thph = new TinhHinhPhoiHop
                     {
@@ -60,9 +61,9 @@ namespace DLTD.Web.Main.DAL
                         NoiDungThucHien = data.NoiDungBaoCao
                     };
 
-                    _dbContext.TinhHinhPhoiHop.Add(thph);
+                    dbContext.TinhHinhPhoiHop.Add(thph);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     if (string.IsNullOrWhiteSpace(data.FileDinhKem)
                         || string.IsNullOrWhiteSpace(data.FileUrl))
@@ -71,14 +72,14 @@ namespace DLTD.Web.Main.DAL
                         return true;
                     }
 
-                    _dbContext.FileTinhHinhPhoiHop.Add(new FileTinhHinhPhoiHop
+                    dbContext.FileTinhHinhPhoiHop.Add(new FileTinhHinhPhoiHop
                     {
                         IdTinhHinhPhoiHop = thph.Id,
                         Name = data.FileDinhKem,
                         Url = data.FileUrl
                     });
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
                     return true;
@@ -92,22 +93,24 @@ namespace DLTD.Web.Main.DAL
         }
         public async Task<bool> DeleteTinhHinhPhoiHop(int? id)
         {
-            using (var dbTransaction = _dbContext.Database.BeginTransaction())
+            var dbContext = new MainDbContext();
+
+            using (var dbTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
                     var fileDinhKem =
-                        _dbContext.FileTinhHinhPhoiHop.Where(x => x.IdTinhHinhPhoiHop == id);
+                        dbContext.FileTinhHinhPhoiHop.Where(x => x.IdTinhHinhPhoiHop == id);
 
-                    _dbContext.FileTinhHinhPhoiHop.RemoveRange(fileDinhKem);
+                    dbContext.FileTinhHinhPhoiHop.RemoveRange(fileDinhKem);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
-                    var thth = _dbContext.TinhHinhPhoiHop.Where(x => x.Id == id);
+                    var thth = dbContext.TinhHinhPhoiHop.Where(x => x.Id == id);
 
-                    _dbContext.TinhHinhPhoiHop.RemoveRange(thth);
+                    dbContext.TinhHinhPhoiHop.RemoveRange(thth);
 
-                    await _dbContext.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
 
                     dbTransaction.Commit();
                     return true;
