@@ -13,7 +13,10 @@ namespace DLTD.Web.Main.DAL
     {
         private readonly MainDbContext _dbContext;
 
-        public static DonViManagement Go => new DonViManagement();
+        public static DonViManagement Go
+        {
+            get { return new DonViManagement(); }
+        }
 
         public DonViManagement()
         {

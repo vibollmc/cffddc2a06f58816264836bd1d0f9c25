@@ -12,7 +12,10 @@ namespace DLTD.Web.Main.DAL
     {
         private readonly MainDbContext _dbContext;
 
-        public static DangNhapManagement Go => new DangNhapManagement();
+        public static DangNhapManagement Go
+        {
+            get { return new DangNhapManagement(); }
+        }
 
         public DangNhapManagement()
         {

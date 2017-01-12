@@ -13,7 +13,10 @@ namespace DLTD.Web.Main.DAL
     {
         private readonly MainDbContext _dbContext;
 
-        public static TinhHinhThucHienManagement Go => new TinhHinhThucHienManagement();
+        public static TinhHinhThucHienManagement Go
+        {
+            get { return new TinhHinhThucHienManagement(); }
+        }
 
         public TinhHinhThucHienManagement()
         {

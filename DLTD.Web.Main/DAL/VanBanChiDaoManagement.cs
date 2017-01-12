@@ -21,7 +21,10 @@ namespace DLTD.Web.Main.DAL
             _dbContext = new MainDbContext();
         }
 
-        public static VanBanChiDaoManagement Go => new VanBanChiDaoManagement();
+        public static VanBanChiDaoManagement Go
+        {
+            get { return new VanBanChiDaoManagement(); }
+        }
 
         public async Task<bool> SaveVanBanChiDaoFromApi(VanBanChiDaoInput vanBan)
         {

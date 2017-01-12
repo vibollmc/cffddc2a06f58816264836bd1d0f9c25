@@ -12,7 +12,10 @@ namespace DLTD.Web.Main.DAL
     {
         private readonly MainDbContext _dbContext;
 
-        public static TinhHinhPhoiHopManagement Go => new TinhHinhPhoiHopManagement();
+        public static TinhHinhPhoiHopManagement Go
+        {
+            get { return new TinhHinhPhoiHopManagement(); }
+        }
 
         public TinhHinhPhoiHopManagement()
         {
