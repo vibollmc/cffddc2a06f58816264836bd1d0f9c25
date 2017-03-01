@@ -27,9 +27,9 @@
         </tr>
         <tr>
             <th class="table-col-4">Ngày giao </th>
-            <td class="table-col-4">@Model.NgayTao</td>
+            <td class="table-col-4">@string.Format("{0:dd/MM/yyyy}",Model.NgayTao)</td>
             <th class="table-col-4">Hạn xử lý</th>
-            <td class="table-col-4">@Model.NgayHoanThanh</td>
+            <td class="table-col-4">@string.Format("{0:dd/MM/yyyy}",Model.NgayHoanThanh)</td>
         </tr>
         <tr>
             <th class="table-col-4">Đơn vị xử lý chính</th>

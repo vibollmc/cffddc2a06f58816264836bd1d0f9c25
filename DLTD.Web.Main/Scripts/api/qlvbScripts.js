@@ -55,8 +55,9 @@ function buildButton() {
     modalHtml += "<div class='box' style='position: fixed; width: 580px; z-index: 1000; left: 0px; top: 26px;'>";
     modalHtml += "<header>";
     modalHtml += "<nav style='padding: 3px;'>";
-    modalHtml += "<button type='button' style='width:100px;' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu văn bản</button>";
-    modalHtml += "<span> <input id='" + idButton + "AnotherOne' type='checkbox'> Phân công cho đơn vị khác</span>";
+    modalHtml += "<button type='button' style='width:100px;' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu</button>";
+    modalHtml += "<button type='button' style='width:100px;margin-left:4px' class='btn btn-sm btn-primary' id='" + idButton + "btnContinue'><i class='glyphicon glyphicon-send'></i> Thêm tiếp</button>";
+    //modalHtml += "<span> <input id='" + idButton + "AnotherOne' type='checkbox'> Phân công cho đơn vị khác</span>";
     modalHtml += "</nav>";
     modalHtml += "</header>";
     modalHtml += "</div>";
@@ -243,6 +244,12 @@ function checkValidData() {
     if ($.trim(ykcd.val()) == "") {
         valid = false;
         message += "<li>Yêu cầu nhập ý kiến chỉ đạo.</li>";
+    }
+
+    var comboNguoiTheoDoi = $("#" + idButton + "NguoiTheoDoi").data("kendoComboBox");
+    if ($.trim(comboNguoiTheoDoi.value()) == "") {
+        valid = false;
+        message += "<li>Yêu cầu chọn người theo dõi.</li>";
     }
 
     if (!valid) {
@@ -575,6 +582,58 @@ $(document).ready(function() {
                         setTimeout("$('#' + idButton + 'Modal').data('kendoWindow').close();", 3000);
 
                     }
+                } else {
+                    $("#" + idButton + "Notification")
+                        .attr("class", "alert alert-danger")
+                        .html("<strong>Lỗi!</strong> " + response)
+                        .show();
+
+                }
+
+            },
+            complete: function() {
+                isProcessing = false;
+                $("#" + idButton + "btnSend").removeAttr("disabled");
+                $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Lưu");
+
+                $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+
+        return false;
+    });
+    $("#" + idButton + "btnContinue").click(function () {
+
+        if (isProcessing) return false;
+
+        if (!checkValidData()) {
+            $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
+            return false;
+        }
+
+        isProcessing = true;
+        $("#" + idButton + "btnSend").attr("disabled", "disabled");
+        $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Đang thực hiện");
+
+        var formData = new FormData($("form#" + idButton + "Form")[0]);
+        $("#" + idButton + "Notification").hide();
+
+        $.ajax({
+            url: dltd.urlApi,
+            type: "POST",
+            data: formData,
+            async: false,
+            crossDomain: true,
+            success: function (response) {
+                if (response === "OK") {
+                    $("#" + idButton + "Notification")
+                        .attr("class", "alert alert-success")
+                        .html("<strong>Thành công!</strong> Đã gửi văn bản qua hệ thống theo dõi chỉ đạo thành công.")
+                        .show();
+                   
                 } else {
                     $("#" + idButton + "Notification")
                         .attr("class", "alert alert-danger")

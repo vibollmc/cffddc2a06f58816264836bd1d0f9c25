@@ -201,7 +201,8 @@ namespace DLTD.Web.Main.Common
         public static VanBanChiDaoViewModel Transform(this VanBanChiDao data)
         {
             if (data == null) return null;
-            return new VanBanChiDaoViewModel
+            
+            var obj = new VanBanChiDaoViewModel
             {
                 TrangThai = data.TrangThai,
                 Id = data.Id,
@@ -216,12 +217,34 @@ namespace DLTD.Web.Main.Common
                 NgayTao = data.NgayTao,
                 FileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.Count : 0,
                 LinkFileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.FirstOrDefault().Url : null,
-                NguoiTheoDoi = data.NguoiTheoDoi.Ten,
+                NguoiTheoDoi = data.NguoiTheoDoi != null ? data.NguoiTheoDoi.Ten : null,
                 TenDonVi = data.DonVi.Ten,
                 NgayHoanThanh = data.NgayHoanThanh,
                 DoKhan = data.DoKhan,
                 NguonChiDao = data.IdNguonChiDao
             };
+            //if (data.FileDinhKem != null)
+            //{
+            //    if (data.FileDinhKem.Any())
+            //    {
+            //        obj.FileDinhKem = data.FileDinhKem.Count;
+            //        var file = data.FileDinhKem.FirstOrDefault();
+            //        if (file != null)
+            //        {
+            //            obj.LinkFileDinhKem = file.Url;
+            //        }
+            //        else
+            //        {
+            //            obj.LinkFileDinhKem = null;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        obj.FileDinhKem = 0;
+            //        obj.LinkFileDinhKem = null;
+            //    }
+            //}
+            return obj;
         }
 
       

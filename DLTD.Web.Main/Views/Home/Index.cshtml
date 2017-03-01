@@ -10,7 +10,7 @@
                 <a href="@Url.Action("Index","Home")"> Nhiệm vụ</a>
             </li>
             @*<li><i class="fa fa-bars"></i>Pages</li>*@
-            <li><i class="glyphicon glyphicon-list"></i> @ViewBag.TieuDe</li>
+            <li style="font-size: 18px; font-style: oblique;"><i class="glyphicon glyphicon-list"></i> @ViewBag.TieuDe</li>
         </ol>
     </div>
 </div>
@@ -527,7 +527,7 @@
                     data.Results[i].FileUrl != null && data.Results[i].FileUrl !== '') {
                     html += '<a href="' + data.Results[i].FileUrl + '"><i class="glyphicon glyphicon-paperclip"></i> ' + data.Results[i].FileDinhKem + '</a>';
 
-                    if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf')) {
+                    if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf') || data.Results[i].FileUrl.toLowerCase().endsWith('.doc') || data.Results[i].FileUrl.toLowerCase().endsWith('.docx')) {
                         html += '<a href="@Url.Content("~/ViewerJS/index.html?zoom=page-width#..")' + data.Results[i].FileUrl + '" target="_blank">(Xem trước)</a>';
                     }
                 }
