@@ -40,7 +40,7 @@
             }
             else if (item.FileName.ToLower().EndsWith(".doc") || item.FileName.ToLower().EndsWith(".docx"))
             {
-                <a href="@Url.Content("~/WordViewer?file=")~/@item.FileUrl" target="_blank">(Xem trước)</a>
+                <a href="@Url.Content("~/WordViewer?file=")@Server.UrlEncode("~/" + item.FileUrl)" target="_blank">(Xem trước)</a>
             }
         </li>
     }
