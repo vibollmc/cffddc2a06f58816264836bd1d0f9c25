@@ -527,9 +527,13 @@
                     data.Results[i].FileUrl != null && data.Results[i].FileUrl !== '') {
                     html += '<a href="' + data.Results[i].FileUrl + '"><i class="glyphicon glyphicon-paperclip"></i> ' + data.Results[i].FileDinhKem + '</a>';
 
-                    if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf') || data.Results[i].FileUrl.toLowerCase().endsWith('.doc') || data.Results[i].FileUrl.toLowerCase().endsWith('.docx')) {
+                    if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf')){
                         html += '<a href="@Url.Content("~/ViewerJS/index.html?zoom=page-width#..")' + data.Results[i].FileUrl + '" target="_blank">(Xem trước)</a>';
                     }
+                    else if (data.Results[i].FileUrl.toLowerCase().endsWith('.doc') || data.Results[i].FileUrl.toLowerCase().endsWith('.docx')) {
+                        html += '<a href="@Url.Content("~/WordViewer?file=~/")' + data.Results[i].FileUrl + '" target="_blank">(Xem trước)</a>';
+                    }
+
                 }
                 html += '</div>';
                 html += '<div class="col-lg-1" style="text-align: right">';

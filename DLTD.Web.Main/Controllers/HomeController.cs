@@ -270,7 +270,7 @@ namespace DLTD.Web.Main.Controllers
         {
             var vanban = await VanBanChiDaoManagement.Go.GetVanBanChiDaoById(id);
 
-            VanBanChiDaoViewModel model = vanban.Transform();
+            var model = vanban.Transform();
 
             return PartialView("_XemChitietVanban", model);
         }
@@ -286,6 +286,13 @@ namespace DLTD.Web.Main.Controllers
             var result = await VanBanChiDaoManagement.Go.TraVanBan(id, lydo);
 
             return Json(new {Result = result}, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult WordReader(string file)
+        {
+            ViewBag.fileHtml = Common.WordReader.DocxConvertToHtml(Server.MapPath(file));
+
+            return View();
         }
 
         public class DonViComboBoxViewModal

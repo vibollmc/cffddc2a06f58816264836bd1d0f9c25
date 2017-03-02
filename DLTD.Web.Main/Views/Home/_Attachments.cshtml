@@ -34,9 +34,13 @@
                 }
                 @item.FileName
             </a>
-            @if (item.FileName.ToLower().EndsWith(".pdf") || item.FileName.ToLower().EndsWith(".doc") || item.FileName.ToLower().EndsWith(".docx"))
+            @if (item.FileName.ToLower().EndsWith(".pdf"))
             {
                 <a href="@Url.Content("~/ViewerJS/index.html?zoom=page-width")#../@item.FileUrl" target="_blank">(Xem trước)</a>
+            }
+            else if (item.FileName.ToLower().EndsWith(".doc") || item.FileName.ToLower().EndsWith(".docx"))
+            {
+                <a href="@Url.Content("~/WordViewer?file=")~/@item.FileUrl" target="_blank">(Xem trước)</a>
             }
         </li>
     }
