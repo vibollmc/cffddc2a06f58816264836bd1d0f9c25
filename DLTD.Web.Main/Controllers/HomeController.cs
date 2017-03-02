@@ -288,7 +288,7 @@ namespace DLTD.Web.Main.Controllers
             return Json(new {Result = result}, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult WordReader(string file)
+        public ActionResult WordViewer(string file)
         {
             ViewBag.fileHtml = Common.WordReader.DocxConvertToHtml(Server.MapPath(file));
 
