@@ -443,8 +443,8 @@ $(document).ready(function() {
         ]
     }).data("kendoWindow").center();
 
-    $("#" + idButton + "HanXL").kendoDatePicker();
-    $("#" + idButton + "Ngayky").kendoDatePicker();
+    $("#" + idButton + "HanXL").kendoDatePicker({culture:"vi-VN"});
+    $("#" + idButton + "Ngayky").kendoDatePicker({culture:"vi-VN"});
 
     var comboDoKhan = $("#"+idButton+"DoKhan").kendoDropDownList({
         dataTextField: "text",
