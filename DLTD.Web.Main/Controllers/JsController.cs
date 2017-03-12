@@ -12,7 +12,7 @@ namespace DLTD.Web.Main.Controllers
     [AllowAnonymous]
     public class JsController : BaseController
     {
-        public async Task<ActionResult> QlvbScripts(string v)
+        public async Task<ActionResult> QlvbScripts(string desc, string v)
         {
             var qlvbUri = WebConfigurationManager.AppSettings["ServerQLVBOauthPath"];
             var dltdUri = WebConfigurationManager.AppSettings["DLTDPath"];
@@ -32,8 +32,13 @@ namespace DLTD.Web.Main.Controllers
             {
                 htmlOptionkhoi.AppendFormat("<option value=\'{0}\'>{1}</option>", item.Id, Server.HtmlEncode(item.Ten));
             }
-
-            var js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbScripts.js"));
+            string js;
+            if (desc != null && desc.ToLower() == "vanbandi")
+                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVnDi.js"));
+            else if (desc != null && desc.ToLower() == "vanbanden")
+                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVnDen.js"));
+            else 
+                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/main.js"));
 
             js = js.Replace("{{DONVI}}", htmlOption.ToString())
                 .Replace("{{URI}}", dltdUri)
