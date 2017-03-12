@@ -84,7 +84,7 @@ function buildButton() {
     modalHtml += "<tr>";
     modalHtml += "<td colspan='2'>";
     modalHtml += "<div class='form-group'>";
-    modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label><span> <input id='" + idButton + "AllDonVi' type='checkbox'> Hiện tất cả</span>";
+    modalHtml += "<label class='control-label'>Đơn vị xử lý chính:</label><span>";//<input id='" + idButton + "AllDonVi' type='checkbox'> Hiện tất cả</span>";
     modalHtml += "<select name='IdDonVi' id='" + idButton + "DonVi' style='width: 100%' placeholder='Chọn đơn vị xử lý chính...'>";
     //modalHtml += "{{DONVI}}";
     modalHtml += "</select>";
@@ -394,6 +394,16 @@ $(document).ready(function() {
         suggest: true
     }).data("kendoMultiSelect");
 
+    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
+        dataTextField: "text",
+        dataValueField: "value",
+        dataSource: dataDonVi,
+        filter: "contains",
+        suggest: true
+    }).data("kendoComboBox");
+
+    comboDonvi.value("");
+
     $("#" + idButton + "File").change(function() {
         $("label[for=" + idButton + "File]").html("<i class='glyphicon glyphicon-paperclip'></i> " + $(this).val());
         $("#" + idButton + "RemoveFile").show();
@@ -439,7 +449,7 @@ $(document).ready(function() {
 
         comboDoKhan.value("0");
         $("#" + idButton + "DoKhan").val("0");
-        $("#" + idButton + "AllDonVi").attr('checked', false);
+        //$("#" + idButton + "AllDonVi").attr('checked', false);
         comboNguonChiDao.value("");
         comboNguoiChiDao.value("");
         comboNguoiTheoDoi.value("");
@@ -483,19 +493,19 @@ $(document).ready(function() {
         $("#" + idButton + "Notification").hide();
     });
 
-    $("#" + idButton + "AllDonVi").click(function() {
-        var data = this.checked ? dataDonVi : dataDonViFiltered;
+    //$("#" + idButton + "AllDonVi").click(function() {
+    //    var data = this.checked ? dataDonVi : dataDonViFiltered;
 
-        var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
-            dataTextField: "text",
-            dataValueField: "value",
-            dataSource: data,
-            filter: "contains",
-            suggest: true
-        }).data("kendoComboBox");
+    //    var comboDonvi = $("#" + idButton + "DonVi").kendoComboBox({
+    //        dataTextField: "text",
+    //        dataValueField: "value",
+    //        dataSource: data,
+    //        filter: "contains",
+    //        suggest: true
+    //    }).data("kendoComboBox");
 
-        comboDonvi.value("");
-    });
+    //    comboDonvi.value("");
+    //});
 
     $("#" + idButton + "btnSend").click(function () {
 
