@@ -304,7 +304,7 @@ function getUserId() {
         xhrFields: {
             withCredentials: true
         },
-        crossDomain: true,
+        //crossDomain: true,
         success: function(data) {
             if (data.length === 0) {
                 $("#" + idButton + "UserId").val("");
@@ -556,8 +556,8 @@ $(document).ready(function() {
             url: dltd.urlApi,
             type: "POST",
             data: formData,
-            async: false,
-            crossDomain: true,
+            //async: false,
+            //crossDomain: true,
             success: function (response) {
                 if (response === "OK") {
                     $("#" + idButton + "Notification")
@@ -572,12 +572,15 @@ $(document).ready(function() {
                         //Close modal now
                         setTimeout("$('#' + idButton + 'Modal').data('kendoWindow').close();", 3000);
 
+                        toastr.success("Thêm văn bản thành công.", "Thành công");
                     }
                 } else {
                     $("#" + idButton + "Notification")
                         .attr("class", "alert alert-danger")
                         .html("<strong>Lỗi!</strong> " + response)
                         .show();
+
+                    toastr.error("Thêm văn bản không thành công.", "Lỗi");
 
                 }
 
