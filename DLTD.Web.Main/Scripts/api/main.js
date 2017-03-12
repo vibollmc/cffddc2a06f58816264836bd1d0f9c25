@@ -55,8 +55,7 @@ function buildButton() {
     modalHtml += "<div class='box' style='position: fixed; width: 580px; z-index: 1000; left: 0px; top: 26px;'>";
     modalHtml += "<header>";
     modalHtml += "<nav style='padding: 3px;'>";
-    modalHtml += "<button type='button' style='width:100px;' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-send'></i> Lưu</button>";
-    modalHtml += "<button type='button' style='width:100px;margin-left:4px' class='btn btn-sm btn-primary' id='" + idButton + "btnContinue'><i class='glyphicon glyphicon-send'></i> Thêm tiếp</button>";
+    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-save'></i> Lưu</button>";
     //modalHtml += "<span> <input id='" + idButton + "AnotherOne' type='checkbox'> Phân công cho đơn vị khác</span>";
     modalHtml += "</nav>";
     modalHtml += "</header>";
@@ -92,7 +91,7 @@ function buildButton() {
     modalHtml += "<td>";
     modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Số/Ký hiệu:</label><br/>";
-    modalHtml += "<input name='SoKH' class='form-control' id='" + idButton + "SoKH'>";
+    modalHtml += "<input name='SoKH' style='height:auto; width:80px;' class='form-control' id='" + idButton + "SoKH'>";
     modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
@@ -249,7 +248,7 @@ function checkValidData() {
     var message = "<ul>";
     var valid = true;
 
-    var trichYeu = $("#" + idButton + "TrichYeu");
+    var trichYeu = $("#" + idButton + "Trichyeu");
     if ($.trim(trichYeu.val()) == "") {
         valid = false;
         message += "<li>Yêu cầu nhập trích yếu văn bản.</li>";
@@ -513,7 +512,7 @@ $(document).ready(function() {
     $("#" + idButton + "NguonChiDao").change(function () {
         $("#" + idButton + "Notification").hide();
     });
-    $("#" + idButton + "TrichYeu").change(function() {
+    $("#" + idButton + "Trichyeu").change(function() {
         $("#" + idButton + "Notification").hide();
     });
     $("#" + idButton + "Ngayky").change(function () {
