@@ -68,7 +68,7 @@ function buildButton() {
     modalHtml += "</div>";
 
     modalHtml += "<form id='" + idButton + "Form' method='post' enctype='multipart/form-data'>";
-    modalHtml += "<table class='responsive-table'>";
+    modalHtml += "<table class='responsive-table' style='width:100%'>";
     modalHtml += "<tbody>";
 
     modalHtml += "<tr>";
