@@ -568,6 +568,7 @@ $(document).ready(function() {
                     if ($("#" + idButton + "AnotherOne").is(":checked")) {
                         //TODO: May be need implement some business here
                     } else {
+                        searchVanBan(); //from index.js - refresh data
                         //Close modal now
                         setTimeout("$('#' + idButton + 'Modal').data('kendoWindow').close();", 3000);
 
@@ -584,59 +585,7 @@ $(document).ready(function() {
             complete: function() {
                 isProcessing = false;
                 $("#" + idButton + "btnSend").removeAttr("disabled");
-                $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Lưu");
-
-                $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        });
-
-        return false;
-    });
-    $("#" + idButton + "btnContinue").click(function () {
-
-        if (isProcessing) return false;
-
-        if (!checkValidData()) {
-            $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
-            return false;
-        }
-
-        isProcessing = true;
-        $("#" + idButton + "btnSend").attr("disabled", "disabled");
-        $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Đang thực hiện");
-
-        var formData = new FormData($("form#" + idButton + "Form")[0]);
-        $("#" + idButton + "Notification").hide();
-
-        $.ajax({
-            url: dltd.urlApi,
-            type: "POST",
-            data: formData,
-            async: false,
-            crossDomain: true,
-            success: function (response) {
-                if (response === "OK") {
-                    $("#" + idButton + "Notification")
-                        .attr("class", "alert alert-success")
-                        .html("<strong>Thành công!</strong> Đã gửi văn bản qua hệ thống theo dõi chỉ đạo thành công.")
-                        .show();
-                   
-                } else {
-                    $("#" + idButton + "Notification")
-                        .attr("class", "alert alert-danger")
-                        .html("<strong>Lỗi!</strong> " + response)
-                        .show();
-
-                }
-
-            },
-            complete: function() {
-                isProcessing = false;
-                $("#" + idButton + "btnSend").removeAttr("disabled");
-                $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Lưu");
+                $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-floppy-disk'></i> Lưu văn bản");
 
                 $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
             },
