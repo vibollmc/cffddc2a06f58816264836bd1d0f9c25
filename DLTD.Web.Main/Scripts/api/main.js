@@ -92,7 +92,7 @@ function buildButton() {
     modalHtml += "<td>";
     modalHtml += "<div class='form-group'>";
     modalHtml += "<label class='control-label'>Số/Ký hiệu:</label><br/>";
-    modalHtml += "<input name='SoKH' type='text' class='form-control' id='" + idButton + "SoKH'>";
+    modalHtml += "<input name='SoKH' class='form-control' id='" + idButton + "SoKH'>";
     modalHtml += "</div>";
     modalHtml += "</td>";
     modalHtml += "</tr>";
@@ -255,7 +255,7 @@ function checkValidData() {
         message += "<li>Yêu cầu nhập trích yếu văn bản.</li>";
     }
 
-    var ngayKy = $("#" + idButton + "NgayKy");
+    var ngayKy = $("#" + idButton + "Ngayky");
     if ($.trim(ngayKy.val()) == "") {
         valid = false;
         message += "<li>Yêu cầu nhập ngày ký.</li>";
@@ -445,7 +445,7 @@ $(document).ready(function() {
     }).data("kendoWindow").center();
 
     $("#" + idButton + "HanXL").kendoDatePicker();
-    $("#" + idButton + "NgayKy").kendoDatePicker();
+    $("#" + idButton + "Ngayky").kendoDatePicker();
 
     var comboDoKhan = $("#"+idButton+"DoKhan").kendoDropDownList({
         dataTextField: "text",
@@ -516,7 +516,7 @@ $(document).ready(function() {
     $("#" + idButton + "TrichYeu").change(function() {
         $("#" + idButton + "Notification").hide();
     });
-    $("#" + idButton + "NgayKy").change(function () {
+    $("#" + idButton + "Ngayky").change(function () {
         $("#" + idButton + "Notification").hide();
     });
     $("#" + idButton + "SoKH").change(function () {
