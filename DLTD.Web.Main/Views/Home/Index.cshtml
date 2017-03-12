@@ -71,7 +71,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="control-label">Văn bản:</label>
+                    <label class="font-style: normal">Văn bản:</label>
                     <p class="control-label" id="TrichYeuVanBan"></p>
                 </div>
                 <form id="FormInput" method="post" enctype="multipart/form-data">
@@ -183,11 +183,11 @@
             <div class="modal-body">
                 <div class="row form-group">
                     <div class="col-md-6">
-                        <label class="control-label">Ngày ký từ</label><br/>
+                        <label class="control-label">Từ ngày</label>
                         <input class="form-control" name="ngaykytu" id="ngaykytu"/>
                     </div>
                     <div class="col-md-6">
-                        <label class="control-label">Ngày ký đến</label><br/>
+                        <label class="control-label">Đến ngày</label>
                         <input class="form-control" name="ngaykyden" id="ngaykyden" />
                     </div>
                 </div>
@@ -219,11 +219,11 @@
                 </div>
                 <div class="row form-group">
                     <div class="col-md-6">
-                        <label class="control-label">Thời hạn xử lý từ</label><br/>
+                        <label class="control-label">Hạn XL từ</label><br/>
                         <input class="form-control" name="thoihanxltu" id="thoihanxltu" />
                     </div>
                     <div class="col-md-6">
-                        <label class="control-label">Thời hạn xử lý đến</label><br/>
+                        <label class="control-label">Đến</label><br/>
                         <input class="form-control" name="thoihanxlden" id="thoihanxlden" />
                     </div>
                 </div>
@@ -246,11 +246,18 @@
                             @Html.Raw(ViewBag.OptionsKhoi)
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    @*<div class="col-md-6">
                         <label class="control-label">Trích yếu nội dung</label>
                         <input class="form-control" name="noidung" id="noidung"/>
+                    </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="control-label">Trích yếu</label>
+                        <input class="form-control" name="noidung" id="noidung" />
                     </div>
                 </div>
+                <br />
                 <div class="row">
                     <div class="col-md-12">
                         <label class="control-label">Ý kiến chỉ đạo</label>
