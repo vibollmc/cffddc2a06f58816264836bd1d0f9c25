@@ -9,7 +9,7 @@
 };
 
 var idButton = "";
-var isProcessing = false;
+var isProcessing99 = false;
 var indexAttachment = 0;
 var dataDonVi = [
     {{DATADONVI}}
@@ -295,8 +295,8 @@ function checkValidData() {
 }
 
 function getUserId() {
-    if (isProcessing) return false;
-    isProcessing = true;
+    if (isProcessing99) return false;
+    isProcessing99 = true;
 
     $.ajax({
         url: dltd.urlApi,
@@ -334,7 +334,7 @@ function getUserId() {
             
         },
         complete: function () {
-            isProcessing = false;
+            isProcessing99 = false;
         }
     });
 
@@ -538,14 +538,14 @@ $(document).ready(function() {
 
     $("#" + idButton + "btnSend").click(function () {
 
-        if (isProcessing) return false;
+        if (isProcessing99) return false;
 
         if (!checkValidData()) {
             $("#" + idButton + "Modal").animate({ scrollTop: "0px" });
             return false;
         }
 
-        isProcessing = true;
+        isProcessing99 = true;
         $("#" + idButton + "btnSend").attr("disabled", "disabled");
         $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-floppy-disk'></i> Đang thực hiện");
 
@@ -568,7 +568,7 @@ $(document).ready(function() {
                     if ($("#" + idButton + "AnotherOne").is(":checked")) {
                         //TODO: May be need implement some business here
                     } else {
-                        searchVanBan(); //from index.js - refresh data
+                        $("#btnSearch").click();
                         //Close modal now
                         setTimeout("$('#' + idButton + 'Modal').data('kendoWindow').close();", 3000);
 
@@ -583,7 +583,7 @@ $(document).ready(function() {
 
             },
             complete: function() {
-                isProcessing = false;
+                isProcessing99 = false;
                 $("#" + idButton + "btnSend").removeAttr("disabled");
                 $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-floppy-disk'></i> Lưu văn bản");
 
