@@ -52,16 +52,16 @@ function buildButton() {
     buttonHtml += "</button>";
 
     var modalHtml = "<div id='" + idButton + "Modal'>";
-    modalHtml += "<div class='box' style='position: fixed; width: 580px; z-index: 1000; left: 0px; top: 26px;'>";
+    modalHtml += "<div class='box' style='position: fixed; width: 580px; z-index: 1000; left: 0px; top: 33px;background: #fff;'>";
     modalHtml += "<header>";
-    modalHtml += "<nav style='padding: 3px;'>";
-    modalHtml += "<button type='button' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-save'></i> Lưu</button>";
+    modalHtml += "<nav style='padding: 3px 10px;'>";
+    modalHtml += "<button type='button' style='width:100px;' class='btn btn-sm btn-primary' id='" + idButton + "btnSend'><i class='glyphicon glyphicon-floppy-disk'></i> Lưu văn bản</button>";
     //modalHtml += "<span> <input id='" + idButton + "AnotherOne' type='checkbox'> Phân công cho đơn vị khác</span>";
     modalHtml += "</nav>";
     modalHtml += "</header>";
     modalHtml += "</div>";
 
-    modalHtml += "<div class='modal-body' style='margin-top: 25px;'>";
+    modalHtml += "<div class='modal-body' style='margin-top: 34px;'>";
 
     modalHtml += "<div id='" + idButton + "Notification' class='alert alert-success'>";
     modalHtml += "<strong>Success!</strong> thông báo ở đây";
@@ -547,7 +547,7 @@ $(document).ready(function() {
 
         isProcessing = true;
         $("#" + idButton + "btnSend").attr("disabled", "disabled");
-        $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-send'></i> Đang thực hiện");
+        $("#" + idButton + "btnSend").html("<i class='glyphicon glyphicon-floppy-disk'></i> Đang thực hiện");
 
         var formData = new FormData($("form#" + idButton + "Form")[0]);
         $("#" + idButton + "Notification").hide();
