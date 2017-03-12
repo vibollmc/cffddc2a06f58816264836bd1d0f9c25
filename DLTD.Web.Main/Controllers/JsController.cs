@@ -34,9 +34,9 @@ namespace DLTD.Web.Main.Controllers
             }
             string js;
             if (desc != null && desc.ToLower() == "vanbandi")
-                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVnDi.js"));
+                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVbDi.js"));
             else if (desc != null && desc.ToLower() == "vanbanden")
-                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVnDen.js"));
+                js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/qlvbVbDen.js"));
             else 
                 js = System.IO.File.ReadAllText(Server.MapPath("~/Scripts/api/main.js"));
 
