@@ -664,6 +664,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="MvcReportViewer.aspx" />
     <Content Include="MvcReportViewerErrorPage.html" />
+    <Content Include="Scripts\api\main.js" />
     <Content Include="Scripts\api\qlvbVbDen.js" />
     <Content Include="Scripts\api\qlvbVbDi.js" />
     <Content Include="Content\bootstrap.min.css.map" />

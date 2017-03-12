@@ -25,7 +25,7 @@
             </button>
             <ul class="dropdown-menu">
                 <li>
-                    <a><i class="glyphicon glyphicon-plus"></i> Tạo mới</a>
+                    <a href="javascript:void(0);" onclick="addNew(); return false;"><i class="glyphicon glyphicon-plus"></i> Tạo mới</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
@@ -308,6 +308,7 @@
         urlDanhSachNhiemVu = "@Url.Action("DanhSachNhiemVu")";
         trangThai = '@ViewBag.TrangThai';
     </script>
+    <script src="@Url.Action("QlvbScripts", "Js")" type="text/javascript"></script>
 }
 @section style {
     <style>
