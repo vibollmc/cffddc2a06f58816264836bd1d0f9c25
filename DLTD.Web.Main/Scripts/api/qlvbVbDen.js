@@ -471,7 +471,7 @@ $(document).ready(function() {
         getAttachments(idVanBan);
 
         var Ngayky = $.trim($(dltd.elementDocument).find("td").eq(2).html());
-        var SoKH = $.trim($(dltd.elementDocument).find("td").eq(5).html()); // +"/"+ $.trim($(dltd.elementDocument).find("td").eq(4).html());;
+        var SoKH = $.trim($(dltd.elementDocument).find("td").eq(3).html()); // +"/"+ $.trim($(dltd.elementDocument).find("td").eq(4).html());;
         var Trichyeu = $.trim($(dltd.elementDocument).find("td").eq(6).html());
 
         $("#" + idButton + "VanBan").html(SoKH + " - " + Trichyeu);
