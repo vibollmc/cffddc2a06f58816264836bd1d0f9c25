@@ -19,12 +19,15 @@
         @*<button class="btn btn-primary btn-sm btn-flat button-box" id="btnThemNhiemvu" onclick="window.open('@System.Web.Configuration.WebConfigurationManager.AppSettings["ServerQLVBOauthPath"]/Vanbandi', '_blank');return false;">
             <i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm Nhiệm vụ
         </button>*@
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-list"></i> Thêm Nhiệm vụ<span class="caret caret-white"></span></a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Thêm Nhiệm vụ <span class="caret"></span>
+            </button>
             <ul class="dropdown-menu">
                 <li>
                     <a><i class="glyphicon glyphicon-list-alt"></i> Tạo mới</a>
                 </li>
+                <li role="separator" class="divider"></li>
                 <li>
                     <a href="javascript:void(0);" onclick="window.open('@System.Web.Configuration.WebConfigurationManager.AppSettings["ServerQLVBOauthPath"]/Vanbandi', '_blank');return false;"><i class="glyphicon glyphicon-th-list"></i> Từ văn bản đi</a>
                 </li>
@@ -32,7 +35,7 @@
                     <a href="javascript:void(0);" onclick="window.open('@System.Web.Configuration.WebConfigurationManager.AppSettings["ServerQLVBOauthPath"]/Vanbanden', '_blank');return false;"><i class="glyphicon glyphicon-th-list"></i> Từ văn bản đến</a>
                 </li>
             </ul>
-        </li>
+        </div>
         @*@if (((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.QuanTriHeThong && ((NhomNguoiDung)ViewBag.Nhom) == NhomNguoiDung.ChuyenVien)
             {*@
         <button class="btn btn-primary btn-sm btn-flat button-box" id="btnTinhHinhXuLy" disabled style="display:@ViewBag.TinhHinhThucHien;" data-toggle="modal" data-target="#modalTinhHinhXuLy">
