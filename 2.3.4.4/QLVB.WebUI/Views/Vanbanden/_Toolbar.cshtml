@@ -1,0 +1,180 @@
+﻿@model QLVB.DTO.Vanbanden.ToolbarViewModel
+<div class="box ">
+	<header>
+		<nav class="box-toolbar">
+			<button id="Addbtn" style="display:@Model.Capnhatvb;" type="button" class="btn btn-sm btn-primary btn-flat button-box" title="Thêm mới văn bản">
+				<i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm mới
+			</button>
+			<button id="Editbtn" disabled style="display:@Model.Capnhatvb;" type="button" class="btn btn-sm btn-primary btn-flat button-box" title="Cập nhật văn bản">
+				<i class="glyphicon glyphicon-pencil"></i>&nbsp;Sửa
+			</button>
+			<button id="Deletebtn" disabled style="display:@Model.Xoavb;" type="button" class="btn btn-danger btn-sm btn-primary btn-flat button-box" title="Xóa văn bản">
+				<i class="glyphicon glyphicon-trash"></i>&nbsp;Xóa
+			</button>
+			<button id="Searchbtn" class="btn btn-success btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm
+			</button>
+			<button id="Duyetbtn" style="display:@Model.Duyetvb;" type="button" class="btn btn-warning btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-ok"></i>&nbsp;Duyệt
+			</button>
+			<button id="Huyduyetbtn" style="display:none" type="button" class="btn btn-warning btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-remove"></i>&nbsp;Hủy duyệt
+			</button>
+			<button id="PhanXLVBbtn" style="display:@Model.PhanXLVB;" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-user"></i>&nbsp;Phân XLVB
+			</button>
+			<button id="Quytrinhbtn" style="display:@Model.PhanQuytrinh;" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-user"></i>&nbsp;Phân quy trình
+			</button>
+			<button id="XLVBbtn" disabled style="display:@Model.Xulyvb;" class="btn btn-metis-4 btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-pencil"></i>&nbsp;Xử lý
+			</button>
+			<button id="Capquyenxembtn" disabled style="display:@Model.Capquyenxem" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-share-alt"></i>&nbsp;Cấp quyền xem
+			</button>
+			<button id="Emailbtn" style="display:@Model.Email" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-envelope"></i>&nbsp;Email
+			</button>
+			<button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
+			</button>
+
+		</nav>
+	</header>
+</div>
+<script type="text/javascript">
+	$('#Searchbtn').click(function () {
+		OpenSearchVBDen();
+	})
+	$('#Addbtn').click(function () {
+		var url = '@Url.Action("Themvanban", "Vanbanden")';
+		window.location = url;
+	})
+	$('#Editbtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		if (idvanban != 0) {
+			var url = '@Url.Action("Themvanban", "Vanbanden", (new { id = "__id__" }))'.replace('__id__', idvanban);
+			window.location = url;			
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#Deletebtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		if (idvanban != 0) {
+			var url = '@Url.Action("_formDeleteVanban", "Vanbanden", (new { id = "__id__" }))'.replace('__id__', idvanban);
+			$('#detail-DeleteVB').load(url);
+			OpenDeleteVB();            
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#Duyetbtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		if (idvanban != 0) {
+			$.ajax(
+				{
+					type: "POST",
+					url: '@Url.Action("_AjaxDuyetVanban", "Vanbanden")',
+					data: { id: idvanban },
+					success: function (data) {
+						if (data == 1) {
+							RefreshGrid();
+						}
+						else {
+							SetThongbao(data);
+							RefreshGrid();
+						}
+					}
+				});
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#Huyduyetbtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		if (idvanban != 0) {
+			$.ajax(
+				{
+					type: "POST",
+					url: '@Url.Action("_AjaxHuyDuyetVanban", "Vanbanden")',
+					data: { id: idvanban },
+					success: function (data) {
+						if (data == 1) {
+							RefreshGrid();
+						}
+						else {
+							SetThongbao(data);
+							RefreshGrid();
+						}
+					}
+				});
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#XLVBbtn').click(function () {
+		var idhosocongviec = 0;
+		idhosocongviec = GetIdHoso();
+		var isXulyNhanh = '@Model.IsXulyNhanh';
+	    if (idhosocongviec != 0) {
+	        if (isXulyNhanh == "True") {
+	            OpenYkienxulyNhanh(idhosocongviec);
+	        } else {
+	            var url = '@Url.Action("XulyHoso", "Hoso", (new { id = "__id__" }))'.replace('__id__', idhosocongviec);
+	            window.location = url;
+	        }			
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	})
+	$('#PhanXLVBbtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		var isPhanXLNhieuVB = '@Model.IsPhanXLNhieuVB';	    
+		if (idvanban != 0) {
+			@*if (isPhanXLNhieuVB == "True") {
+				var url = '@Url.Action("PhanXLNhieuVB", "Vanbanden")';
+				window.location = url;
+			} else {*@
+				var url = '@Url.Action("PhanXLVB", "Hoso", (new { id = "__id__" }))'.replace('__id__', idvanban);
+				window.location = url;
+			//}			
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	});
+	$('#Quytrinhbtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();        
+		if (idvanban != 0) {            
+			var url = '@Url.Action("PhanQuytrinh", "Hoso", (new { id = "__id__" }))'.replace('__id__', idvanban);
+			window.location = url;            
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	});
+	$('#Capquyenxembtn').click(function () {
+		var idvanban = 0;
+		idvanban = GetIdVanban();
+		if (idvanban != 0) {
+			OpenViewCapquyenxemVBDen(idvanban);
+		} else {
+			SetThongbao("Bạn chưa chọn văn bản");
+		}
+	});
+	$('#PrintListVBbtn').click(function () {
+		var url = '@Url.Action("Export", "Vanbanden")';
+		window.location = url;
+	})
+    $('#Emailbtn').click(function () {
+        var idvanban = 0;
+        idvanban = GetIdVanban();
+        var url = '@Url.Action("Email", "Vanbanden", (new { id = "__id__" }))'.replace('__id__', idvanban);
+        window.location = url;
+    })
+</script>

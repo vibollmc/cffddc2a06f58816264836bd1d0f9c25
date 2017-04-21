@@ -1,0 +1,50 @@
+﻿@model QLVB.DTO.Quytrinh.EditLoaiQuytrinhViewModel
+
+<div class="box">
+    <form class="form-horizontal" id="formEditLoaiQT">
+        <span id="ketquaSaveLoaiQT" class="validation-summary-valid"></span>
+        <header>
+            <nav style="padding: 3px;">
+                <button id="SaveLoaiQTbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                <button id="BackLoaiQTbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </nav>
+        </header>
+
+        @Html.HiddenFor(m => m.intid)
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strtenloaiquytrinh, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strtenloaiquytrinh, new { @class = "form-control form-control-window", placeholder = "Tên Loại quy trình" })
+            </div>
+        </div>
+        
+    </form>
+</div>
+<script type="text/javascript">
+
+    $("#SaveLoaiQTbtn").click(function () {
+        var validatable = $("#formEditLoaiQT").kendoValidator().data("kendoValidator");
+        if (validatable.validate()) {            
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveLoaiquytrinh", "Quytrinh")',
+                dataType: "json",
+                data: { id: '@Model.intid',strten:$('#strtenloaiquytrinh').val()},
+                success: function (data) {
+                    if (data == 1) {
+                        ShowResult("ketquaSaveLoaiQT", "Cập nhật thành công");
+                        RefreshLoaiQT();
+                    }
+                    else {
+                        ShowResult("ketquaSaveLoaiQT", "Lỗi !!!");
+                        //RefreshGrid();
+                    }
+                },
+            });
+        }
+    });
+    $('#BackLoaiQTbtn').click(function () {
+        CloseEditLoaiQT();
+    })
+    
+</script>

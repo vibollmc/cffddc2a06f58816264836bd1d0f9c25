@@ -20,16 +20,19 @@
             //"# } else { #" +
 
             //"# } #"
-           ).Width(30);
-          columns.Bound(p => p.SoKH).Width("10%");
+           ).Filterable(p => p.Cell(cell => cell.ShowOperators(false))).Width(30);
+          columns.Bound(p => p.SoKH).Width(60);
           columns.Bound(p => p.Ngayky).Width(90);
-          columns.Bound(p => p.Trichyeu).Width("20%").Encoded(false);
+          columns.Bound(p => p.Trichyeu).Encoded(false);
+          columns.Bound(p => p.NguoiChiDao).Width(90).Filterable(p => p.Cell(cell=>cell.Operator("contains"))); 
           columns.Bound(p => p.TenDonVi).Width(100);
-          columns.Bound(p => p.NguoiTheoDoi);
+          columns.Bound(p => p.NguoiTheoDoi).Width(90);
           columns.Bound(p => p.YKienChiDao).Width("20%").Encoded(false);
           columns.Bound(p => p.ThoiHanXuLy).Width(90);
           columns.Bound(p => p.DoKhan).Width(60);      
-          columns.Bound(p => p.TrangThaiVB).Width(50);
+         // columns.Bound(p => p.TrangThaiVB).Width(50);
+          
+         
       })
       .Pageable(
           pageable => pageable
@@ -41,6 +44,34 @@
                   .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
       )
       .Scrollable()
+      .Filterable(
+        s=>s.Mode(GridFilterMode.Row)
+            .Operators(o => 
+                o.ForString(ss => 
+                    ss.Clear()
+                    .Contains("bao gồm")
+                    .IsEqualTo("bằng với")
+                )
+                .ForDate(dd => 
+                    dd.Clear()
+                    .IsEqualTo("bằng")
+                    .IsGreaterThanOrEqualTo("lớn hơn hoặc bằng")
+                    .IsGreaterThan("lớn hơn")
+                    .IsLessThan("nhỏ hơn")
+                    .IsLessThanOrEqualTo("nhỏ hơn hoặc bằng")
+                    .IsNotEqualTo("khác")
+                )
+                .ForNumber(nn =>
+                    nn.Clear()
+                    .IsEqualTo("bằng")
+                    .IsGreaterThanOrEqualTo("lớn hơn hoặc bằng")
+                    .IsGreaterThan("lớn hơn")
+                    .IsLessThan("nhỏ hơn")
+                    .IsLessThanOrEqualTo("nhỏ hơn hoặc bằng")
+                    .IsNotEqualTo("khác")
+                )
+            )
+      )
       .Selectable(s => s.Type(GridSelectionType.Row).Mode(GridSelectionMode.Single))
       .Resizable(resize => resize.Columns(true))
       .HtmlAttributes(new { style = "height:100%;" })
@@ -51,5 +82,4 @@
           .Read(read => read.Action("GetVanBanChiDao", "Home", Model))
       )
     .Events(events => events.Change("gridSelected").DataBound("gridDataBound"))
-
 )

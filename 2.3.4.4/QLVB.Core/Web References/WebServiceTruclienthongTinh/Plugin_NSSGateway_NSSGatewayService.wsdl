@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:intf="urn:http.service.gateway.nss.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:impl="urn:http.service.gateway.nss.com" targetNamespace="urn:http.service.gateway.nss.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:http.service.gateway.nss.com">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:complexType name="ArrayOf_xsd_string">
+        <xsd:complexContent mixed="false">
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="soapenc:string[]" ref="soapenc:arrayType" />
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="synchronizationAllDepartmentGWRequest" />
+  <wsdl:message name="hasReceiverMessageResponse">
+    <wsdl:part name="hasReceiverMessageReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getConnectionStatusRequest">
+    <wsdl:part name="orgCode" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="synchronizationDepartmentByCodeOrganizationGWResponse">
+    <wsdl:part name="synchronizationDepartmentByCodeOrganizationGWReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsByStartDateEndDateResponse">
+    <wsdl:part name="getReceivedMessageIdsByStartDateEndDateReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="updateReceiveFinishRequest">
+    <wsdl:part name="messageId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMessagesResponse">
+    <wsdl:part name="getMessagesReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getDownloadFileURLResponse">
+    <wsdl:part name="getDownloadFileURLReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMessageByMessageIdRequest">
+    <wsdl:part name="messageId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMessageByMessageIdResponse">
+    <wsdl:part name="getMessageByMessageIdReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsByDocumentTypeRequest">
+    <wsdl:part name="documentType" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedDocumentCodesRequest" />
+  <wsdl:message name="sendMessageRequest">
+    <wsdl:part name="xmlMessage" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getUploadFileURLRequest">
+    <wsdl:part name="ipAddress" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="checkReceiverMessageRequest">
+    <wsdl:part name="messageId" type="xsd:long" />
+    <wsdl:part name="receiverOrgId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getConnectionStatusResponse">
+    <wsdl:part name="getConnectionStatusReturn" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsByStartDateEndDateRequest">
+    <wsdl:part name="startDateInMilisecond" type="xsd:long" />
+    <wsdl:part name="endDateInMilisecond" type="xsd:long" />
+  </wsdl:message>
+  <wsdl:message name="updateErrorMessageResponse">
+    <wsdl:part name="updateErrorMessageReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getOrganizationRequest">
+    <wsdl:part name="orgCode" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getUploadFileURLResponse">
+    <wsdl:part name="getUploadFileURLReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getNumberOfReceiveMessageRequest" />
+  <wsdl:message name="updateReceiveFinishResponse">
+    <wsdl:part name="updateReceiveFinishReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getOrganizationResponse">
+    <wsdl:part name="getOrganizationReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="hasReceiverMessageRequest">
+    <wsdl:part name="msId" type="xsd:string" />
+    <wsdl:part name="receiverOrgId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMessageIdsByPriorityResponse">
+    <wsdl:part name="getMessageIdsByPriorityReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="sendMessageResponse">
+    <wsdl:part name="sendMessageReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsRequest" />
+  <wsdl:message name="getMessagesRequest" />
+  <wsdl:message name="getMessagePriorityByMessageIdResponse">
+    <wsdl:part name="getMessagePriorityByMessageIdReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getMessageIdsByPriorityRequest">
+    <wsdl:part name="documentType" type="xsd:string" />
+    <wsdl:part name="offset" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="getDownloadFileURLRequest">
+    <wsdl:part name="ipAddress" type="xsd:string" />
+    <wsdl:part name="fileId" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getOrganizationsResponse">
+    <wsdl:part name="getOrganizationsReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsResponse">
+    <wsdl:part name="getReceivedMessageIdsReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getMessagePriorityByMessageIdRequest">
+    <wsdl:part name="messageId" type="xsd:long" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedDocumentCodesResponse">
+    <wsdl:part name="getReceivedDocumentCodesReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="synchronizationAllDepartmentGWResponse">
+    <wsdl:part name="synchronizationAllDepartmentGWReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getReceivedMessageIdsByDocumentTypeResponse">
+    <wsdl:part name="getReceivedMessageIdsByDocumentTypeReturn" type="impl:ArrayOf_xsd_string" />
+  </wsdl:message>
+  <wsdl:message name="getNumberOfReceiveMessageResponse">
+    <wsdl:part name="getNumberOfReceiveMessageReturn" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="synchronizationDepartmentByCodeOrganizationGWRequest">
+    <wsdl:part name="codeOrganization" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="getOrganizationsRequest">
+    <wsdl:part name="systemType" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="updateErrorMessageRequest">
+    <wsdl:part name="messageId" type="xsd:string" />
+    <wsdl:part name="errorMessage" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="checkReceiverMessageResponse">
+    <wsdl:part name="checkReceiverMessageReturn" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:portType name="NSSGatewayServiceSoap">
+    <wsdl:operation name="checkReceiverMessage" parameterOrder="messageId receiverOrgId">
+      <wsdl:input name="checkReceiverMessageRequest" message="impl:checkReceiverMessageRequest" />
+      <wsdl:output name="checkReceiverMessageResponse" message="impl:checkReceiverMessageResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getConnectionStatus" parameterOrder="orgCode">
+      <wsdl:input name="getConnectionStatusRequest" message="impl:getConnectionStatusRequest" />
+      <wsdl:output name="getConnectionStatusResponse" message="impl:getConnectionStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getDownloadFileURL" parameterOrder="ipAddress fileId">
+      <wsdl:input name="getDownloadFileURLRequest" message="impl:getDownloadFileURLRequest" />
+      <wsdl:output name="getDownloadFileURLResponse" message="impl:getDownloadFileURLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMessageByMessageId" parameterOrder="messageId">
+      <wsdl:input name="getMessageByMessageIdRequest" message="impl:getMessageByMessageIdRequest" />
+      <wsdl:output name="getMessageByMessageIdResponse" message="impl:getMessageByMessageIdResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMessageIdsByPriority" parameterOrder="documentType offset">
+      <wsdl:input name="getMessageIdsByPriorityRequest" message="impl:getMessageIdsByPriorityRequest" />
+      <wsdl:output name="getMessageIdsByPriorityResponse" message="impl:getMessageIdsByPriorityResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMessagePriorityByMessageId" parameterOrder="messageId">
+      <wsdl:input name="getMessagePriorityByMessageIdRequest" message="impl:getMessagePriorityByMessageIdRequest" />
+      <wsdl:output name="getMessagePriorityByMessageIdResponse" message="impl:getMessagePriorityByMessageIdResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getMessages">
+      <wsdl:input name="getMessagesRequest" message="impl:getMessagesRequest" />
+      <wsdl:output name="getMessagesResponse" message="impl:getMessagesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getNumberOfReceiveMessage">
+      <wsdl:input name="getNumberOfReceiveMessageRequest" message="impl:getNumberOfReceiveMessageRequest" />
+      <wsdl:output name="getNumberOfReceiveMessageResponse" message="impl:getNumberOfReceiveMessageResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getOrganization" parameterOrder="orgCode">
+      <wsdl:input name="getOrganizationRequest" message="impl:getOrganizationRequest" />
+      <wsdl:output name="getOrganizationResponse" message="impl:getOrganizationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getOrganizations" parameterOrder="systemType">
+      <wsdl:input name="getOrganizationsRequest" message="impl:getOrganizationsRequest" />
+      <wsdl:output name="getOrganizationsResponse" message="impl:getOrganizationsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedDocumentCodes">
+      <wsdl:input name="getReceivedDocumentCodesRequest" message="impl:getReceivedDocumentCodesRequest" />
+      <wsdl:output name="getReceivedDocumentCodesResponse" message="impl:getReceivedDocumentCodesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIdsByDocumentType" parameterOrder="documentType">
+      <wsdl:input name="getReceivedMessageIdsByDocumentTypeRequest" message="impl:getReceivedMessageIdsByDocumentTypeRequest" />
+      <wsdl:output name="getReceivedMessageIdsByDocumentTypeResponse" message="impl:getReceivedMessageIdsByDocumentTypeResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIdsByStartDateEndDate" parameterOrder="startDateInMilisecond endDateInMilisecond">
+      <wsdl:input name="getReceivedMessageIdsByStartDateEndDateRequest" message="impl:getReceivedMessageIdsByStartDateEndDateRequest" />
+      <wsdl:output name="getReceivedMessageIdsByStartDateEndDateResponse" message="impl:getReceivedMessageIdsByStartDateEndDateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIds">
+      <wsdl:input name="getReceivedMessageIdsRequest" message="impl:getReceivedMessageIdsRequest" />
+      <wsdl:output name="getReceivedMessageIdsResponse" message="impl:getReceivedMessageIdsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getUploadFileURL" parameterOrder="ipAddress">
+      <wsdl:input name="getUploadFileURLRequest" message="impl:getUploadFileURLRequest" />
+      <wsdl:output name="getUploadFileURLResponse" message="impl:getUploadFileURLResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="hasReceiverMessage" parameterOrder="msId receiverOrgId">
+      <wsdl:input name="hasReceiverMessageRequest" message="impl:hasReceiverMessageRequest" />
+      <wsdl:output name="hasReceiverMessageResponse" message="impl:hasReceiverMessageResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="sendMessage" parameterOrder="xmlMessage">
+      <wsdl:input name="sendMessageRequest" message="impl:sendMessageRequest" />
+      <wsdl:output name="sendMessageResponse" message="impl:sendMessageResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="synchronizationAllDepartmentGW">
+      <wsdl:input name="synchronizationAllDepartmentGWRequest" message="impl:synchronizationAllDepartmentGWRequest" />
+      <wsdl:output name="synchronizationAllDepartmentGWResponse" message="impl:synchronizationAllDepartmentGWResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="synchronizationDepartmentByCodeOrganizationGW" parameterOrder="codeOrganization">
+      <wsdl:input name="synchronizationDepartmentByCodeOrganizationGWRequest" message="impl:synchronizationDepartmentByCodeOrganizationGWRequest" />
+      <wsdl:output name="synchronizationDepartmentByCodeOrganizationGWResponse" message="impl:synchronizationDepartmentByCodeOrganizationGWResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateErrorMessage" parameterOrder="messageId errorMessage">
+      <wsdl:input name="updateErrorMessageRequest" message="impl:updateErrorMessageRequest" />
+      <wsdl:output name="updateErrorMessageResponse" message="impl:updateErrorMessageResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="updateReceiveFinish" parameterOrder="messageId">
+      <wsdl:input name="updateReceiveFinishRequest" message="impl:updateReceiveFinishRequest" />
+      <wsdl:output name="updateReceiveFinishResponse" message="impl:updateReceiveFinishResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Plugin_NSSGateway_NSSGatewayServiceSoapBinding" type="impl:NSSGatewayServiceSoap">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="checkReceiverMessage">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="checkReceiverMessageRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="checkReceiverMessageResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getConnectionStatus">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getConnectionStatusRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getConnectionStatusResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getDownloadFileURL">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getDownloadFileURLRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getDownloadFileURLResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMessageByMessageId">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getMessageByMessageIdRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getMessageByMessageIdResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMessageIdsByPriority">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getMessageIdsByPriorityRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getMessageIdsByPriorityResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMessagePriorityByMessageId">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getMessagePriorityByMessageIdRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getMessagePriorityByMessageIdResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getMessages">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getMessagesRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getMessagesResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNumberOfReceiveMessage">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getNumberOfReceiveMessageRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getNumberOfReceiveMessageResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getOrganization">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getOrganizationRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getOrganizationResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getOrganizations">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getOrganizationsRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getOrganizationsResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedDocumentCodes">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getReceivedDocumentCodesRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getReceivedDocumentCodesResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIdsByDocumentType">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getReceivedMessageIdsByDocumentTypeRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getReceivedMessageIdsByDocumentTypeResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIdsByStartDateEndDate">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getReceivedMessageIdsByStartDateEndDateRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getReceivedMessageIdsByStartDateEndDateResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReceivedMessageIds">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getReceivedMessageIdsRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getReceivedMessageIdsResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUploadFileURL">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="getUploadFileURLRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="getUploadFileURLResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="hasReceiverMessage">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="hasReceiverMessageRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="hasReceiverMessageResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendMessage">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="sendMessageRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="sendMessageResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="synchronizationAllDepartmentGW">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="synchronizationAllDepartmentGWRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="synchronizationAllDepartmentGWResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="synchronizationDepartmentByCodeOrganizationGW">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="synchronizationDepartmentByCodeOrganizationGWRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="synchronizationDepartmentByCodeOrganizationGWResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateErrorMessage">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="updateErrorMessageRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="updateErrorMessageResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateReceiveFinish">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input name="updateReceiveFinishRequest">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output name="updateReceiveFinishResponse">
+        <wsdlsoap:body use="encoded" namespace="urn:http.service.gateway.nss.com" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NSSGatewayServiceSoapService">
+    <wsdl:port name="Plugin_NSSGateway_NSSGatewayService" binding="impl:Plugin_NSSGateway_NSSGatewayServiceSoapBinding">
+      <wsdlsoap:address location="http://truclienthong.newsaigonsoft.com/gw-portlet/api/secure/axis/Plugin_NSSGateway_NSSGatewayService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

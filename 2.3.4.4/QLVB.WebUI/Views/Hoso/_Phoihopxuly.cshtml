@@ -1,0 +1,131 @@
+﻿@model QLVB.DTO.Hoso.PhoihopXulyViewModel
+
+
+<div class="box">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="SubmitPhoihopxulybtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>			
+			<button id="ClosePhoihopxulybtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+		</nav>
+	</header>
+</div>
+<span id="ketqua" class="validation-summary-valid"></span>
+<div style="height:400px ;width: 100%; overflow-y: scroll;">
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" id="formAddPhoihopxuly">
+				@Html.Hidden("idhoso", Model.idhoso)
+				<table class="table table-condensed responsive-table" style="width: 100%">
+					@for (int i = 0; i <= Model.maxLevelDonvi; i++)
+					{
+						foreach (var dv in Model.donvi)
+						{
+							string strIndent = "";
+							if (dv.intlevel == i)
+							{
+								<tr>
+									<td colspan="2">
+										@for (var j = 0; j < i; j++) { strIndent += "&nbsp;&nbsp;&nbsp;"; }										
+										@Html.Raw(strIndent)<b>@dv.strtendonvi</b>
+									</td>
+								</tr>
+								foreach (var c in Model.canbo)
+								{
+									if (dv.Id == c.intiddonvi)
+									{
+										<tr>
+											<td style="width:50px;text-align:center;">
+												@if ((c.IsCheck == true) & (c.IsPhoihopxuly == false))
+												{
+													@Html.CheckBox(c.intid.ToString(), c.IsCheck, new { disabled = "disabled" })
+												}
+												else
+												{
+													@Html.CheckBox(c.intid.ToString(), c.IsCheck)
+												}
+											</td>
+											<td>
+												@c.strhoten
+											</td>
+										</tr>
+									}
+								}
+
+								@*foreach (var d2 in Model.donvi)
+								{
+									if ((d2.intlevel == Model.maxLevelDonvi) && (d2.ParentId == dv.Id))
+									{
+										string strLastNode = "";
+										for (var j = 0; j <= Model.maxLevelDonvi; j++) { strLastNode += "&nbsp;&nbsp;&nbsp;"; }
+										<tr>
+											<td colspan="2">
+												@Html.Raw(strLastNode)												
+												<b>@d2.strtendonvi</b>
+											</td>
+										</tr>
+
+										foreach (var c in Model.canbo)
+										{
+											if (d2.Id == c.intiddonvi)
+											{
+												<tr>
+													<td style="width:50px;text-align:center;">
+														@if ((c.IsCheck == true) & (c.IsPhoihopxuly == false))
+														{
+															@Html.CheckBox(c.intid.ToString(), c.IsCheck, new { disabled = "disabled" })
+														}
+														else
+														{
+															@Html.CheckBox(c.intid.ToString(), c.IsCheck)
+														}
+   
+													</td>
+													<td>
+														@c.strhoten
+													</td>
+												</tr>
+											}
+										}
+
+									}
+								}*@
+
+
+							}
+						}
+					}
+				</table>
+			</form>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript">
+	$('#ClosePhoihopxulybtn').click(function () {
+		CloseViewPhoihopxuly();
+	});
+	$("#SubmitPhoihopxulybtn").click(function () {
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_SavePhoihopxuly", "Hoso")',
+		    data: $("#formAddPhoihopxuly").serialize(),
+			success: function (data) {
+				if (data == 1) {
+				    CloseViewPhoihopxuly();
+				    // reload canbo xuly hoso
+				    ReloadCanboxuly();
+				    ReloadThongtinxuly();
+				}
+				else {
+				    SetThongbao("Lỗi!!!");
+				}
+			},
+			dataType: "Json"
+		});
+	});
+	
+</script>
+
+

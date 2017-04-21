@@ -1,0 +1,71 @@
+﻿@model QLVB.DTO.Hoso.SearchCongviecViewModel
+@using QLVB.DTO
+
+@(Html.Kendo().Grid<QLVB.DTO.Hoso.ListCongviecViewModel>()
+    .Name("grid").AutoBind(false)
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.intid).Hidden();        
+        columns.Bound(o => o.dtengayhs).Format("{0:dd/MM/yyyy}").Title("Ngày mở HS").Width(90);        
+        columns.Bound(o => o.strtieude).Title("Tiêu đề").Width("50%").Encoded(false);                
+        columns.Bound(o => o.dtehanxuly).Format("{0:dd/MM/yyyy}").Title("Hạn trả lời").Width(90);
+        columns.Bound(o => o.strnguoinhap).Title("Người mở HS").Width("20%").Encoded(false);    
+        columns.Bound(o => o.inttrangthai).Hidden();
+        columns.Bound(o => o.idnguoinhap).Hidden();
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+        //.Sortable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("ListHoso_Read", "Hoso",
+                new
+                {
+                    strngayhscat = Model.strngayhscat,
+                    strxuly = Model.strxuly,
+                    intsobd = Model.intsobd,
+                    intsokt = Model.intsokt,
+                    strngayhsbd = Model.strngayhsbd,
+                    strngayhskt = Model.strngayhskt,
+                    //strxulychinh = Model.strxulychinh,
+                    strtieude = Model.strtieude,
+                    strhantraloi = Model.strhantraloi,
+                    idlinhvuc = Model.idlinhvuc
+                })
+            )
+            .Events(events => events.Error("onError"))
+        )
+        .Events(events => events.Change("onChange").DataBound("onDataBound"))
+)
+<script type="text/javascript">
+    $(function () {
+        dataSource = $('#grid').data().kendoGrid.dataSource;
+        dataSource.query({
+            page: '@Model.intPage',
+            group: dataSource.group(),
+            filter: dataSource.filter(),
+            sort: dataSource.sort(),
+            pageSize: dataSource.pageSize()
+        })
+    })
+    $(window).resize(function () {
+        SetGridHeight();
+    });
+    $(document).ready(function () {
+        SetGridHeight();
+    })
+    function onError(e, status) {
+        SetThongbao("Đã có lỗi xảy ra trên Server!");
+    }
+</script>

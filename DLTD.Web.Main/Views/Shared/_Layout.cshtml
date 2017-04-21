@@ -15,12 +15,19 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/kendo")
     @Scripts.Render("~/bundles/moment")
-    <style>        .control-label {
+    <style>        
+        .control-label {
             font-style: normal;
             font-size: small;
             color: #003399;
            // font-family: "Times New Roman";
-        }</style>
+        }
+    </style>
+
+    <script type="text/javascript">
+        kendo.culture("vi-VN");
+        moment.locale("vi");
+    </script>
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -91,9 +98,6 @@
                 <p>&copy; @DateTime.Now.Year TRUNG TÂM TIN HỌC - VĂN PHÒNG UBND TỈNH ĐỒNG NAI. ĐT: 061.3820704.</p>
             </footer>*@
     </div>
-    <script type="text/javascript">
-        moment.locale("vi");
-    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

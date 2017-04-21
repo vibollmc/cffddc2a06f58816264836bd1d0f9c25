@@ -1,0 +1,135 @@
+﻿@model QLVB.DTO.TracuuLuutru.CapnhatLuutruViewModel
+
+@{
+	ViewBag.Title = "CapnhatVanban";
+
+	var thoihanbaoquan = new[]{
+				new {value = "1 năm", name = "1 năm"},
+				new {value = "2 năm", name = "2 năm"},
+				new {value = "vĩnh viễn", name = "vĩnh viễn"},
+				new {value = "Hết hạn lưu trữ", name = "Hết hạn lưu trữ"}
+			};
+}
+
+@section header{
+	<i class="glyphicon glyphicon-file">&nbsp;</i>Cập nhật Lưu trữ văn bản đi
+}
+
+<div class="box " id="tbar">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="Savebtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="Ghi nhận(Ctrl-G)"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+			<button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="Quay lại(Ctrl-Q)"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+		</nav>
+	</header>
+</div>
+
+<div id="vanban" style="min-height:500px;max-height:950px;height:auto; width: 100%;overflow-x:hidden; overflow-y: scroll;font-weight:600;">
+	<div class="row">
+		<div class="col-sm-12">
+			<span id="ketqua" class="validation-summary-valid"></span>
+			<table class="table-condensed table-bordered responsive-table" style="width:100%;">
+				<tr>
+					<td colspan="4" class="title-header">
+						<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN VĂN BẢN
+					</td>
+				</tr>
+				<tr>
+					<th class="table-col-4">Số, ký hiệu</th>
+					<td class="table-col-4">
+						@if (Model.intso > 0)
+						{
+							string strSo = Model.intso.ToString() + Model.strsophu + "/" + Model.strkyhieu;
+							@strSo
+						}
+					</td>
+
+					<th class="table-col-4">Ngày ký</th>
+					<td class="table-col-4">@Model.strngayvanban</td>
+				</tr>
+				<tr>
+					<th class="table-col-4">Trích yếu nội dung</th>
+					<td class="table-col-4" colspan="3">@Model.strtrichyeu</td>
+				</tr>
+				<tr>
+					<td colspan="4" class="title-header">
+						<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN LƯU TRỮ
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<form class="form-horizontal" id="formUpdateLuutru" method="post">
+				@Html.Hidden("idvanban", Model.intidvanban)
+				@Html.Hidden("intloai", Model.intloaivanban)
+				@Html.Hidden("intid", Model.intid)
+				<div class="form-group form-group-window">
+					<label class="col-sm-4 control-label">Hộp số / Kệ số</label>
+					<div class="col-sm-6">
+						@Html.TextBoxFor(u => u.inthopso,
+								new
+								{
+									@class = "form-control form-control-window3",
+									@Value = Model.inthopso
+								})
+					</div>
+				</div>
+				<div class="form-group form-group-window">
+					<label class="col-sm-4 control-label">Đơn vị bảo quản</label>
+					<div class="col-sm-6">
+						@Html.TextBoxFor(u => u.intdonvibaoquan,
+								new
+								{
+									@class = "form-control form-control-window3",
+									@Value = Model.intdonvibaoquan
+								})
+					</div>
+				</div>
+				<div class="form-group form-group-window">
+					<label class="col-sm-4 control-label">Thời hạn bảo quản</label>
+					<div class="col-sm-6">
+						@Html.DropDownList("strthoihanbaoquan", new SelectList(thoihanbaoquan, "value", "name", Model.strthoihanbaoquan),
+																	 new { @class = "form-control" })
+
+					</div>
+				</div>
+				<div class="form-group form-group-window">
+					<label class="col-sm-4 control-label">Nội dung</label>
+					<div class="col-sm-6">
+						@Html.TextBoxFor(u => u.strnoidung,
+								new
+								{
+									@class = "form-control form-control-window3",
+									@Value = Model.strnoidung
+								})
+					</div>
+				</div>
+			</form>
+
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#Savebtn").click(function () {
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("_SaveLuutru", "Luutru")',
+			data: $("#formUpdateLuutru").serialize(),
+			success: function (data) {
+				if (data > 0) {
+					ShowResult("ketqua", "Cập nhật thành công");
+					$('#intid').val(data);
+				}
+				else {
+					ShowResult("ketqua", "Lỗi !!!");
+				}
+			},
+			dataType: "Json"
+		});
+	});
+	$("#Backbtn").click(function () {
+		var url = '@Url.Action("Index", "Vanbandi", new { isBack=true })';
+		window.location = url;
+	});
+</script>

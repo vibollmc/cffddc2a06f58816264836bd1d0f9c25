@@ -1,0 +1,172 @@
+﻿@{
+	ViewBag.Title = "PhanXLNhieuVBDen";
+}
+@section header{
+	<i class="fa fa-file-text">&nbsp;</i>Phân xử lý văn bản
+}
+
+<div class="box " id="tbar">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="SavePhanXLVBbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="fa fa-save"></i>&nbsp;Ghi nhận</button>
+			<button id="BackPhanXLVBbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+		</nav>
+	</header>
+</div>
+
+<div class="row">
+	<div class="col-sm-12" id="detail-PhanXLVB">
+		@Html.Action("_FormPhanXLNhieuVB", "Vanbanden")
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12" id="listPhanXLVB">
+		@Html.Action("_ListPhanXLNhieuVBDen", "Vanbanden", new { listid = ViewBag.listid })
+	</div>
+</div>
+
+<script type="text/javascript">
+	function onChange(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#grid").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			//SetIdVanban(intid);
+			var currentPage = grid.dataSource.page();
+
+		});
+	}
+	function onDataBound(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}
+			else {
+				var uid = dataView[i].uid;
+				var strClass = SetColorVanban(dataView[i].inttinhtrangxuly, dataView[i].isykien, dataView[i].IsVbdt)
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass(strClass);
+			}
+		}
+	}
+	function SetColorVanban(inttinhtrangxuly, isykien, IsVbdt) {
+		var strClass = "";
+		switch (inttinhtrangxuly) {
+		    case 0: // dang xu ly
+		        if (isykien == true) {
+		            strClass = "coykien";
+		        } else {
+		            if (IsVbdt == true) {
+
+		                strClass = "dangxuly-vbdt";
+		            } else {
+		                strClass = "dangxuly";
+		            }
+		        }
+		        break;
+			case 1: // da hoan thanh
+				strClass = "daxuly";
+				break;
+			default:  // null
+				strClass = "daxuly";
+				break;
+		}
+		return strClass;
+	}
+	function onError(e, status) {
+		SetThongbao("Đã có lỗi xảy ra trên Server!");
+	}
+	function SetIdVanban(idvanban) {
+		$('#idvanban').val(idvanban);
+	}
+	function GetIdVanban() {
+		var id = $('#idvanban').val();
+		return id;
+	}
+
+	function ViewDetailVBDen(id) {
+		OpenViewDetailVBDen(id);
+	}
+	function GetSelectedItemsVBDen() {
+		var idselect = "";
+		$("#grid  tbody").find('tr').each(function () {
+			var id = $(this).find('#hfID').val();
+			var IsCheck = $(this).find('#hfID').prop('checked');
+			if (IsCheck == true) {
+				idselect += id + ',';
+			}
+			//var IsAdd = $(this).hasClass('k-state-selected');
+			//if (IsAdd == true) {
+			//	idselect += id + ',';
+			//}
+		});
+		return idselect;
+	};
+	$('#hfAll').on("click", function () {
+		var IsCheck = $('#hfAll').prop('checked');
+		$("#grid  tbody").find('tr').each(function () {
+			$(this).find('#hfID').prop('checked', IsCheck);
+		});
+	});
+	$('#SavePhanXLVBbtn').click(function () {
+		var idselect = GetSelectedItemsVBDen();
+		SetIdVanban(idselect);
+		console.log(idselect);
+		var validatable = $("#formPhanXLVB").kendoValidator({
+			rules: {
+				ngaymohoso: function (input) {
+					if (input.is("[name=strngaymohoso]")) {
+						var ngay = $('#strngaymohoso').val();
+						if (ngay == "") {
+							return false;
+						} else {
+							var date = kendo.parseDate(ngay);
+							if (!date) {
+								return false;
+							}
+							return true;
+						}
+					}
+					return true;
+				},
+				hanxuly: function (input) {
+					if (input.is("[name=strthoihanxuly]")) {
+						var ngay = $('#strthoihanxuly').val();
+						if (ngay != "") {
+							var date = kendo.parseDate(ngay);
+							if (!date) {
+								return false;
+							}
+							return true;
+						}
+					}
+					return true;
+				}
+			},
+			messages: {
+				ngaymohoso: "Ngày không hợp lệ",
+				hanxuly: "Ngày không hợp lệ"
+			}
+			//errorTemplate: "<span>#=message#</span>"
+		}).data("kendoValidator");
+
+		if (validatable.validate()) {
+			SubmitFormPhanXLVB();
+		}
+	});
+	function SubmitFormPhanXLVB() {
+		$('#formPhanXLVB').submit();
+	};
+	$('#BackPhanXLVBbtn').click(function () {
+		var url = '@Url.Action("Index", "Vanbanden", new { isBack = true })';
+		$().redirect(url);
+	});
+</script>
+
+@Html.Action("_ViewDetailVBDen", "Vanbanden")
+@Html.Action("_ViewDetailVBDi", "Vanbandi")
+@Html.Action("_ViewDetailHoso", "Hoso")

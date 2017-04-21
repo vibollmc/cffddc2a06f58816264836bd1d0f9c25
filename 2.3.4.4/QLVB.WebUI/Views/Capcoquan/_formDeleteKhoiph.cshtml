@@ -1,0 +1,33 @@
+﻿@model QLVB.DTO.Capcoquan.EditKhoiphViewModel
+
+<div class="modal-body">
+    Bạn có muốn xóa @Model.strtenkhoi không?
+</div>
+<div class="modal-footer">
+    <button id="SubmitDeleteKhoiphbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+    <button id="BackKhoiphbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+</div>
+
+<script type="text/javascript">
+    $("#BackKhoiphbtn").bind("click", function () {
+        CloseEditKhoiph();
+    })
+    $('#SubmitDeleteKhoiphbtn').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteKhoiph", "Capcoquan")',
+            dataType: "json",            
+            data: { id:'@Model.intid', strten:'@Model.strtenkhoi' } ,
+            success: function (data) {
+                if (data == 1) {
+                    RefreshGrid();
+                    CloseEditKhoiph();
+                }
+                else {
+                    CloseEditKhoiph();
+                    SetThongbao("Lỗi, không xóa được");
+                }
+            },
+        });
+    })
+</script>

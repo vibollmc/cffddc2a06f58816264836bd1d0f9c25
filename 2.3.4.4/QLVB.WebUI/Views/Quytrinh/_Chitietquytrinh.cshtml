@@ -1,0 +1,692 @@
+﻿@{
+    string jsFlowchart = ViewBag.jsFlowchart;
+    int idquytrinh = ViewBag.idquytrinh;
+}
+
+<div class="box ">
+    <header>
+        <nav class="box-toolbar">
+            <button id="load" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-refresh"></i>&nbsp;Hiển thị QT</button>
+            <button id="addBegin" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title="Thêm mới quy trình"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp;Bắt đầu QT</button>
+            <button id="addTask" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title="Thêm bước xử lý"><i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm xử lý</button>
+            <button id="save" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+            <button id="delete" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-trash"></i>&nbsp;Xóa</button>
+            <button id="SaveVersion" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Lưu phiên bản</button>
+            <button id="ViewVersion" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-retweet"></i>&nbsp;Xem phiên bản</button>
+        </nav>
+    </header>
+</div>
+<div id="container-detail" style="overflow:auto;">    
+    <div id="container-flowchart" style="height:98%;width:95%;"></div>
+
+    @Html.Hidden("jsFlowchart", jsFlowchart)
+    @Html.Hidden("NodeId")
+    @Html.Hidden("LabelId")
+    @Html.Hidden("IsSaveFlowchart",false)
+    @Html.Hidden("IsSaveVersion",false)
+
+    <script type="text/javascript">
+    var $idContainer = "#" + 'container-flowchart';
+    var numberOfElements = 0;
+    var nodeid = 'node_';
+    var labelid = 'mylabel_';
+    var nodebegin = nodeid + 'begin';
+    var nodeend = nodeid + 'end';
+
+    $(window).resize(function () {
+        SetFlowchartHeight();
+    });
+    $(document).ready(function () {
+        SetFlowchartHeight();
+        DisplayFlowchart();
+        EnableMenu(false);
+    });
+
+    function SetFlowchartHeight() {
+        $("#container-detail").height(900).width(1000);
+    }
+
+    jsPlumb.ready(function () {
+        jsPlumb.importDefaults({
+            ConnectionOverlays: [
+                ["Arrow", { width: 10, length: 20, location: 1, id: "arrow" }]
+            ],
+            PaintStyle: {
+                lineWidth: 2,
+                strokeStyle: "#5c96bc"
+            },
+            HoverPaintStyle: { strokeStyle: "#1e8151", lineWidth: 2 },
+            Connector: ["Flowchart", { stub: [5, 5], midpoint: 0.4, cornerRadius: 3, alwaysRespectStubs: true }],
+            anchors: "Continuous",
+            Endpoints: [["Rectangle", { width: 10, height: 10 }], ["Dot", { radius: 5 }]],
+            EndpointStyles: [{ fillStyle: "#225588" }, { fillStyle: "#558822" }]
+        });
+        jsPlumb.bind('connection', function (info) {
+            var idlabel = SetLabelId(info.connection.id);
+            var labeltext = SetLabelText('', idlabel);
+            info.connection.addOverlay(["Label", { label: labeltext, location: 0.25, id: idlabel, cssClass: "aLabel context-menu-label" }]);
+        });
+    });
+
+    function AddBegin() {
+        var top = 80;
+        var left = 50;
+        AddNodeBegin("Bắt đầu", nodebegin, top + 20, left + 20);
+        AddNodeBegin("Kết thúc", nodeend, top + 50, left + 50);
+    };
+    //================================
+    $("#addBegin").on("click", function (evnt) {
+        if ($('#' + nodebegin).length > 0) {
+            // co roi
+        } else {
+            AddBegin();
+        }
+    });
+    $("#addTask").on("click", function (evnt) {
+        $('#IsNew').val(1);
+        OpenEditTenNode();
+    });
+    $("#save").click(function () {
+        var json = saveFlowchart();
+        //console.log(json);
+        saveFlowchartToDB(json);
+        EnableMenu(true);
+    });
+    $("#load").click(function () {
+        var id = GetIdQuytrinh();
+        var url = '@Url.Action("Index", "Quytrinh", (new { id = "__id__" }))'.replace('__id__', id);
+        window.location = url;
+    });
+    $("#delete").click(function () {
+        OpenDeleteDetailQuytrinh();
+    });
+    $("#SaveVersion").click(function () {
+        SaveVersion();
+    });
+    $("#ViewVersion").click(function () {
+        var id = '@idquytrinh'; 
+        var url = '@Url.Action("Phienban", "Quytrinh", (new { id = "__id__" }))'.replace('__id__', id);
+        window.location = url;
+    });
+    //================================
+    function SaveVersion() {
+        var id = '@idquytrinh';
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveVersion", "Quytrinh")',
+            dataType: "json",
+            data: { id: id },
+            success: function (data) {
+                SetThongbao(data);
+            }
+        });
+    }
+
+    function saveFlowchartToDB(flowChartJson) {
+        var id = '@idquytrinh';
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveFlowChart", "Quytrinh")',
+            dataType: "json",
+            data: { id: id, strjson: flowChartJson },
+            success: function (data) {
+                if (data == 1) {
+                    SetThongbao("Cập nhật thành công");
+                    $("#jsFlowchart").val(flowChartJson);
+                }
+                else {
+                    SetThongbao("Lỗi !!! Cập nhật không thành công ");
+                }
+            }
+        });
+    }
+    function deleteFlowchartInDB() {
+        var id = '@idquytrinh';
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteFlowChart", "Quytrinh")',
+            data: { id: id },
+            success: function (data) {
+                if (data == 1) {
+                    SetThongbao("Đã xóa quy trình thành công");
+                    deleteFlowchart();
+                }
+                else {
+                    SetThongbao("Lỗi !!! Xóa không thành công ");
+                }
+            }
+        });
+    }
+    function DisplayFlowchart() {
+        //deleteFlowchart();
+        var json = $("#jsFlowchart").val();
+        if (json.length > 1) {
+            RemoveAllNode(json);
+            loadFlowchart(json);
+        }
+    }
+    //==============================
+    function AddNode(TextNode, id, top, left) {
+        var newState = $('<div>').attr('id', id).addClass('window').addClass('context-menu-node');
+        var connect = $('<div>').attr('id', id).addClass('connect').text(TextNode);
+        newState.css({
+            'top': top,
+            'left': left
+        });
+        newState.append(connect);
+        $($idContainer).append(newState);
+        jsPlumb.makeTarget(newState, {
+            anchor: 'Continuous'
+        });
+        jsPlumb.makeSource(connect, {
+            parent: newState,
+            anchor: 'Continuous'
+        });
+        jsPlumb.draggable(newState, {
+            containment: 'parent'
+        });
+    }
+
+    function DeleteNode(id) {
+        var $id = '#' + id
+        jsPlumb.detachAllConnections($($id));
+        $($id).remove();
+    }
+
+    function AddNodeBegin(TextNode, id, top, left) {
+        var newState = $('<div>').attr('id', id).addClass('Circle');
+        var connect = $('<div>').attr('id', id).addClass('connect').text(TextNode);
+        newState.css({
+            'top': top,
+            'left': left
+        });
+        newState.append(connect);
+        $($idContainer).append(newState);
+        jsPlumb.makeTarget(newState, {
+            anchor: 'Continuous'
+        });
+        jsPlumb.makeSource(connect, {
+            parent: newState,
+            anchor: 'Continuous'
+        });
+        jsPlumb.draggable(newState, {
+            containment: 'parent'
+        });
+    }
+    //=======================
+    function saveFlowchart() {
+        var nodes = [];
+        var i = 0;
+        $(".window").each(function (idx, elem) {
+            var $elem = $(elem);
+            nodes.push({
+                Id: $elem.attr('id'),
+                text: $elem.text(),
+                left: parseInt($elem.css("left"), 10),
+                top: parseInt($elem.css("top"), 10)
+            });
+            i++;
+        });
+        $(".Circle").each(function (idx, elem) {
+            var $elem = $(elem);
+            nodes.push({
+                Id: $elem.attr('id'),
+                text: $elem.text(),
+                left: parseInt($elem.css("left"), 10),
+                top: parseInt($elem.css("top"), 10)
+            });
+        });
+        var connections = [];
+        $.each(jsPlumb.getConnections(), function (idx, connection) {
+            try {
+                var idlabel = SetLabelId(connection.id);
+                var label = GetLabelText(idlabel);
+            }
+            catch (err) {
+                label = null;
+            }
+            connections.push({
+                from: connection.sourceId,
+                to: connection.targetId,
+                label: label
+            });
+        });
+
+        var flowChart = {};
+        flowChart.nodes = nodes;
+        flowChart.connections = connections;
+        flowChart.numberOfElements = numberOfElements;
+
+        var flowChartJson = JSON.stringify(flowChart);
+        return flowChartJson;
+    }
+
+    function loadFlowchart(flowChartJson) {
+        var flowChart = JSON.parse(flowChartJson);
+        var nodes = flowChart.nodes;
+        $.each(nodes, function (index, elem) {
+            if (elem.Id == nodebegin) {
+                AddNodeBegin(elem.text, elem.Id, elem.top, elem.left);
+            } else if (elem.Id == nodeend) {
+                AddNodeBegin(elem.text, elem.Id, elem.top, elem.left);
+            } else {
+                AddNode(elem.text, elem.Id, elem.top, elem.left);
+            }
+        });
+        var connections = flowChart.connections;
+        $.each(connections, function (index, elem) {
+            var con = jsPlumb.connect({
+                source: elem.from,
+                target: elem.to
+            });
+            var label = elem.label;
+            if (label != "") {
+                var idlabel = SetLabelId(con.id);
+                var labeltext = SetLabelText(label, idlabel);
+                con.removeOverlay(idlabel);
+                con.addOverlay(["Label", { label: labeltext, location: 0.25, id: idlabel, cssClass: "aLabel context-menu-label" }]);
+            }
+        });
+        numberOfElements = flowChart.numberOfElements;
+    }
+
+    function deleteFlowchart() {
+        var json = $("#jsFlowchart").val();
+        RemoveAllNode(json);
+    }
+    function RemoveAllNode(flowChartJson) {
+        var flowChart = JSON.parse(flowChartJson);
+        var nodes = flowChart.nodes;
+        $.each(nodes, function (index, elem) {
+            jsPlumb.remove(elem.Id);
+        });
+    }
+    //======================================
+    function EnableMenu(valid) {
+        var $trigger1 = $('.context-menu-node');
+        var $trigger2 = $('.context-menu-label');
+        if (valid == true) {
+            $trigger1.contextMenu(true);
+            $trigger2.contextMenu(true);
+            $('#IsSaveFlowchart').val(true);
+        } else {
+            $trigger1.contextMenu(false);
+            $trigger2.contextMenu(false);
+            $('#IsSaveFlowchart').val(false);
+        }
+    }
+
+    $(function () {
+        $.contextMenu({
+            selector: '.context-menu-node',
+            callback: function (key, options) {
+                var id = $(this).attr('id');
+                switch (key) {
+                    case "edit":
+                        //EditNode(id);
+                        OpenTenNode(id);
+                        break;
+                    case "delete":
+                        DeleteNode(id);
+                        break;
+                    case "xuly":
+                        OpenEditThongtinXuly(id);
+                        break;
+                    default:
+                }
+            },
+            items: {
+                "edit": { name: "<i class='glyphicon glyphicon-pencil'></i>&nbsp;Sửa" },
+                "delete": { name: "<i class='glyphicon glyphicon-trash'></i>&nbsp;Xóa" },
+                "sep1": "---------",
+                "xuly": { name: "<i class='glyphicon glyphicon-user'></i>&nbsp; Thông tin" },
+                "sep2": "---------",
+                "quit": { name: "<i class='glyphicon glyphicon-arrow-left'></i>&nbsp;Thoát" }
+            }
+        });
+        $.contextMenu({
+            selector: '.context-menu-label',
+            callback: function (key, options) {
+                var id = $(this).attr('id');
+                switch (key) {
+                    case "edit":
+                        OpenTenLabel(id);
+                        break;
+                    case "delete":
+                        DeleteNode(id);
+                        break;
+                    default:
+
+                }
+            },
+            items: {
+                "edit": { name: "<i class='glyphicon glyphicon-pencil'></i>&nbsp;Sửa" },
+                "delete": { name: "<i class='glyphicon glyphicon-trash'></i>&nbsp;Xóa" },
+                "sep1": "---------",
+                "quit": { name: "<i class='glyphicon glyphicon-arrow-left'></i>&nbsp;Thoát" }
+            }
+        });
+
+    });
+    function EditNode(id) {
+        var name = prompt("Ten moi ", "cong viec _ 1 _ moi");
+        if (name != null) {
+            var $id = '#' + id + ' .connect';
+            $($id).text(name);
+        }
+    }
+    function EditLabel(id) {
+        var $id = '#' + id;
+        var name = prompt("Ten moi ", "Co / Khong");
+        if (name != null) {
+            var labelid = GetLabelId(id);
+            var connectid = GetConnectionId(labelid);
+            $.each(jsPlumb.getConnections(), function (idx, connection) {
+                try {
+                    if (connection.id == connectid) {
+                        var labeltext = SetLabelText(name, labelid);
+                        connection.removeOverlay(labelid);
+                        connection.addOverlay(
+                                ["Label", { label: labeltext, location: 0.25, id: labelid, cssClass: "aLabel context-menu-label" }]
+                            );
+                    }
+                }
+                catch (err) {
+                    label = null;
+                }
+            });
+        }
+    }
+    //===================================
+    function SetLabelText(text, idlabel) {
+        var labeltext = "<span id='" + idlabel + "'>" + text + "</span>";
+        return labeltext;
+    }
+    function GetLabelText(id) {
+        var $id = '#' + id;
+        var text = $($id).text();
+        return text;
+    }
+    function SetLabelId(connectionid) {
+        var _idlabel = labelid + connectionid;
+        return _idlabel;
+    }
+    function GetLabelId(id) {
+        var $id = '#' + id;
+        var labelid = $($id).find("span").attr("id");
+        return labelid;
+    }
+    function GetConnectionId(_labelid) {
+        var connectid = _labelid.substring(8, _labelid.length);
+        //var connectid = _labelid.replace(labelid, '');
+        return connectid;
+    }
+    function _SetNodeId(id) {
+        $('#NodeId').val(id);
+    }
+    function _GetNodeId() {
+        var id = $('#NodeId').val();
+        return id;
+    }
+    function _SetLabelId(id) {
+        $('#LabelId').val(id);
+    }
+    function _GetLabelId() {
+        var id = $('#LabelId').val();
+        return id;
+    }
+    //=======================================
+    function OpenTenNode(id) {
+        var $id = '#' + id + ' .connect';
+        var strten = $($id).text();
+        _SetNodeId(id);
+        SetTenNode(strten);
+        $('#IsNew').val(0);
+        OpenEditTenNode();
+    }
+    function SaveTenNode() {
+        var id = _GetNodeId();
+        var strten = GetTenNode();
+        var $id = '#' + id + ' .connect';
+        $($id).text(strten);
+    }
+    function AddNewNode() {
+        var strten = GetTenNode();
+        var top = 80;
+        var left = 50;
+        var id = nodeid + numberOfElements;
+        AddNode(strten, id, top, left);
+        numberOfElements++;
+    }
+    //==================================
+    function OpenTenLabel(id) {
+        _SetLabelId(id);
+        OpenEditTenLabel();
+    }
+    function SaveTenLabel() {
+        var id = _GetLabelId();
+        var _labelid = GetLabelId(id);
+        var connectid = GetConnectionId(_labelid);
+        var strten = GetTenLabel();
+        $.each(jsPlumb.getConnections(), function (idx, connection) {
+            try {
+                if (connection.id == connectid) {
+                    var labeltext = SetLabelText(strten, _labelid);
+                    connection.removeOverlay(_labelid);
+                    connection.addOverlay(
+                            ["Label", { label: labeltext, location: 0.25, id: _labelid, cssClass: "aLabel context-menu-label" }]
+                        );
+                }
+            }
+            catch (err) {
+                label = null;
+            }
+        });
+    }
+    function ReplaceLabel(id, text) {
+        var $id = "#" + id;
+        $($id).val(text);
+    }
+    function OpenEditThongtinXuly(id) {
+        var idquytrinh = '@idquytrinh'; 
+        _SetNodeId(id);
+        var url = '@Url.Action("_formThongtinXuly", "Quytrinh")';
+        url = url + '?idquytrinh=' + idquytrinh;
+        url = url + '&NodeId=' + id
+        $('#detail-editThongtinXuly').load(url);
+        OpenThongtinXuly();
+    }
+</script>
+
+</div>
+
+
+@(Html.Kendo().Window()
+.Name("EditTenNode")
+.Draggable()
+.AutoFocus(true)
+.Title("Cập nhật xử lý")
+.Resizable()
+.Width(500)
+.HtmlAttributes(new { style = "height:100%;" })
+.Visible(false)
+.Actions(actions => actions.Close())
+.Content(
+    @<text>
+        <div class="box">
+            <header>
+                <nav style="padding: 3px;">
+                    <button id="SaveEditNodebtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                    <button id="BackEditNodebtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+                </nav>
+            </header>
+            @Html.Hidden("IsNew", 1)
+            <div class="form-group form-group-window">
+                @Html.Label("Tên công việc", new { @class = "control-label col-sm-3" })
+                <div class="col-sm-6">
+                    @Html.TextBox("strTenNode", null, new { @class = "form-control form-control-window", placeholder = "Tên công việc" })
+                </div>
+            </div>
+            <script type="text/javascript">
+                function SetTenNode(strten) {
+                    $('#strTenNode').val(strten);
+                }
+                function GetTenNode() {
+                    var strten = $('#strTenNode').val();
+                    return strten;
+                }
+                function CloseEditTenNode() {
+                    var window = $("#EditTenNode").data("kendoWindow");
+                    window.close();
+                }
+                function OpenEditTenNode() {
+                    var window = $("#EditTenNode").data("kendoWindow");
+                    window.center();
+                    window.open();
+                }
+                $("#BackEditNodebtn").click(function () {
+                    CloseEditTenNode();
+                });
+                $("#SaveEditNodebtn").click(function () {
+                    var isNew = $('#IsNew').val();
+                    if (isNew == 1) {
+                        AddNewNode();
+                    } else {
+                        SaveTenNode();
+                    }
+                    CloseEditTenNode();
+                });
+            </script>
+        </div>
+    </text>
+    )
+)
+
+
+@(Html.Kendo().Window()
+.Name("EditTenLabel")
+.Draggable()
+.AutoFocus(true)
+.Title("Cập nhật điều kiện xử lý")
+.Resizable()
+.Width(300)
+.HtmlAttributes(new { style = "height:100%;" })
+.Visible(false)
+.Actions(actions => actions.Close())
+.Content(
+    @<text>
+        <div class="box">
+            <header>
+                <nav style="padding: 3px;">
+                    <button id="SaveEditLabelbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                    <button id="BackEditLabelbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+                </nav>
+            </header>
+            <div class="form-group form-group-window">
+                @Html.Label("Điều kiện", new { @class = "control-label col-sm-3" })
+                <div class="col-sm-6">
+                    @Html.TextBox("strTenLabel", null, new { @class = "form-control form-control-window", placeholder = "Điều kiện xử lý" })
+                </div>
+            </div>
+            <script type="text/javascript">
+                function SetTenLabel(strten) {
+                    $('#strTenLabel').val(strten);
+                }
+                function GetTenLabel() {
+                    var strten = $('#strTenLabel').val();
+                    return strten;
+                }
+                function CloseEditTenLabel() {
+                    var window = $("#EditTenLabel").data("kendoWindow");
+                    window.close();
+                }
+                function OpenEditTenLabel() {
+                    var window = $("#EditTenLabel").data("kendoWindow");
+                    window.center();
+                    window.open();
+                }
+                $("#BackEditLabelbtn").click(function () {
+                    CloseEditTenLabel();
+                });
+                $("#SaveEditLabelbtn").click(function () {
+                    SaveTenLabel();
+                    CloseEditTenLabel();
+                });
+            </script>
+        </div>
+    </text>
+)
+)
+
+@(Html.Kendo().Window()
+.Name("DeleteDetailQuytrinh")
+.Draggable()
+.AutoFocus(true)
+.Title("Xóa quy trình xử lý")
+.Resizable()
+        //.Width(300)
+.HtmlAttributes(new { style = "height:100%;" })
+.Visible(false)
+.Actions(actions => actions.Close())
+.Content(
+    @<text>
+        <div class="modal-body">
+            Bạn có muốn xóa toàn bộ các bước xử lý không?
+        </div>
+        <div class="modal-footer">
+            <button id="SubmitDeleteQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+            <button id="BackDeleteQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+        </div>
+
+        <script type="text/javascript">
+            function CloseDeleteDetailQuytrinh() {
+                var window = $("#DeleteDetailQuytrinh").data("kendoWindow");
+                window.close();
+            }
+            function OpenDeleteDetailQuytrinh() {
+                var window = $("#DeleteDetailQuytrinh").data("kendoWindow");
+                window.center();
+                window.open();
+            }
+            $("#BackDeleteQuytrinhbtn").bind("click", function () {
+                CloseDeleteDetailQuytrinh();
+            })
+            $('#SubmitDeleteQuytrinhbtn').click(function () {
+                deleteFlowchartInDB();
+                CloseDeleteDetailQuytrinh();
+            })
+        </script>
+
+    </text>
+)
+)
+
+@(Html.Kendo().Window()
+.Name("EditThongtinXuly")
+.Draggable()
+.AutoFocus(true)
+.Title("Cập nhật thông tin xử lý")
+.Resizable()
+.Width(500)
+.HtmlAttributes(new { style = "height:100%;" })
+.Visible(false)
+.Actions(actions => actions.Close())
+.Content(
+    @<text>
+        <div id="detail-editThongtinXuly">
+        </div>
+        <script type="text/javascript">
+            function CloseThongtinXuly() {
+                var window = $("#EditThongtinXuly").data("kendoWindow");
+                window.close();
+            }
+            function OpenThongtinXuly() {
+                var window = $("#EditThongtinXuly").data("kendoWindow");
+                window.center();
+                window.open();
+            }
+        </script>
+
+    </text>
+)
+)

@@ -1,0 +1,118 @@
+﻿@model QLVB.DTO.Vanbanden.DetailVBDenViewModel
+
+@(Html.Kendo().Window()
+	.Name("ViewDetailVBDen")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Thông tin văn bản")
+	.Resizable()
+	.Width(650)
+	.Height(490)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-VBDen">
+			<div class="box">
+				<header>
+					<nav style="padding: 3px;">                        
+						<button id="InChitietVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat ">
+							<i class="glyphicon glyphicon-print"></i>&nbsp;In
+						</button>
+						<button id="BackViewDetailVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+					</nav>
+				</header>
+			</div>
+			<div id="chitietvanbanden">                
+
+			</div>
+
+		</div>
+</text>
+	)
+)
+
+<script type="text/javascript">
+	function CloseViewDetailVBDen() {
+		var window = $("#ViewDetailVBDen").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewDetailVBDen(idvanban) {	   
+		LoadVanbanDen(idvanban);
+		var window = $("#ViewDetailVBDen").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadVanbanDen(id) {
+		$('#chitietvanbanden').html(" ");
+		var url = '@Url.Action("_XemChitietVanban","Vanbanden")';
+		url = url + "?id=" + id;
+		$('#chitietvanbanden').load(url);
+	}
+	$('#BackViewDetailVBDenbtn').click(function () {
+		CloseViewDetailVBDen();
+	})
+
+	$('#InChitietVBDenbtn').click(function () {
+		PrintElement('#chitietvanbanden');
+	})
+
+	function OpenDetailHoso(id) {
+		OpenViewDetailHoso(id);
+		CloseViewDetailVBDen();
+	}
+	function OpenVBPhathanh(idvanbandi) {
+		CloseViewDetailVBDen();
+		OpenViewDetailVBDi(idvanbandi);
+	}
+
+	function SetLink(isattach, idvanban) {
+		if (isattach == false) {
+			$("#strfileattach").text("Không có file đính kèm");
+		} else {
+			$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("GetFileVBDen", "Vanbanden")',
+				data: { 'idvanban': idvanban },
+				success: function (data) {
+					var countfile = data.files;
+					var html = "";
+					var url = '@Url.Action("DownloadVanban", "Files")';
+					for (var i = 0; i < countfile.length; i = i + 2) {
+						var urlfile = url + "?intloai=1&idfile=" + countfile[i];
+						html = html + "<a class='FileDisplay' href='" + urlfile + "'>"
+									+ "<img src='@Url.Content("~/Content/Images/FileType2/pdf-32_32.png")' style='height:25px;width:25px;' />"
+									+ countfile[i + 1] + "</a> <br /> ";
+					};
+					$("#strfileattach").html(html);
+				}
+			});
+		}
+	}
+	function addExtensionClass(extension) {
+		switch (extension) {
+			case '.jpg':
+			case '.img':
+			case '.png':
+			case '.gif':
+				return "img-file";
+		    case '.doc':
+		        return "doc-file";
+			case '.docx':
+				return "doc-file";
+			case '.xls':
+			case '.xlsx':
+				return "xls-file";
+			case '.pdf':
+				return "pdf-file";
+		    case '.zip':
+		        return "zip-file";
+			case '.rar':
+				return "zip-file";
+			default:
+				return "default-file";
+		}
+	}
+</script>

@@ -13,6 +13,14 @@ namespace DLTD.Web.Main.ViewModels
         public int? UserId { get; set; }
         [Display(Name = "Người theo dõi")]
         public string NguoiTheoDoi { get; set; }
+        public int? IdNguoiChiDao { get; set; }
+        [Display(Name = "Người chỉ đạo")]
+        public string NguoiChiDao { get; set; }
+
+     
+        public int? IdNguonChiDao { get; set; }
+        [Display(Name = "Nguồn chỉ Đạo")]
+        public string NguonChiDao { get; set; }
 
         [Display(Name = "Ngày ký")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -54,8 +62,6 @@ namespace DLTD.Web.Main.ViewModels
         [Display(Name = "Độ khẩn")]
         public DoKhan DoKhan { get; set; }
 
-        [Display(Name = "Nguồn chỉ Đạo")]
-        public int?NguonChiDao { get; set; }
 
         [Display(Name = "Trạng thái")]
         public string TrangThaiVB

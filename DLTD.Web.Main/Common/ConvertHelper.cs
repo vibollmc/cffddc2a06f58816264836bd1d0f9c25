@@ -209,6 +209,7 @@ namespace DLTD.Web.Main.Common
                 SoKH = data.SoKH,
                 UserId = data.UserId,
                 IdDonVi = data.IdDonVi,
+                IdNguoiChiDao=data.IdNguoiChiDao,
                 ThoiHanXuLy = data.ThoiHanXuLy,
                 Ngayky = data.Ngayky,
                 IdVanBan = data.IdVanBan,
@@ -218,10 +219,12 @@ namespace DLTD.Web.Main.Common
                 FileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.Count : 0,
                 LinkFileDinhKem = data.FileDinhKem != null && data.FileDinhKem.Any() ? data.FileDinhKem.FirstOrDefault().Url : null,
                 NguoiTheoDoi = data.NguoiTheoDoi != null ? data.NguoiTheoDoi.Ten : null,
+                NguoiChiDao = data.NguoiChiDao!=null?data.NguoiChiDao.Ten:null,
                 TenDonVi = data.DonVi.Ten,
                 NgayHoanThanh = data.NgayHoanThanh,
                 DoKhan = data.DoKhan,
-                NguonChiDao = data.IdNguonChiDao
+                IdNguonChiDao = data.IdNguonChiDao,
+                NguonChiDao = data.NguonChiDao != null ? data.NguonChiDao.Ten : null,
             };
             //if (data.FileDinhKem != null)
             //{

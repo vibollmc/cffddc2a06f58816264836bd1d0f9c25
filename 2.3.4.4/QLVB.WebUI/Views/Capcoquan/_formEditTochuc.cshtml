@@ -1,0 +1,126 @@
+﻿@model QLVB.DTO.Capcoquan.EditTochucViewModel
+
+<div class="box">
+    <form class="form-horizontal" id="formEditTochuc">
+        <span id="ketquaSaveTochuc" class="validation-summary-valid"></span>
+        <header>
+            <nav style="padding: 3px;">
+                <button id="SaveTochucbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                <button id="BackTochucbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </nav>
+        </header>
+
+        @Html.HiddenFor(m => m.intid)
+        @Html.HiddenFor(m => m.intidkhoiph)
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strtentochucdoitac, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strtentochucdoitac, new { @class = "form-control form-control-window", placeholder = "Tên đơn vị" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strmatochucdoitac, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strmatochucdoitac, new { @class = "form-control form-control-window", placeholder = "Ký hiệu" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strphone, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strphone, new { @class = "form-control form-control-window", placeholder = "Điện thoại" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strdiachi, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strdiachi, new { @class = "form-control form-control-window", placeholder = "Địa chỉ" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.stremail, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.stremail, new { @class = "form-control form-control-window", placeholder = "Email" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.IsHoibao, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.CheckBoxFor(m => m.IsHoibao)
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.Isvbdt, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.CheckBoxFor(m => m.Isvbdt)
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.stremailvbdt, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.stremailvbdt, new { @class = "form-control form-control-window", placeholder = "Email văn bản" })
+            </div>
+        </div>
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strmadinhdanh, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strmadinhdanh, new { @class = "form-control form-control-window", placeholder = "Mã định danh" })
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+    $("#SaveTochucbtn").click(function () {
+        isCheckVBDT = CheckVBDT();        
+        if (isCheckVBDT) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveTochuc", "Capcoquan")',
+                dataType: "json",
+                data: $("#formEditTochuc").serialize(),
+                success: function (data) {
+                    if (data == 1) {
+                        ShowResult("ketquaSaveTochuc", "Cập nhật thành công");
+                        RefreshGridNext();
+                    }
+                    else {
+                        ShowResult("ketquaSaveTochuc", "Lỗi !!!");
+                        RefreshGridNext();
+                    }
+                },
+            });
+        }
+    });
+    function CheckVBDT() {
+        var isCheckVBDT = $("#Isvbdt").is(':checked');        
+        if (isCheckVBDT) {
+            var strmadinhdanh = $('#strmadinhdanh').val();
+            var stremailvbdt = $('#stremailvbdt').val();
+            var strdiachi = $('#strdiachi').val();
+            var strphone = $('#strphone').val();
+            
+            if (strdiachi == "") {
+                $('#strdiachi').focus();
+            }
+            if (strphone == "") {
+                $('#strphone').focus();
+            }            
+            if (stremailvbdt == "") {
+                $('#stremailvbdt').focus();
+            }
+            if (strmadinhdanh == "") {
+                $('#strmadinhdanh').focus();
+            }
+            if ((strdiachi != "") && (strphone != "") && (stremailvbdt != "") && (strmadinhdanh != "")) {
+                return true;
+            } else {
+                return false;
+            }       
+        } else {
+            return true;
+        }        
+    }
+    $('#BackTochucbtn').click(function () {
+        CloseEditTochuc();
+    })
+</script>

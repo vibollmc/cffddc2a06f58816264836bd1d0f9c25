@@ -1,0 +1,51 @@
+﻿@model QLVB.DTO.Hethong.EditGroupViewModel
+
+<div class="box">
+    <header>
+        <nav style="padding: 3px;">
+            <button id="SaveGroupbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+            <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+        </nav>
+    </header>
+    <span id="ketquaSaveGroup" class="validation-summary-valid"></span>
+    <form class="form-horizontal" id="formEditGroup">
+        @Html.HiddenFor(m => m.intid)
+        <div class="form-group form-group-window" >
+            @Html.LabelFor(m => m.strtennhomquyen, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strtennhomquyen, new { @class = "form-control form-control-window", placeholder = "Tên nhóm quyền" })
+            </div>
+        </div>        
+    </form>
+</div>
+
+<script type="text/javascript">
+    $("#SaveGroupbtn").bind("click", function () {
+        var group = { intid: $('#intid').val(), strtennhomquyen: $('#strtennhomquyen').val() };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveGroup", "Hethong")',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            //data: JSON.stringify({
+            //    intid: $('#intid').val(),
+            //    strtennhomquyen: $('#strtennhomquyen').val()
+            //}),
+            data: JSON.stringify(group),
+            success: function (data) {
+                if (data == 1) {
+                    ShowResult("ketquaSaveGroup", "Cập nhật thành công");
+                    RefreshGrid();
+                }
+                else {
+                    ShowResult("ketquaSaveGroup", "Lỗi !!!");
+                    RefreshGrid();
+                }
+            },
+        });
+    });
+    $("#Backbtn").bind("click", function () {
+        CloseEditGroup();
+    })
+</script>
+

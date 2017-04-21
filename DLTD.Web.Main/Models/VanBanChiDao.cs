@@ -45,6 +45,7 @@ namespace DLTD.Web.Main.Models
 
         [ForeignKey("NguoiChiDao")]
         public int? IdNguoiChiDao { get; set; }
+
         [ForeignKey("NguoiTheoDoi")]
         public int? IdNguoiTheoDoi { get; set; }
         public bool? IsTralai { get; set; }

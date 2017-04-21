@@ -1,0 +1,264 @@
+﻿@model QLVB.DTO.Vanbanden.SearchVBViewModel
+
+@using QLVB.DTO
+
+@(Html.Kendo().Grid<QLVB.DTO.Vanbanden.ListVanbandenViewModel>()
+	.Name("grid").AutoBind(false)
+	.Columns(columns =>
+	{
+		//columns.Bound(c => c.intid).Hidden();
+		columns.Bound(c => c.intid).Title(" ").ClientTemplate(
+				"<input type='checkbox' class='checkboxvbden' />"
+			).Width(25);
+		columns.Bound(o => o.IsAttach).Title(" ")
+			.ClientTemplate(
+				"#if (IsAttach) { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+				"# } else { #" +
+					"<img onclick='ViewDetailVBDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+				"# } #"
+			)
+			.Width(25);
+		columns.Bound(o => o.dtengayden).Format("{0:dd/MM/yyyy}").Title("Ngày đến").Width(90);
+		columns.Bound(o => o.intsoden).Title("Số đến").Width(60);
+		columns.Bound(o => o.strnoiphathanh).Title("Nơi gửi").Width("20%");
+		columns.Bound(o => o.strkyhieu).Title("Số, Ký hiệu").Width("12%");
+		columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("30%").Encoded(false);
+		columns.Bound(o => o.strnoinhan).Title("Xử lý chính").Width("14%");
+		columns.Bound(o => o.inttrangthai).Hidden();
+		columns.Bound(o => o.inttinhtrangxuly).Hidden();
+		columns.Bound(o => o.isykien).Hidden();
+	})
+	.HtmlAttributes(new { style = "white-space: normal" })
+	.Scrollable()
+		//.Sortable()
+	.Selectable()
+	.Resizable(resize => resize.Columns(true))
+	.Pageable(pageable => pageable
+		.Refresh(true)
+		//.PageSizes(true)
+		.ButtonCount(5)
+		.Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+			.First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+			.Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+		)
+	.DataSource(dataSource => dataSource
+		.Ajax()
+		.PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+			.Read(read => read.Action("Vanbanden_Read", "Vanbanden",
+				new
+				{
+					idsovb = Model.idsovb,
+					idloaivb = Model.idloaivb,
+					idkhoiph = Model.idkhoiph,
+					strngaydencat = Model.strngaydencat,
+					xuly = Model.xuly,
+					intsodenbd = Model.intsodenbd,
+					intsodenkt = Model.intsodenkt,
+					strngaydenbd = Model.strngaydenbd,
+					strngaydenkt = Model.strngaydenkt,
+					strngaykybd = Model.strngaykybd,
+					strngaykykt = Model.strngaykykt,
+					strsokyhieu = Model.strsokyhieu,
+					strnguoiky = Model.strnguoiky,
+					strnoigui = Model.strnoigui,
+					strtrichyeu = Model.strtrichyeu,
+					strnguoixuly = Model.strnguoixuly,
+					strdangvanban = Model.strdangvanban
+				})
+			)
+			.Events(events => events.Error("onError"))
+		)
+	.Events(events => events.Change("onChange")
+							.DataBound("onDataBound")
+	)
+)
+
+<ul id="rightmenuVBDen" style="display:none;">
+	<li id="rightmenu-xulybtn">
+		<i class="glyphicon glyphicon-pencil"></i>
+		&nbsp;Xử lý Văn bản
+		<ul>
+			<li id="rightmenu-luuHSbtn"> <i class="glyphicon glyphicon-book"></i> &nbsp;lưu hồ sơ</li>
+			<li id="rightmenu-ketthucHSbtn"> <i class="glyphicon glyphicon-ok"></i> &nbsp;Kết quả</li>
+		</ul>
+	</li>
+	<li class="k-separator"></li>
+	<li id="rightmenu-phanxuly">
+		<i class="glyphicon glyphicon-user"></i>&nbsp;Phân xử lý nhiều văn bản
+	</li>
+</ul>
+
+<script type="text/javascript">
+	$(function () {
+		dataSource = $('#grid').data().kendoGrid.dataSource;
+		dataSource.query({
+			page: '@Model.intPage',
+			group: dataSource.group(),
+			filter: dataSource.filter(),
+			sort: dataSource.sort(),
+			pageSize: dataSource.pageSize()
+		})
+
+		var grid = $("#grid").data("kendoGrid");
+		//bind click event to the checkbox
+		grid.table.on("click", ".checkboxvbden", selectRow);
+				
+		//on click of the checkbox:
+		function selectRow() {
+			var checked = this.checked,
+			row = $(this).closest("tr"),
+			grid = $("#grid").data("kendoGrid"),
+			dataItem = grid.dataItem(row);
+
+			var idvanban = dataItem.intid;
+
+			$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("GetIdHosoCV", "Vanbanden")',
+				data: { 'idvanban': idvanban },
+				success: function (data) {
+					var idhosocongviec = data;
+					if (idhosocongviec > 0) {
+						isSelectCheck = true;
+						checkedIds[dataItem.intid] = checked;						
+						if (checked) {
+							//-select the row
+							row.addClass("k-state-selected");
+						} else {
+							//-remove selection
+							row.removeClass("k-state-selected");
+						}
+						CheckMenu();
+					} else {					    
+						checkedIds = {};
+						$('.checkboxvbden').prop('checked', false);
+						isSelectCheck = false;
+					}
+				}
+			});
+
+		}
+
+		function CheckMenu(){
+			var flag = false;
+			var count = 0;		    
+			for (var i in checkedIds) {		        
+				count++;
+				if ((checkedIds[i])&&(count>=2)) {
+					flag = true;					
+				}
+			}
+			if(flag){
+				EnableRightMenu(true);
+			}else{				
+				EnableRightMenu(false);
+			}
+		}
+
+		function EnableRightMenu(value){
+			var contextMenu = $("#rightmenuVBDen").data("kendoContextMenu");
+			contextMenu.enable("#rightmenu-xulybtn", value);
+			contextMenu.enable("#rightmenu-phanxuly", value);
+		}
+
+		var initMenu = function () {
+			menu = $("#rightmenuVBDen").kendoContextMenu({
+				target: "#grid",
+				filter: ".chonvanbanden",
+				animation: {
+					open: { effects: "fadeIn" },
+					duration: 500
+				},
+				select: function(e) {
+					// Do something on select
+				}
+			});
+
+			EnableRightMenu(false);
+		};
+
+		initMenu();
+
+	})
+	$(window).resize(function () {
+		SetGridHeight();
+	});
+	$(document).ready(function () {
+		SetGridHeight();
+	})
+	function onError(e, status) {
+		SetThongbao("Đã có lỗi xảy ra trên Server!");
+	}
+
+	$('#rightmenu-phanxuly').click(function () {
+		var checked = [];
+		var listid = '';
+		for (var i in checkedIds) {
+			if (checkedIds[i]) {
+				checked.push(i);
+				listid = listid + i + ',';
+			}
+		}
+		var url = '@Url.Action("PhanXLNhieuVBDen", "Vanbanden")';
+		url = url + '?listid=' + listid;	    
+		$().redirect(url);		
+	})
+
+	$('#rightmenu-ketthucHSbtn').click(function(){
+		var checked = [];
+		var listid = '';
+		for(var i in checkedIds){
+			if(checkedIds[i]){				
+				checked.push(i);
+				listid = listid + i + ',';
+			}
+		}
+
+		$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("_KetthucNhieuHoso", "Hoso")',
+				data: { 'listid': listid },
+				success: function (data) {
+					if (data == 1) {
+						isSelectCheck = false;
+						RefreshGrid();
+					}
+				}
+			});
+
+	})
+	$('#rightmenu-luuHSbtn').click(function(){
+		var checked = [];
+		var listid = '';
+		for(var i in checkedIds){
+			if(checkedIds[i]){				
+				checked.push(i);
+				listid = listid + i + ',';
+			}
+		}
+		$.ajax(
+			{
+				type: "POST",
+				url: '@Url.Action("_LuuNhieuHoso", "Hoso")',
+				data: { 'listid': listid },
+				success: function (data) {
+					if (data == 1) {
+						isSelectCheck = false;
+						RefreshGrid();
+					}
+				}
+			});
+				
+	})
+
+</script>
+
+<style type="text/css">
+	/*=====right menu kendo ui ================*/
+	.k-context-menu.k-menu-vertical > .k-item > .k-link, .k-menu .k-menu-group .k-item > .k-link {
+		padding: .28em 1em .38em .9em !important;
+	}
+</style>

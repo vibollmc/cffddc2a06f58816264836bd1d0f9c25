@@ -1,0 +1,199 @@
+﻿@model QLVB.DTO.Donvi.EditUserViewModel
+@{
+    SelectList ListChucdanh = new SelectList(Model.Listchucdanh, "intid", "strtenchucdanh");
+    SelectList ListNhomquyen = new SelectList(Model.Listnhomquyen,"intid","strtennhom");
+    string strImageProfile = QLVB.Common.Utilities.AppConts.ImageProfile; 
+    if (Model.strImageProfile != null)
+    {
+        strImageProfile += Model.strImageProfile;
+    }
+    else
+    {
+        strImageProfile += "avatar_default.png";
+    }
+    string strngaysinh = QLVB.Common.Date.DateServices.FormatDateVN(Model.strngaysinh);
+}
+<div class="box">    
+    <header>
+        <nav style="padding: 3px;">
+            <button id="SaveUserbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+            <button id="BackUserbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            <span id="ketquaSaveUser" class="validation-summary-valid"></span>
+        </nav>
+    </header>
+</div>
+<form class="form-horizontal" id="formEditUser">
+    @Html.HiddenFor(m => m.intid)
+    @Html.HiddenFor(m => m.iddonvi)
+    <table class="table table-condensed table-bordered responsive-table">
+        <tbody>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.strmacanbo, new { @class = "font-label" })</td>
+                <td>@Html.TextBoxFor(m => m.strmacanbo, new { @class = "form-control form-control-window2", placeholder = "Mã cán bộ" })</td>
+                <td class="table-label">@Html.LabelFor(m => m.strkyhieu, new { @class = "font-label" })</td>
+                <td>@Html.TextBoxFor(m => m.strkyhieu, new { @class = "form-control form-control-window2", placeholder = "Ký hiệu" })</td>
+            </tr>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.strhoten, new { @class = "font-label" })</td>
+                <td colspan="3">@Html.TextBoxFor(m => m.strhoten, new { @class = "form-control form-control-window", placeholder = "Họ tên" })</td>
+            </tr>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.strdienthoai, new { @class = "font-label" })</td>
+                <td>@Html.TextBoxFor(m => m.strdienthoai, new { @class = "form-control form-control-window2", placeholder = "Điện thoại" })</td>
+                <td class="table-label">@Html.LabelFor(m => m.stremail, new { @class = "font-label" })</td>
+                <td>@Html.TextBoxFor(m => m.stremail, new { @class = "form-control form-control-window2", placeholder = "Email" })</td>
+            </tr>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.strngaysinh, new { @class = "font-label" })</td>
+                <td>
+                    @*@Html.TextBoxFor(m => m.strngaysinh, new { @class = "form-control form-control-window2", placeholder = "Ngày sinh" })*@
+                    @Html.TextBox("strngaysinh", strngaysinh, new { @class = "form-control form-control-window2", placeholder = "Ngày sinh" })
+                </td>
+                <td class="table-label">@Html.LabelFor(m => m.enumgioitinh, new { @class = "font-label" })</td>
+                <td>@Html.EnumDropDownListFor(m => m.enumgioitinh, new { @class = "form-control form-control-window2", placeholder = "Giới tính" })</td>
+            </tr>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.intchucvu, new { @class = "font-label" })</td>
+                <td>@Html.DropDownListFor(m => m.intchucvu, ListChucdanh, new { @class = "form-control form-control-window2", placeholder = "Chức vụ" })</td>
+                <td class="table-label">@Html.LabelFor(m => m.intnhomquyen, new { @class = "font-label" })</td>
+                <td>@Html.DropDownListFor(m => m.intnhomquyen, ListNhomquyen, new { @class = "form-control form-control-window2", placeholder = "Nhóm quyền" })</td>
+            </tr>
+            <tr>
+                <td class="table-label">@Html.LabelFor(m => m.intkivb, new { @class = "font-label" })</td>
+                <td>@Html.CheckBoxFor(m => m.intkivb)</td>
+                <td class="table-label">@Html.LabelFor(m => m.IsNguoiXL, new { @class = "font-label" })</td>
+                <td>
+                    @Html.CheckBoxFor(m => m.IsNguoiXL)
+                    &nbsp; @Html.LabelFor(m => m.IsDefaultXLBD, new { @class = "font-label" })
+                    &nbsp; @Html.CheckBoxFor(m => m.IsDefaultXLBD)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table class="table table-condensed ">
+                        <tr>
+                            <td class="table-label">@Html.LabelFor(m => m.strusername, new { @class = "font-label" })</td>
+                            <td colspan="3">
+                                @Html.TextBoxFor(m => m.strusername, new
+                                {
+                                    @class = "form-control form-control-window2",
+                                    placeholder = "Tên đăng nhập" @*validationMessage = "Chưa có tên đăng nhập"*@
+                                })
+                                <span id="ketquaUserName" class="validation-summary-valid"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">@Html.LabelFor(m => m.strpassword, new { @class = "font-label" })</td>
+                            <td colspan="3">@Html.PasswordFor(m => m.strpassword, new { @class = "form-control form-control-window2", placeholder = "Mật khẩu" })</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">@Html.LabelFor(m => m.ConfirmPassword, new { @class = "font-label" })</td>
+                            <td colspan="3">@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control form-control-window2", placeholder = "Mật khẩu" })</td>
+                        </tr>
+                    </table>                    
+                </td>
+                <td >
+                    <table class="table table-condensed table-bordered responsive-table">
+                        <tr>
+                            <td>
+
+                                <img class="user-image" alt="Hình đại diện" src="@Url.Content(strImageProfile)">
+                                @*@(Html.Kendo().Upload()
+                        .Name("files")
+                        .Messages(m => m.Select("Chọn hình đại diện")
+                        .StatusFailed("Lỗi").StatusUploaded("Hoàn thành")
+                        )
+                                                //.HtmlAttributes(new { @class = "btn btn-sm btn-primary btn-flat" })
+                        .Async(a => a
+                            .Save("UploadImageProfile", "File", new { iduser = Model.intid })
+                            .Remove("RemoveImageProfile", "File", new { iduser = Model.intid })
+                            .AutoUpload(true)
+                        )
+                            .Files(files =>
+                            {
+                                //foreach (var f in Model.listfile)
+                                {
+                                    files.Add().Name(Model.ImageProfile.Name).Extension(Model.ImageProfile.Extension).Size(Model.ImageProfile.Size);
+                                }
+                            })
+                    )*@
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+</form>
+
+<script type="text/javascript">
+    $("#SaveUserbtn").click(function () {
+        // kiem tra strpassword and confirmPassword
+        //var validatable = $("#formEditUser").kendoValidator().data("kendoValidator");
+        var validatable = $("#formEditUser").kendoValidator({
+            rules: {
+                password: function (input) {
+                    if (input.is("[name=ConfirmPassword]")) {
+                        var strpassword = $('#strpassword').val();                        
+                        var ConfirmPassword = $('#ConfirmPassword').val();
+                        if (strpassword != "") {                            
+                            if (strpassword != ConfirmPassword) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                    return true;
+                }
+            },
+            messages: {
+                password: "Mật khẩu xác nhận không đúng"
+                
+            }
+        }).data("kendoValidator");
+        if (validatable.validate()) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveUser", "Donvi")',
+                dataType: "json",                
+                data: $("#formEditUser").serialize(),
+                success: function (data) {
+                    if (data == 1) {
+                        ShowResult("ketquaSaveUser", "Cập nhật thành công");
+                        RefreshGrid();
+                    }
+                    else {
+                        //ShowResult("ketquaSaveUser", data);
+                        SetThongbao(data);
+                        RefreshGrid();
+                    }
+                },
+            });
+        }
+    });
+    $('#BackUserbtn').click(function () {
+        CloseEditUser();
+    })
+    $('#strusername').blur(function () {
+        var intiduser = '@Model.intid';
+        if (intiduser == 0) {
+            var strusername = $('#strusername').val();
+            var url = '@Url.Action("CheckUsername", "Donvi")';
+            url = url + '?strusername=' + strusername;
+            $.ajax(
+                    {
+                        type: "POST",
+                        url: url,
+                        success: function (data) {
+                            ShowResult("ketquaUserName", data);                          
+                        }
+                    });
+        }
+
+    })
+</script>

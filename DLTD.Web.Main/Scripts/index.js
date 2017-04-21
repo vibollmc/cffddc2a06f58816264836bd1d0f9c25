@@ -271,7 +271,7 @@ function buildHtmlTHTH(data, idContainer) {
             if (data.Results[i].FileUrl.toLowerCase().endsWith('.pdf')) {
                 html += '<a href="' + urlPdfViewer + data.Results[i].FileUrl + '" target="_blank">(Xem trước)</a>';
             }
-            else if (data.Results[i].FileUrl.toLowerCase().endsWith('.doc') || data.Results[i].FileUrl.toLowerCase().endsWith('.docx')) {
+            else if (data.Results[i].FileUrl.toLowerCase().endsWith('.docx')) {
                 html += '<a href="' + urlWordViewer + encodeURIComponent('~/' + data.Results[i].FileUrl) + '" target="_blank">(Xem trước)</a>';
             }
 

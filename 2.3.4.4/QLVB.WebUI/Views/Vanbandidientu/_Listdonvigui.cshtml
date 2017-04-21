@@ -1,0 +1,72 @@
+﻿
+@{
+    int? idvanban = ViewBag.idvanban;
+}
+@using QLVB.DTO
+
+@(Html.Kendo().Grid<QLVB.DTO.Vanbandientu.ListDonviguiViewModels>()
+    .Name("gridDonvi")
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.intid).Hidden();
+        columns.Bound(o => o.strtendonvi).Title("Đơn vị gửi").Width("50%");
+        columns.Bound(o => o.dtengaygui).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày gửi").Width(90);
+        columns.Bound(o => o.dtengaynhan).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày nhận").Width("25%");
+
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+        //.Sortable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("Donvigui_Read", "Vanbandidientu", new { idvanban = idvanban })
+            )
+        //.Events(events => events.Error("onErrorDonvi"))
+        )
+        //.Events(events => events.Change("onChangeDonvi"))
+)
+
+<script type="text/javascript">    
+    $(window).resize(function () {
+        SetGridHeightDonvi();
+    });
+    $(document).ready(function () {
+        SetGridHeightDonvi();
+    })
+    function onErrorDonvi(e, status) {
+        SetThongbao("Đã có lỗi xảy ra trên Server!");
+    }
+    function SetGridHeightDonvi() {
+
+        var gridElement = $("#gridDonvi"),
+            newHeight = gridElement.innerHeight(),
+            otherElements = gridElement.children().not(".k-grid-content"),
+            otherElementsHeight = 0;
+
+        otherElements.each(function () {
+            otherElementsHeight += $(this).outerHeight();
+        });
+        var contentHeight = $('#content').innerHeight(),
+            headerHeight = $('#head').innerHeight(),
+            contentWidth = $('#content').innerWidth(),
+            $windowHeight = $(window).height();
+
+        if (contentWidth > 700) {
+            contentHeight = $windowHeight - 100;
+            gridElement.children(".k-grid-content").height(contentHeight - otherElementsHeight - headerHeight - 65);
+        } else {
+            gridElement.children(".k-grid-content").height(200);
+        }
+    }
+</script>

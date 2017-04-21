@@ -1,0 +1,789 @@
+﻿@model QLVB.DTO.Vanbandi.ThemvanbanViewModel
+
+@{
+	ViewBag.Title = "Themvanban";
+}
+@section header{
+	<i class="glyphicon glyphicon-file">&nbsp;</i>Cập nhật văn bản đi
+}
+<link rel="stylesheet" href=@Url.Content("~/Content/token-input.css")>    
+<div class="box " id="tbar">
+	<header>
+		<nav style="padding: 3px;">
+			<button id="Addbtn" type="button" class="btn btn-sm btn-primary btn-flat" title="Thêm mới văn bản(Ctrl-H)">
+				<i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm mới
+			</button>
+            <button id="AddNextbtn" type="button" class="btn btn-sm btn-primary btn-flat" title="Thêm tiếp (Ctrl-Y)">
+                <i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm tiếp
+            </button>
+            <button id="Savebtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="Ghi nhận(Ctrl-G)"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+			<button id="Attachbtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-paperclip"></i>&nbsp;Đính kèm </button>
+
+			<button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat">
+				<i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
+			</button>
+
+            <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="Quay lại(Ctrl-Q)"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+		</nav>
+	</header>
+</div>
+<div id="vanban" style="min-height:560px;max-height:950px;height:auto; width: 100%;overflow-x:hidden; overflow-y: scroll;font-weight:600;">
+	<div class="row">
+		<div class="col-sm-10">
+			<span id="ketqua" class="validation-summary-valid"></span>
+			<form class="form-horizontal" id="formAddVanban" method="post" action="@Url.Action("Themvanban","Vanbandi")">
+				@Html.HiddenFor(u => u.Vanbandi.intid)
+				@Html.Hidden("idloaivb")
+				@Html.Hidden("intAddNext", 0)
+
+				@foreach (var m in Model.PhanloaiTruong)
+				{
+					if ((m.intidmotatruong == 26) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							<label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>@m.strmota</label>
+							<div class="col-sm-5">
+								@(Html.Kendo().DropDownList()
+									.Name("idsovanban")
+									.BindTo(Model.Sovanban)
+									.DataTextField("strten")
+									.DataValueField("intid")
+									.Value(Model.intidsovanban.ToString())
+									.HtmlAttributes(new { @style = "width:100%;" })
+									.ValueTemplate("<span style='color:red;' >#:data.strten#</span>")
+								)
+
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 27) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							<label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>@m.strmota</label>
+							<div class="col-sm-5">
+								@(Html.Kendo().DropDownList()
+									.Name("idloaivanban")
+									.BindTo(Model.PhanloaiVanban)
+									.DataTextField("strtenvanban")
+									.DataValueField("intid")
+									.Value(Model.intidloaivanban.ToString())
+									.HtmlAttributes(new { @style = "width:100%;" })
+								)
+
+							</div>
+						</div>
+					}
+
+					if ((m.intidmotatruong == 28) & (m.IsDisplay == true))
+					{
+						<div class="form-inline form-group form-group-window">
+							<label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>@m.strmota</label>
+							<div class="col-sm-6">
+								@Html.TextBoxFor(u => u.Vanbandi.intso,
+								new
+								{
+                                    @class = "form-control form-control-window3",
+									@Value = Model.Vanbandi.intso,
+									style = "color:red;font-weight:bold;width:60%;"
+								})
+								@Html.TextBoxFor(u => u.Vanbandi.strmorong,
+								new
+								{
+                                    @class = "form-control form-control-window3",
+									@Value = Model.Vanbandi.strmorong,
+									disabled = "disabled",
+									style = "width:20%;"
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 29) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							<label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>@m.strmota</label>
+							<div class="col-sm-5">
+								@Html.TextBox("strkyhieu", Model.Vanbandi.strkyhieu, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "Số, ký hiệu"
+								})
+							</div>
+							<div class="col-sm-2">
+								@Html.CheckBox("InHoa", true)
+								<label>In hoa</label>
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 30) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@(Html.Kendo().DatePicker()
+									.Name("strngayky")
+									.Value(Model.Vanbandi.strngayky)
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 31) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-8">
+								@Html.TextBoxFor(u => u.Vanbandi.strdonvisoan, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "Đơn vị soạn",
+									@Value = Model.Vanbandi.strdonvisoan
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 32) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							<label class="col-sm-4 control-label"><span style="color:red">*&nbsp;</span>@m.strmota</label>
+							<div class="col-sm-8">
+								@Html.TextAreaFor(u => u.Vanbandi.strtrichyeu, new
+								{
+                                    @class = "form-control form-control-window3",
+									@Value = Model.Vanbandi.strtrichyeu
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 33) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-8">
+								@Html.Hidden("strnoinhan")
+								<input type="text" id="strnoinhan-auto" class="form-control" name="strnoinhan-auto"/>                                
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 34) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.DropDownListFor(u => u.Vanbandi.intidlinhvuc,
+								new SelectList(Model.Linhvuc, "intid", "strtenlinhvuc", Model.Vanbandi.intidlinhvuc),
+                             "", new { @class = "form-control form-control-window3" })
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 35) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@(Html.Kendo().AutoComplete()
+									.Name("strnguoiky")
+									.Filter(FilterType.Contains)
+									.Placeholder("Người ký")
+									.BindTo(Model.Nguoiky.Select(u => u.strhoten))
+                                    .HtmlAttributes(new { @class = "form-control form-control-window3", style = "width:100%;height:100%;" })
+									.HighlightFirst(true)                            
+									.Value(Model.Vanbandi.strnguoiky)
+								)								
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 36) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@(Html.Kendo().AutoComplete()
+									.Name("strnguoisoan")
+									.Filter(FilterType.Contains)
+									.Placeholder("Người soạn")
+									.BindTo(Model.Nguoisoan.Select(u => u.strhoten))
+                                    .HtmlAttributes(new { @class = "form-control form-control-window3", style = "width:100%;height:100%;" })
+									.HighlightFirst(true)
+									.Value(Model.Vanbandi.strnguoisoan)
+								)								
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 37) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@(Html.Kendo().AutoComplete()
+									.Name("strnguoiduyet")
+									.Filter(FilterType.Contains)
+									.Placeholder("Người duyệt")
+									.BindTo(Model.Nguoiduyet.Select(u => u.strhoten))
+                                    .HtmlAttributes(new { @class = "form-control form-control-window3", style = "width:100%;height:100%;" })
+									.HighlightFirst(true)
+									.Value(Model.Vanbandi.strnguoiduyet)
+								)								
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 38) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@(Html.Kendo().DatePicker()
+									.Name("strhanxuly")
+									.Value(Model.Vanbandi.strhanxuly)
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 39) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.strtraloivanbanso, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = Model.strmota_traloivanban,//"Số - Mẵ sổ - Năm",
+									@Value = Model.Vanbandi.strtraloivanbanso
+								})                                                             
+							</div>
+                            <div class="col-sm-2">
+                                <label id="checkLienket"></label>                                                                                            
+                            </div>  
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-5" id="checkVanban">
+                            </div>
+						</div>                       
+                    }
+                    if ((m.intidmotatruong == 40) & (m.IsDisplay == true))
+                    {
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.DropDownListFor(u => u.Vanbandi.intidkhan,
+								new SelectList(Model.Vanbankhan, "intid", "strtentinhchatvb", Model.Vanbandi.intidkhan),
+                             "", new { @class = "form-control form-control-window3" })
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 41) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.DropDownListFor(u => u.Vanbandi.intidmat,
+								new SelectList(Model.Vanbanmat, "intid", "strtentinhchatvb", Model.Vanbandi.intidmat),
+                             "", new { @class = "form-control form-control-window3" })
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 42) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.intsoban, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "Số bản",
+									@Value = Model.Vanbandi.intsoban
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 43) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.intsoto, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "Số tờ",
+									@Value = Model.Vanbandi.intsoto
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 44) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.intmucquantrong, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "",
+									@Value = Model.Vanbandi.intmucquantrong
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 45) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.strtomtat, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "",
+									@Value = Model.Vanbandi.strtomtat
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 46) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.DropDownListFor(u => u.Vanbandi.intiddiachiluutru,
+								new SelectList(Model.Diachiluutru, "Id", "strtendonvi", Model.Vanbandi.intiddiachiluutru),
+                             "", new { @class = "form-control form-control-window3" })
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 47) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.TextBoxFor(u => u.Vanbandi.strtukhoa, new
+								{
+                                    @class = "form-control form-control-window3",
+									placeholder = "",
+									@Value = Model.Vanbandi.strtukhoa
+								})
+							</div>
+						</div>
+					}
+					if ((m.intidmotatruong == 48) & (m.IsDisplay == true))
+					{
+						<div class="form-group form-group-window">
+							@Html.Label(m.strmota, new { @class = "control-label col-sm-4" })
+							<div class="col-sm-5">
+								@Html.CheckBoxFor(u=>u.IsQPPL)
+							</div>
+						</div>
+					}
+
+				}
+
+			</form>
+
+		</div>
+	</div>
+</div>
+<style type="text/css">
+    .k-state-focused {border-color:#428bca; background-color: #428bca;color:#fff }
+</style>
+<script type="text/javascript" src="~/Scripts/jquery.tokeninput.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        SetClientHeight();
+        setTimeout(function () { $('#strkyhieu').focus(); }, 1000);
+        var intidvanban = '@Model.Vanbandi.intid';
+        $('#Vanbandi_intid').val(intidvanban);
+        if (intidvanban == 0) {
+            GetAjaxSovbdi();
+        } else {
+            ButtonEnable("Attachbtn", true);
+            CheckLienketVanban();
+        };
+        $('#formAddvanban').keypress(function (e) {
+            preventEnterSubmit(e);
+        });
+        @if (Model.IsSave == true)
+		{
+		<text>
+            ShowResult("ketqua", "Cập nhật thành công");
+            setTimeout(function () { $('#ketqua').hide(); }, 3000);
+        </text>
+		}
+        GetTenDonvi();
+    });
+    function GetTenDonvi() {
+        var url = '@Url.Action("_AjaxGetTenDonvi", "Vanbandi")';
+        $.ajax(
+			{
+			    //type: "POST",
+			    url: url,
+			    success: function (data) {
+			        AutoComplete_Noinhan(data);
+			    }
+			});
+    }
+    function AutoComplete_Noinhan(listdonvi) {
+        var noinhan = '@Html.Raw(Model.Vanbandi.strnoinhan)';
+        var url = '@Url.Action("_AjaxGetNoinhan", "Vanbandi")';
+        url = url + '?idvanban=' + @Model.Vanbandi.intid + '&strnoinhantiep=' + noinhan;
+        $.ajax(
+			{
+			    //type: "POST",
+			    url: url,
+			    success: function (strnoinhan) {
+			        //console.log(strnoinhan);
+			        $("#strnoinhan-auto").tokenInput(
+					listdonvi,
+					{
+					    theme: "facebook",
+					    searchingText: "Đang tìm...",
+					    hintText: "Nhập tên đơn vị",
+					    queryParam: "q",
+					    //minChars: 2,
+					    searchDelay: 200,
+					    noResultsText: "Không tìm thấy",
+					    placeholder: "Nhập tên đơn vị",
+					    resultsLimit: 20,
+					    preventDuplicates: false,
+					    prePopulate: strnoinhan,
+					    propertyToSearch: "strkyhieu_ten",
+					    resultsFormatter: function (item) {
+					        return "<li>" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.strkyhieu_ten + "</div></li>"
+					    },
+					    tokenFormatter: function (item) {
+					        var index = item.strkyhieu_ten.indexOf("||");
+					        if(index>0){
+					            return "<li><p>" + item.strten + "</p></li>";
+					        }else{
+					            return "<li><p>" + item.strkyhieu_ten + "</p></li>";
+					        }
+					    },
+					    allowFreeTagging: true,
+					    autoSelectFirstResult:true,
+					    allowTabOut:true
+					});
+			    }
+			});
+    }
+    function GetAutoNoinhan() {
+        var _strnoinhan = $('#strnoinhan-auto').tokenInput("get");
+        var strnoinhan = "";
+        $.each(_strnoinhan, function (index, elem) {
+            var index = elem.strkyhieu_ten.indexOf("||");
+            if (index > 0) {
+                if (strnoinhan == "") {
+                    strnoinhan = elem.strten;
+                } else {
+                    strnoinhan = strnoinhan + ", " + elem.strten;
+                }
+            } else {
+                if (strnoinhan == "") {
+                    strnoinhan = elem.strkyhieu_ten;
+                } else {
+                    strnoinhan = strnoinhan + ", " + elem.strkyhieu_ten;
+                }
+            }
+        });
+        return strnoinhan;
+    }
+
+    //========================================================
+    $(window).resize(function () {
+        SetClientHeight();
+    });
+    function SetClientHeight() {
+        var contentHeight = $('#content').innerHeight();
+        var headerHeight = $('#head').innerHeight();
+        var tbar = $('#tbar').innerHeight();
+        var windowHeight = $(window).height();
+        // box bar
+        var contentWidth = $('#content').innerWidth();
+
+        if (contentWidth > 768) {
+
+            if (contentHeight > 800) { contentHeight = 800; }
+            $('#vanban').height(contentHeight - headerHeight - tbar - 280);
+        };
+    }
+    $(window).bind('keydown', function(event) {
+        if (event.ctrlKey || event.metaKey) {
+            switch (String.fromCharCode(event.which).toLowerCase()) {
+                case 'h':
+                    event.preventDefault();
+                    AddNew();
+                    break;
+                case 'g':
+                    event.preventDefault();
+                    Save();
+                    break;
+                case 'q':
+                    event.preventDefault();
+                    Back();
+                    break;
+                case 'y':
+                    event.preventDefault();
+                    AddNext();
+                    break;
+            }
+        }
+    });
+    //======================================================
+    function Back(){
+        var url = '@Url.Action("Index", "Vanbandi", new { isBack = true })';
+        $().redirect(url);
+    }
+    $('#Backbtn').click(function () {
+        Back();
+    });
+    $('#Addbtn').click(function () {
+        AddNew();
+    });
+    function AddNew(){
+        var url = '@Url.Action("Themvanban", "Vanbandi", new { id = string.Empty })';
+        window.location = url;
+    }
+    $('#AddNextbtn').click(function () {
+        AddNext();
+    });
+    function AddNext() {
+        var idloaivb = $('#idloaivanban').val();
+        $('#idloaivb').val(idloaivb);
+        $('#intAddNext').val(1);
+        SubmitFormAddVanban();
+    }
+    $('#Savebtn').click(function () {
+        Save();
+    })
+    function Save(){
+        var validatable = $("#formAddVanban").kendoValidator({
+            rules: {
+                ngayden: function (input) {
+                    if (input.is("[name=strngayden]")) {
+                        var ngay = $('#strngayden').val();
+                        if (ngay == "") {
+                            return false;
+                        } else {
+                            var date = kendo.parseDate(ngay);
+                            if (!date) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                    return true;
+                },
+                soden: function (input) {
+                    if (input.is("[name=Vanbandi.intso]")) {
+                        return $('#Vanbandi_intso').val() != "";
+                    }
+                    return true;
+                },
+                kyhieu: function (input) {
+                    if (input.is("[name=Vanbandi.strkyhieu]")) {
+                        return $('#Vanbandi_strkyhieu').val() != "";
+                    }
+                    return true;
+                },
+                noiphathanh: function (input) {
+                    if (input.is("[name=strnoiphathanh]")) {
+                        return $('#strnoiphathanh').val() != "";
+                    }
+                    return true;
+                },
+                trichyeu: function (input) {
+                    if (input.is("[name=Vanbandi.strtrichyeu]")) {
+                        return $('#Vanbandi_strtrichyeu').val() != "";
+                    }
+                    return true;
+                },
+                ngayky: function (input) {
+                    if (input.is("[name=strngayky]")) {
+                        var ngay = $('#strngayky').val();
+                        if (ngay != "") {
+                            var date = kendo.parseDate(ngay);
+                            if (!date) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                    return true;
+                },
+                hanxuly: function (input) {
+                    if (input.is("[name=strhanxuly]")) {
+                        var ngay = $('#strhanxuly').val();
+                        if (ngay != "") {
+                            var date = kendo.parseDate(ngay);
+                            if (!date) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                    return true;
+                },
+            },
+            messages: {
+                ngayden: "Ngày không hợp lệ",
+                soden: "*",
+                kyhieu: "*",
+                noiphathanh: "*",
+                trichyeu: "*",
+                ngayky: "Ngày không hợp lệ",
+                hanxuly: "Ngày không hợp lệ"
+            }
+            //errorTemplate: "<span>#=message#</span>"
+        }).data("kendoValidator");
+
+        if (validatable.validate()) {
+            $('#idloaivb').val(0);
+            $('#intAddNext').val(0);
+            SubmitFormAddVanban();
+            //SetThongbao("submit");
+        }
+    }
+    //=================================
+    $('#idsovanban').change(function () {
+        GetAjaxSovbdi();
+    })
+
+    function GetAjaxSovbdi() {
+        $('#Vanbandi_intso').val("");
+        var idsovanban = $('#idsovanban').val();
+        var url = '@Url.Action("_AjaxGetSovb", "Vanbandi")';
+        url = url + '?idsovb=' + idsovanban;
+        $.ajax(
+			{
+			    type: "POST",
+			    url: url,
+			    success: function (data) {
+			        $('#Vanbandi_intso').val(data.intso);
+			    }
+			});
+    }
+
+    $('#strkyhieu').keyup(function () {
+        var inhoa = $('#InHoa').prop('checked');
+        if(inhoa==true){
+            var strkyhieu = $('#strkyhieu').val();
+            var item = strkyhieu.toUpperCase();
+            $('#strkyhieu').val(item);
+        }
+    })
+    $('#strngayky').keyup(function () {
+        var ngay = $('#strngayky').val();
+        var _ngay = editdate(ngay);
+        $('#strngayky').val(_ngay);
+    })
+    //====================================
+    $('#idloaivanban').change(function () {
+        changeLoaivb();
+    })
+    function changeLoaivb() {
+        var idloaivb = $('#idloaivanban').val();
+        $('#idloaivb').val(idloaivb);
+        $('#intAddNext').val(0);
+        SubmitFormAddVanban();
+    }
+
+    function SubmitFormAddVanban() {
+        var strnoinhan = GetAutoNoinhan();
+        $('#strnoinhan').val(strnoinhan);
+
+        $('#formAddVanban').submit();
+    }
+    function CheckSophu() {
+        var idvanban = '@Model.Vanbandi.intid';
+        if (idvanban == 0) {
+            var intso = $('#Vanbandi_intso').val();
+            var strngayky = $('#strngayky').val();
+            var idsovanban = $('#Vanbandi_intidsovanban').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CheckSophu","Vanbandi")',
+                data: { 'intso': intso, 'strngayky': strngayky, 'idsovanban': idsovanban },
+                success: function (data) {
+                    if (data == 1) {
+                        SetConfirm("Số đi đã tồn tại, bạn cần dùng thêm số phụ");
+                        $('#OKConfirmbtn').click(function () {
+                            CloseConfirm();
+                            SubmitFormAddVanban();
+                        });
+                    } else {
+                        SubmitFormAddVanban();
+                    }
+                }
+            });
+        } else {
+            SubmitFormAddVanban();
+        }
+    }
+
+    $('#Attachbtn').click(function () {
+        OpenUploadVBDi();
+    })
+    //====================================
+    function CheckLienketVanban() {
+        var strTraloi = $('#Vanbandi_strtraloivanbanso').val();
+        if (strTraloi) {
+            var iconOK = "<i class='glyphicon glyphicon-ok' style='color:#3071a9;'></i>";
+            var iconBan = "<i class='glyphicon glyphicon-ban-circle' style='color:red;'></i>";
+            var idvanban = '@Model.Vanbandi.intid';
+            $.ajax({
+                url: '@Url.Action("_CheckLienketVanban", "Vanbandi")',
+                data: { 'id': idvanban },
+                success: function (idvanbanden) {
+                    if (idvanbanden > 0) {
+                        $('#checkLienket').html(iconOK);
+                    } else {
+                        $('#checkLienket').html(iconBan);
+                    }
+                }
+            });
+        }
+    }
+    $('#Vanbandi_strtraloivanbanso').focusout(function () {
+        var iconOK = "<i class='glyphicon glyphicon-ok' style='color:#3071a9;'></i>";
+        var iconBan = "<i class='glyphicon glyphicon-ban-circle' style='color:red;'></i>";
+        var header = "<div class='alert alert-info alert-dismissible'>"
+                   + "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+        var footer = "</div>";
+        var thongbao = header + " " + footer;
+        var strTraloi = $('#Vanbandi_strtraloivanbanso').val();
+        var idvanban = '@Model.Vanbandi.intid';
+        if (strTraloi) {
+            $.ajax({
+                url: '@Url.Action("_CheckTraloiVanban", "Vanbandi")',
+                data: { 'strTraloivb': strTraloi, 'idvanbandi' : idvanban },
+                success: function (data) {
+                    if (data.intloai == 1) {
+                        $('#checkLienket').html(iconBan);
+                        var noidung = "Văn bản đi đã tồn tại."
+                        noidung += "<br/>Số: " + data.strSoKyhieu + " ngày " + data.strNgay;
+                        noidung += "<br/>Người soạn: " + data.strNguoisoan;
+                        thongbao = header + noidung + footer;
+                        $('#checkVanban').html(thongbao);
+                    }
+                    if (data.intloai == 2) {
+                        $('#checkLienket').html(iconBan);
+                        var noidung = "Không tìm thấy Văn bản đến"
+                        thongbao = header + noidung + footer;
+                        $('#checkVanban').html(thongbao);
+                    }
+                    if (data.intloai == 0) {
+                        $('#checkLienket').html(iconOK);
+                    }
+                }
+            });
+        }
+    })
+    $('#Vanbandi_strtraloivanbanso').focus(function () {
+        $('#checkVanban').text("");
+        $('#checkLienket').text("");
+    })
+
+</script>
+
+@Html.Action("_UploadVBDi", "Vanbandi", new { idvanban = Model.Vanbandi.intid })
+
+
+
+

@@ -1,0 +1,85 @@
+﻿@model QLVB.DTO.Sovb.ListSovanbanViewModel
+
+<div class="box ">
+    <header>
+        <nav class="box-toolbar">
+            <button id="AddDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title="Thêm mới"><i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm</button>
+            <button id="EditDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-pencil"></i>&nbsp;Sửa</button>
+            <button id="DeleteDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" data-original-title="" title=""><i class="glyphicon glyphicon-trash"></i>&nbsp;Xóa</button>
+
+        </nav>
+    </header>
+</div>
+
+@*@(Html.Kendo().TreeView()
+        .Name("treeview")
+        .Items(treeview =>
+        {
+            treeview.Add().Text("Sổ văn bản đến")
+                .SpriteCssClasses("folder")
+                .Expanded(true)
+                .Items(root =>
+                {
+                    foreach (var p in Model.Sovbden)
+                    {
+                        root.Add().Text(p.strten).Id(p.intid.ToString());                        
+                    }
+                });
+
+            treeview.Add().Text("Sổ văn bản phát hành")
+                .SpriteCssClasses("folder")
+                .Expanded(true)
+                .Items(root =>
+                {
+                    foreach (var p in Model.Sovbdi)
+                    {
+                        root.Add().Text(p.strten).Id(p.intid.ToString());                        
+                    }
+                });
+        })
+)*@
+
+@(Html.Kendo().PanelBar()
+        .Name("panelbar")
+        .ExpandMode(PanelBarExpandMode.Multiple)
+        //.HtmlAttributes(new { style = "width:300px" })
+        .Items(panelbar =>
+        {
+            panelbar.Add().Text("Sổ văn bản đến").HtmlAttributes(new { id = "idden" })
+                .Expanded(true)
+                .Items(cat =>
+                {
+                    foreach (var p in Model.Sovbden)
+                    {
+                        cat.Add().Text(p.strten).HtmlAttributes(new { @value= p.intid });
+                    }
+
+                });
+
+            panelbar.Add().Text("Sổ văn bản phát hành").HtmlAttributes(new { id = "iddi" })
+                .Expanded(true)
+                .Items(cat =>
+                {
+                    foreach (var p in Model.Sovbdi)
+                    {
+                        cat.Add().Text(p.strten).HtmlAttributes(new { @value = p.intid });
+                    }
+
+                });
+            
+        })
+        .Events(events => events.Select("select"))
+)
+<script type="text/javascript">
+    function select(e) {
+        //console.log("Select: " + $(e.item).find("> .k-link").text());       
+        //console.log(e.item.id);
+        var vItem = $(e.item);
+        var text = vItem.text();
+        var intid = vItem.attr('value');
+        SetIdSovb(intid);
+        var url = '@Url.Action("_AjaxSovanban", "Sovb", (new { id = "__id__" }))'.replace('__id__', intid);
+        $('#detailSovb').load(url);
+    }
+    
+</script>

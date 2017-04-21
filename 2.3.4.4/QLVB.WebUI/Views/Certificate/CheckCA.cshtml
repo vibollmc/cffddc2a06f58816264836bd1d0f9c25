@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "CheckCA";
+    Layout = "~/Views/Shared/_Layout_null.cshtml";
+}
+
+<form id="form1" action='@Url.Action("UploadCA", "Certificate")' enctype="multipart/form-data" method="post">
+    <div id="header" style="background-image: url(images/header-blue.jpg); height: 150px; width:100%;background-attachment:scroll;background-repeat:repeat;background-position-x:0%;background-position-y:0%;background-size:auto;">
+        <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+
+                    <img alt="" src="Images/DN.png" height="110" width="110" />
+
+
+                </td>
+                <td>
+                    <span style="font-size: 21pt; color: red; font-family: Tahoma">VĂN PHÒNG UBND TỈNH ÐỒNG NAI</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </br>
+    <div>
+
+        <table align="center" border="0" cellpadding="2"
+               cellspacing="3">
+            <tr>
+                <td colspan="2" align=center>
+
+                    <span style="color: #FF3300; font-weight:bold;font-size:xx-large">HỆ THỐNG CHỨNG THỰC</span>
+                </td>
+            </tr>
+            <tr>
+                <td align=left>
+                    <span style="color: #000000;font-size:medium">Chọn Chứng thư:</span>
+
+                </td>
+                <td align=left>
+
+                    <input type="file" name="file" id="file" />
+
+
+                </td>
+
+            </tr>
+
+            <tr>
+                <td align=center colspan="2">
+
+                    <input type="button" name="Submit" id="Submit" value="Chứng thực" class="btn btn-lg btn-primary" onclick="Upload($('#file'))" />
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+</form>
+
+
+@*<form action=@Url.Action("UploadCA", "Certificate") enctype="multipart/form-data" method="post">
+        <input type="file" name="file" />
+        <input type="submit" name="Submit" id="Submit" class="btn btn-lg btn-primary" value="Upload" />
+    </form>*@
+
+<script type="text/javascript" language="JavaScript">
+    function Upload(sender) {
+        @*var iframe = $("<iframe>").hide();
+        var newForm = $("<FORM>");
+        newForm.attr({ method: "POST", enctype: "multipart/form-data", action: "/Certificate/UploadCA" });
+        //newForm.attr({ method: "POST", enctype: "multipart/form-data", action:'@Url.Action("UploadCA", "Certificate")'  });
+        var $this = $(sender), $clone = $this.clone();
+        $this.after($clone).appendTo($(newForm));
+        iframe.appendTo($("html")).contents().find('body').html($(newForm));
+         newForm.submit();*@
+
+        //alert('ok');
+        $.ajax({
+            type: "POST",
+            //url: '/Certificate/UploadCA',
+            url: '@Url.Action("UploadCA", "Certificate")',
+            // data: { file: $('#file').val() },
+            data: new FormData(document.getElementById("form1")),
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+        }).done(function (data) {
+            console.log(data);
+            if (data ==1) {
+                //console.log("ok");
+                window.location = '@Url.Action("Login", "Account")';
+            } else {
+                //console.log("no");
+               window.location = '@Url.Action("CheckCA", "Certificate")';
+            }
+
+        })
+
+        ;
+
+    }
+
+
+</script>
+

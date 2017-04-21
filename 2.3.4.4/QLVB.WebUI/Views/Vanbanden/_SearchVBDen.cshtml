@@ -1,0 +1,250 @@
+﻿@model QLVB.DTO.Vanbanden.SearchVBViewModel
+
+@(Html.Kendo().Window()
+	.Name("SearchVBDen")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Tìm kiếm văn bản đến")
+	.Resizable()
+	.Width(670)
+	.Height(500)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-SearchVBDen">
+			<div class="box">
+				<header>
+					<nav style="padding: 3px;">
+						<button id="SubmitSearchVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm</button>
+						<button id="BackSearchVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+						<button id="RefreshSearchVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-refresh"></i>&nbsp;Refresh</button>
+						
+					</nav>
+				</header>
+			</div>
+			<form class="form-horizontal" id="formSearchVBDen">
+				@Html.Hidden("isSearch", true)
+				<table class="table table-condensed table-bordered responsive-table">
+					<tbody>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Số đến", new { @class = "font-label" })</td>
+							<td >@Html.TextBoxFor(m => m.intsodenbd, null, new { @class = "form-control form-control-window2 ", placeholder = "" })</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>@Html.TextBoxFor(m => m.intsodenkt, null, new { @class = "form-control form-control-window2 ", placeholder = "" })</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ngày đến", new { @class = "font-label" })</td>
+							<td>                                
+								@(Html.Kendo().DatePicker()
+									.Name("strngaydenbd")									
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+									
+								)
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaydenkt")                                        
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Ngày ký", new { @class = "font-label" })</td>
+							<td >
+								@(Html.Kendo().DatePicker()
+									.Name("strngaykybd")                                        
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("==>", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DatePicker()
+									.Name("strngaykykt")
+									.HtmlAttributes(new { style = "width:100%;" })
+									.Format("dd/MM/yyyy")
+								)
+							</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Số, ký hiệu", new { @class = "font-label" })</td>
+							<td>@Html.TextBox("strsokyhieu", null, new { @class = "form-control form-control-window2 ", placeholder = "Số, ký hiệu" })</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("Người ký", new { @class = "font-label" })</td>
+							<td> @Html.TextBox("strnguoiky", null, new { @class = "form-control form-control-window2 ", placeholder = "Người ký" })</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Sổ văn bản", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DropDownList()
+									.Name("idsovb")
+									.BindTo(Model.Sovanban)
+									.DataTextField("strten")
+									.DataValueField("intid")                                    
+									.HtmlAttributes(new { @style = "width:100%;" })
+									.OptionLabel(" ")
+								)								
+							</td>
+							<td class="table-col-4" style="text-align:center;">@Html.Label("Loại văn bản", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DropDownList()
+									.Name("idloaivb")
+									.BindTo(Model.Loaivanban)
+									.DataTextField("strtenvanban")
+									.DataValueField("intid")
+									.HtmlAttributes(new { @style = "width:100%;" })
+									.OptionLabel(" ")
+								)								
+							</td>
+						</tr>						
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Cấp cơ quan", new { @class = "font-label" })</td>
+							<td>
+								@(Html.Kendo().DropDownList()
+									.Name("idkhoiph")
+									.BindTo(Model.Khoiphathanh)
+									.DataTextField("strtenkhoi")
+									.DataValueField("intid")
+									.HtmlAttributes(new { @style = "width:100%;" })
+									.OptionLabel(" ")
+								)								
+							</td>
+							<td class="table-label table-col-4" style="text-align:center;">@Html.Label("Dạng văn bản", new { @class = "font-label" })</td>
+							<td>
+								@{
+									var Dangvanban = new[]{
+										new {value = "dientu", name = "Văn bản điện tử"},
+										new {value = "dientugiay", name = "Văn bản điện tử và giấy"},
+										new {value = "giay", name = "Văn bản giấy"}
+									};
+								}
+								@(Html.Kendo().DropDownList()
+									.Name("strdangvanban")
+									.BindTo(Dangvanban)
+									.DataTextField("name")
+									.DataValueField("value")
+									.HtmlAttributes(new { @style = "width:100%;" })
+									.OptionLabel(" ")
+								)
+							</td>
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Cơ quan gửi", new { @class = "font-label" })</td>
+							<td colspan="3">@Html.TextBox("strnoigui", null, new { @class = "form-control form-control-window ", placeholder = "Cơ quan phát hành" })</td>
+
+						</tr>
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Trích yếu", new { @class = "font-label" })</td>
+							@{
+								bool isfulltext = QLVB.Common.Utilities.AppSettings.IsFullText;
+								string strhienthi = string.Empty;
+								if (isfulltext)
+								{
+									strhienthi = "Tìm kiếm chính xác, vui lòng để trong dấu \" \" ";
+								}
+								else
+								{
+									strhienthi = "Trích yếu văn bản";
+								}
+							}
+							<td colspan="3">@Html.TextBox("strtrichyeu", null, new { @class = "form-control form-control-window ", placeholder = @strhienthi })</td>
+						</tr>
+
+
+
+						<tr>
+							<td class="table-label table-col-4">@Html.Label("Xử lý chính", new { @class = "font-label" })</td>
+							<td colspan="3">
+								@(Html.Kendo().AutoComplete()
+								.Name("strnguoixuly")
+								.Filter(FilterType.Contains)
+								.Placeholder("Người xử lý chính")
+								.BindTo(Model.Nguoixuly.Select(u => u.strhoten))
+								.HtmlAttributes(new { @class = "form-control", style = "width:100%;" })
+								.HighlightFirst(true)
+								.IgnoreCase(true)                                
+								)								
+							</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</text>
+	)
+)
+
+<script type="text/javascript">    
+	function CloseSearchVBDen() {
+		var window = $("#SearchVBDen").data("kendoWindow");
+		window.close();
+	}
+	function OpenSearchVBDen() {
+		ResetFormVBDen();
+		var window = $("#SearchVBDen").data("kendoWindow");
+		window.center();
+		window.open();
+		setTimeout(function () { $('#intsodenbd').focus(); }, 500);        
+	}
+	$('#BackSearchVBDenbtn').click(function () {
+		CloseSearchVBDen();
+	})
+
+
+	$('#formSearchVBDen').on("keypress", function (e) {
+		if (e.keyCode == 13) {		
+			SubmitSearchVBDen();
+			return false; 
+		}
+	});
+	$('#SubmitSearchVBDenbtn').click(function () {
+		SubmitSearchVBDen();
+	})
+	function SubmitSearchVBDen() {
+		var collection = $('#formSearchVBDen').serialize();
+		var url = '@Url.Action("_Listvanbanden_2", "Vanbanden")';
+		url = url + "?" + collection;
+		$('#listvanbanden').load(url);
+		CloseSearchVBDen();
+		
+	}
+	$('#RefreshSearchVBDenbtn').click(function () {
+		ResetFormVBDen();
+	})
+	function ResetFormVBDen() {
+		$("input").val('');
+		$("#isSearch").val('True');		
+		var dropdownlist = $("#idloaivb").data("kendoDropDownList");
+		dropdownlist.select(0);
+		var dropdown_sovb = $("#idsovb").data("kendoDropDownList");
+		dropdown_sovb.select(0);
+		var dropdown_khoiph = $("#idkhoiph").data("kendoDropDownList");
+		dropdown_khoiph.select(0);
+		var dropdown_dangvb = $("#strdangvanban").data("kendoDropDownList");
+		dropdown_dangvb.select(0);
+	}
+	$('#strngaydenbd').keyup(function () {	    
+		var ngay = $('#strngaydenbd').val();
+		var _ngay = editdate(ngay);
+		$('#strngaydenbd').val(_ngay);
+	})
+	$('#strngaydenkt').keyup(function () {
+		var ngay = $('#strngaydenkt').val();
+		var _ngay = editdate(ngay);
+		$('#strngaydenkt').val(_ngay);
+	})
+	$('#strngaykybd').keyup(function () {
+		var ngay = $('#strngaykybd').val();
+		var _ngay = editdate(ngay);
+		$('#strngaykybd').val(_ngay);
+	})
+	$('#strngaykykt').keyup(function () {
+		var ngay = $('#strngaykykt').val();
+		var _ngay = editdate(ngay);
+		$('#strngaykykt').val(_ngay);
+	})
+</script>

@@ -1,0 +1,44 @@
+﻿@model QLVB.DTO.Quytrinh.CategoryNgayViewModel
+
+@(
+ Html.Kendo().TreeView()
+    .Name("treeview")
+    .Events(events => events.Select("onSelect_treeview"))
+    .HtmlAttributes(new { @class = "text-color-black" })
+    .ExpandAll(true)
+    .Items(item =>
+        item.Add()
+            .Text("Ngày phiên bản")            
+            .Id("parentNode")
+            .Items(subItem =>
+            {
+                foreach( var p in Model.ListNgay)
+                {
+                    subItem.Add()
+                        .Text(p)
+                        .Id(p);
+                }
+            })
+        )
+    )
+
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetTreeViewHeight();
+    });
+    $(document).ready(function () {
+        SetTreeViewHeight();
+    })
+    function onSelect_treeview(e) {
+        var treeview = $("#treeview").getKendoTreeView();
+        var text = treeview.dataItem(e.node).text;
+        var id = treeview.dataItem(e.node).id;
+        //console.log(id);
+        if (id != "parentNode") {
+            var url = '@Url.Action("ChitietVersion", "Quytrinh")';
+            url = url + '?id=' + '@Model.idquytrinh' + '&ngay=' + id;            
+            $('#detail-quytrinh').load(url);
+        }
+    }
+
+</script>

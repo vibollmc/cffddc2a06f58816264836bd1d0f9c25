@@ -1,0 +1,50 @@
+﻿@model QLVB.DTO.Vanbandi.UploadVBDiViewModel
+
+@(Html.Kendo().Window()
+	.Name("ViewUploadVBDi")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Đính kèm văn bản")
+	.Resizable()
+	.Width(500)
+	.HtmlAttributes(new { style = "height:100%;" })
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		@(Html.Kendo().Upload()
+				.Name("files")
+				.Messages(m => m.Select("Chọn văn bản đính kèm")
+				.StatusFailed("Lỗi").StatusUploaded("Hoàn thành")
+
+				)
+				//.HtmlAttributes(new { @class = "btn btn-sm btn-primary btn-flat" })
+				.Async(a => a
+					.Save("UploadVBDi", "File", new { idvanban = Model.idvanban })
+					.Remove("RemoveVBDi", "File", new { idvanban = Model.idvanban })
+					.AutoUpload(true)
+				)
+				.Files(files =>
+				{
+					foreach (var f in Model.listfile)
+					{
+						files.Add().Name(f.Name).Extension(f.Extension).Size(f.Size);
+					}
+				})
+		)
+	</text>
+	)
+)
+<script type="text/javascript">
+	function CloseUploadVBDi() {
+		var window = $("#ViewUploadVBDi").data("kendoWindow");
+		window.close();
+	}
+	function OpenUploadVBDi() {
+		var window = $("#ViewUploadVBDi").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+
+</script>
+

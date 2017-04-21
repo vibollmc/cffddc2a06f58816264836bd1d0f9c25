@@ -1,0 +1,10 @@
+﻿using QLVB.Domain.Entities;
+using System.Linq;
+
+namespace QLVB.Domain.Abstract
+{
+    public interface IHomeRepository
+    {
+        IQueryable<Home> Homes { get; }
+    }
+}

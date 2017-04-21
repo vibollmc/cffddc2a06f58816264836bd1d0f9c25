@@ -1,0 +1,212 @@
+﻿@model QLVB.DTO.Menu.HeaderViewModel
+@{
+    string FixHeaderBar = QLVB.Common.Utilities.AppSettings.FixHeaderBar == true ? "navbar-fixed-top" : "navbar-static-top";
+    int intAutoReceiveMail = (ViewBag.isAutoReceiveMail) ? 1 : 0;
+    int intAutoSendMail = (ViewBag.isAutoSendMail) ? 1 : 0;
+    int intTimeAutoMail = ViewBag.intTimeAutoMail;
+    string strImageProfile = QLVB.Common.Utilities.AppConts.ImageProfile;
+    if (Model.strImageProfile != null)
+    {
+        strImageProfile += Model.strImageProfile;
+    }
+    else
+    {
+        strImageProfile += "avatar_default.png";
+    }
+    string strMenuType = ViewBag.strMenuType;
+    bool bluyquyen = Model.uyquyen.Count() > 1 ? true : false;
+
+    int intAutoSendTHVB =  (ViewBag.isSendTonghopVB) ? 1 : 0;
+    int intTimeAutoSendTHVB = ViewBag.intTimeAutoSendTHVB ;
+    int intTimeStartSendTHVB = ViewBag.intTimeStartSendTHVB ;
+    int intStartSendTHVB = (ViewBag.isStartSendTHVB) ? 1 : 0;
+}
+<style type="text/css">
+    
+</style>
+<div id="top">
+    <!-- .navbar -->
+    <nav class="navbar navbar-inverse @FixHeaderBar ">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->         
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown messages-menu">
+                        <a id="Logoutbtn" class="header">
+                            <i class="glyphicon glyphicon-off glyphicon-head"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle header" data-toggle="dropdown">
+                            <img src="@Url.Content(strImageProfile)" class="user-image-head" alt="User Image">
+                            <span class="user-name-head"> @Model.UserName </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="@Url.Content(strImageProfile)" class="img-circle" alt="User Image">
+                                <p>
+                                    @Model.UserName 
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">                               
+                                <ul class="list-unstyled user-uyquyen">
+                                    @if (bluyquyen)
+                                    {
+                                        foreach (var m in Model.uyquyen)
+                                        {
+                                            if (m.isRealUser)
+                                            {
+                                                <li> @Html.ActionLink(m.strhoten, "GetUyquyen", new { Controller = "Account", id = m.intid }, new { style = "font-style:italic;color:red;" })</li>
+                                            }
+                                            else
+                                            {
+                                                <li> @Html.ActionLink(m.strhoten, "GetUyquyen", new { Controller = "Account", id = m.intid })</li>
+                                            }
+                                        }
+                                    }
+                                    
+                                </ul>
+
+                            </li>                          
+                        </ul>
+                    </li>
+                    <li class="dropdown ">
+                        <a data-original-title="Show / Hide Left" data-toggle="tooltip" class="toggle-left" id="menu-left">
+                            <i class="glyphicon glyphicon-th-large glyphicon-head"></i>&nbsp;Menu
+                        </a>
+                    </li>
+                    <li class="dropdown ">
+                        <a data-placement="bottom" data-original-title="Show / Hide Right" data-toggle="tooltip" class="toggle-right" id="menu-right">
+                            <span class="glyphicon glyphicon-comment glyphicon-head"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <!-- .nav -->
+                <h4 style="color:white;padding-left:15px; margin-top:12px;">                    
+                    @QLVB.Common.Utilities.AppSettings.SiteName
+                </h4>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+</div><!-- /#top -->
+
+<script type="text/javascript">
+    $('#Logoutbtn').click(function () {
+        $.connection.hub.stop();
+        var url = '@Url.Action("LogOff","Account")';
+        window.location = url;
+    })
+    $('#Auto-VBDTbtn').click(function () {
+        var url = '@Url.Action("Index","Vanbandendientu")';
+        window.location = url;
+    })
+    function SetMenuType(strtype) {
+        var $body = $('body');
+        if ($(window).width() < 768) {
+        } else {
+            var hasType = $body.hasClass(strtype);
+            //console.log(hasType);
+            if (hasType == false) {
+                $body.removeClass("sidebar-left-hidden sidebar-left-mini");
+                $body.addClass(strtype);
+            }
+
+        }
+    }
+    $(function () {
+        SetMenuType('@strMenuType');
+        var intTimeAutoMail = '@intTimeAutoMail';
+        var second = intTimeAutoMail * 60;
+        var msReceive = second * 1000;
+        setInterval(AutoReceiveMail, msReceive);
+
+        var SendSecond = 10 * 60;
+        var msSend = SendSecond * 1000;
+        setInterval(AutoSendMail, msSend);
+
+        var intTimeAutoSendTHVB = '@intTimeAutoSendTHVB';       
+        var msSendTHVB = intTimeAutoSendTHVB * 60 * 1000;
+        setInterval(AutoSendTHVB, msSendTHVB);
+        // gui so lieu lap tuc
+        var intStartSendTHVB = '@intStartSendTHVB';
+        if (intStartSendTHVB == 1) {
+            AutoSendTHVB();
+        }       
+
+    });
+    function SetCountVBDT(count) {
+        try {
+            var old = $('#CountVBDT').text();
+            if (old != "") {
+                var current = parseInt(count) + parseInt(old);
+                $('#CountVBDT').text(current);
+            } else {
+                $('#CountVBDT').text(count);
+            }
+        }
+        catch (ex) {
+
+        }
+    }
+    function AutoReceiveMail() {
+        var intAutoReceiveMail = '@intAutoReceiveMail';
+        if (intAutoReceiveMail == 1) {
+            $.ajax(
+            {
+                type: "POST",
+                url: '@Url.Action("_AutoReceiveMail", "Vanbandendientu")',
+                success: function (data) {
+                    if (data.id == -1) {
+                        // loi khong nhan duoc
+                    }
+                    else {
+                        //if (data.message > 0) { SetCountVBDT(data.message); }
+                    }
+                },
+                dataType: "Json"
+            });
+        }
+    }
+    function AutoSendMail() {        
+        var intAutoSendMail = '@intAutoSendMail';
+        if (intAutoSendMail == 1) {
+            $.ajax(
+            {
+                type: "POST",
+                url: '@Url.Action("_AutoSendMail", "Vanbandidientu")',
+                success: function (data) {
+                    if (data.id == -2) {
+                        // tu dong gui tiep
+                        AutoSendMail();
+                    }
+                    else {
+                        //ShowResult("ketquaNhanvb", data.message);
+                    }
+                },
+                dataType: "Json"
+            });
+        }
+    };
+    function AutoSendTHVB() {
+        var intTimeStartSendTHVB = '@intTimeStartSendTHVB';
+        var dt = new Date($.now());
+        var hours = dt.getHours();
+        var intAutoSendTHVB = '@intAutoSendTHVB';
+        if (intAutoSendTHVB == 1) {
+            if (hours >= intTimeStartSendTHVB) {
+                $.ajax(
+                {
+                    type: "POST",
+                    url: '@Url.Action("_SendVBToUBT", "Vanbandidientu")',
+
+                });
+            }            
+        }
+    };
+
+</script>

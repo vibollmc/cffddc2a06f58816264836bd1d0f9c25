@@ -1,0 +1,32 @@
+﻿@model QLVB.DTO.TracuuVanbandi.ToolbarViewModel
+<div class="box ">
+	<header>
+		<nav class="box-toolbar">           
+			<button id="Searchbtn" class="btn btn-success btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm
+			</button>           
+			<button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
+			</button>
+			<button id="Luutrubtn" style="display:@Model.Luutru;" type="button" class="btn btn-sm btn-primary btn-flat button-box" title="Lưu trữ văn bản">
+				<i class="glyphicon glyphicon-folder-close"></i>&nbsp;Cập nhật Lưu trữ
+			</button>
+		</nav>
+	</header>
+</div>
+<script type="text/javascript">
+	$('#Searchbtn').click(function () {
+		OpenSearchVBDi();
+	});	
+	$('#PrintListVBbtn').click(function () {
+		var url = '@Url.Action("Export", "Vanbandi")';
+		window.location = url;
+	});
+    $('#Luutrubtn').click(function () {
+        var idvanban = GetIdVanban();
+	    var url = '@Url.Action("CapnhatVanban", "TracuuLuutru")';
+	    url = url + '?idvanban=' + idvanban + '&intloai=2' ;
+	    $().redirect(url);
+	});
+</script>
+

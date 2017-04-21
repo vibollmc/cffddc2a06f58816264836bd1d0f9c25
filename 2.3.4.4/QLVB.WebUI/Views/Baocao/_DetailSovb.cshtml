@@ -1,0 +1,86 @@
+﻿@model IEnumerable<QLVB.Domain.Entities.SoVanban>
+@{
+    QLVB.DTO.Baocao.ListdonviViewModel listdonvi = ViewBag.listdonvi;
+    if (listdonvi != null)
+    {        
+        @*@Html.CheckBox("IsXuly", listdonvi.IsXuly)*@
+        <input checked="checked" id="IsXuly" name="IsXuly" type="checkbox" value="true">
+        @Html.Label("In văn bản đã phân xử lý chính", new { @class = "font-label" })
+        <br />
+        <select id="listdonvi" style="width:300px; ">
+            @if (listdonvi.maxLevelDonvi == 0)
+            {
+                foreach (var m in listdonvi.Donvi)
+                {
+                    <option value="@m.Id">@m.strtendonvi</option>
+                }
+            }
+            else
+            {
+                for (int i = 0; i < listdonvi.maxLevelDonvi; i++)
+                {
+                    {
+                        foreach (var m in listdonvi.Donvi)
+                        {
+                            string strIndent = "";
+                            if (m.intlevel <= i)
+                            {
+                                for (var j = 0; j < i; j++) { strIndent += "&nbsp;&nbsp;&nbsp;"; }
+                                <option value="@m.Id">@Html.Raw(strIndent) @m.strtendonvi</option>
+
+                                foreach (var m2 in listdonvi.Donvi)
+                                {
+                                    if ((m2.intlevel == listdonvi.maxLevelDonvi) && (m2.ParentId == m.Id))
+                                    {
+                                        string strLastNode = "";
+                                        for (var j = 0; j < listdonvi.maxLevelDonvi; j++) { strLastNode += "&nbsp;&nbsp;&nbsp;"; }
+                                        <option value="@m2.Id">@Html.Raw(strLastNode) @m2.strtendonvi</option>
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        </select>
+            <br/><br />
+        <script type="text/javascript">
+            $("#listdonvi").kendoDropDownList();
+        </script>
+    }
+
+}
+
+<table class="table responsive-table">
+    <tr>
+        <th style="width: 10%; text-align: center">
+            &nbsp;Chọn
+        </th>
+        <th style="width: 85%; text-align: left">
+            <b>Sổ văn bản</b>
+        </th>
+
+    </tr>
+
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td style="width: 10%; text-align: center">
+                @*@if (p.intloai == (int)QLVB.Domain.Entities.enumSovanban.intloai.Vanbanden)
+                {
+                    @Html.CheckBox(p.intid.ToString(), false, new { id = p.intid, value = p.intid, @class = "clsChon" })
+                }
+                else
+                {
+                    @Html.CheckBox(p.intid.ToString(), false, new { onclick = "changeCheck(" + @p.intid + ")", id = p.intid, value = p.intid, @class = "clsChon" })
+                }*@
+                @Html.CheckBox(p.intid.ToString(), false, new { id = p.intid, value = p.intid, @class = "clsChon" })
+            </td>
+            <td style="width: 85%">
+                @Html.Label(p.strten, new { @class = "font-label" })
+            </td>
+
+        </tr>
+    }
+</table>

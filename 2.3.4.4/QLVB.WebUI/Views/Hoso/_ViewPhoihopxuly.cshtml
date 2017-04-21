@@ -1,0 +1,41 @@
+﻿@(Html.Kendo().Window()
+	.Name("FormPhoihopxuly")
+	.Draggable()
+	.AutoFocus(true)
+	.Modal(true)
+	.Title("Thêm cán bộ phối hợp xử lý")
+	.Resizable()
+	.Width(480)
+	.Height(500)
+	.Visible(false)
+	.Actions(actions => actions.Close())
+	.Content(
+	@<text>
+
+		<div id="chitietphoihopxuly">
+
+		</div>
+
+	</text>
+	)
+)
+
+<script type="text/javascript">
+	function CloseViewPhoihopxuly() {
+		var window = $("#FormPhoihopxuly").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewPhoihopxuly(idhoso) {
+		LoadPhoihopxuly(idhoso);
+		var window = $("#FormPhoihopxuly").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadPhoihopxuly(idhoso) {
+		var url = '@Url.Action("_Phoihopxuly", "Hoso")';
+		url = url + "?idhosocongviec=" + idhoso;
+		$('#chitietphoihopxuly').load(url);
+	}
+
+</script>
+

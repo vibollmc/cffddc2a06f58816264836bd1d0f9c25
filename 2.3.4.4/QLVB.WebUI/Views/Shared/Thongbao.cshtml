@@ -1,0 +1,36 @@
+﻿@(Html.Kendo().Window()
+    .Name("Thongbao")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Thông báo")
+    .Resizable(resizing => resizing.Enabled(true).MinHeight(100))    
+    .HtmlAttributes(new { style = "height:100%;width:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Close())    
+    .Content(
+    @<text>
+        <div id="detail-thongbao">
+            <div id="strthongbao" class="modal-body">                
+            </div>
+            <div class="modal-footer">
+                <button id="closethongbaobtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-ok"></i>&nbsp;Đóng</button>                
+            </div>
+        </div>
+    </text>
+    )
+)
+<script type="text/javascript">
+    function SetThongbao(strthongbao) {
+        $('#strthongbao').text(strthongbao);
+        var window = $("#Thongbao").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    $("#closethongbaobtn").bind("click", function () {
+        CloseThongbao();
+    })
+    function CloseThongbao() {        
+        var window = $("#Thongbao").data("kendoWindow");
+        window.close();
+    }    
+</script>
