@@ -71,7 +71,7 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="CertificateDll">
-      <HintPath>C:\Users\NGOCHUNG\Desktop\create dll certificate\New folder\create dll certificate\CertificateDll\CertificateDll\bin\Debug\CertificateDll.dll</HintPath>
+      <HintPath>..\packages\CertificateDll.dll</HintPath>
     </Reference>
     <Reference Include="CipherText">
       <HintPath>..\packages\CipherText.dll</HintPath>
@@ -247,7 +247,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="RSAEncryptionLib">
-      <HintPath>C:\Users\NGOCHUNG\Desktop\create dll certificate\New folder\create dll certificate\CertificateDll\CertificateDll\bin\Debug\RSAEncryptionLib.dll</HintPath>
+      <HintPath>..\packages\RSAEncryptionLib.dll</HintPath>
     </Reference>
     <Reference Include="SKGL">
       <HintPath>..\packages\SKGL.2.0.5.3\lib\SKGL.dll</HintPath>
