@@ -977,43 +977,49 @@ namespace QLVB.WebUI.Controllers
         [HttpPost]
         public JsonResult _SendVBTruclienthongTinh(int idvanbanTrucTinh, FormCollection collection)
         {
-            string strgiatri = "";           
-            
-            List<OrganizationVM> listdonvi = new List<OrganizationVM>();
-
-            foreach (string p in collection)
+            try
             {
-                strgiatri = collection[p].ToLower();
-                if (strgiatri.Contains("true"))
+                string strgiatri = "";
+
+                List<OrganizationVM> listdonvi = new List<OrganizationVM>();
+
+                foreach (string p in collection)
                 {
-                    if ((p != "parentcheckboxTrucTinh") && (p != "autosend"))
+                    strgiatri = collection[p].ToLower();
+                    if (strgiatri.Contains("true"))
                     {
-                        string[] split = collection[p].Split(',');
-                        foreach (var s in split)
+                        if ((p != "parentcheckboxTrucTinh") && (p != "autosend"))
                         {
-                            if ((!s.ToLower().Contains("true")) && (!s.ToLower().Contains("false")))
+                            string[] split = collection[p].Split(',');
+                            foreach (var s in split)
                             {
-                                OrganizationVM senddonvi = new OrganizationVM();
-                                senddonvi.code = p;
-                                senddonvi.name = s;
-                                listdonvi.Add(senddonvi);
+                                if ((!s.ToLower().Contains("true")) && (!s.ToLower().Contains("false")))
+                                {
+                                    OrganizationVM senddonvi = new OrganizationVM();
+                                    senddonvi.code = p;
+                                    senddonvi.name = s;
+                                    listdonvi.Add(senddonvi);
+                                }
                             }
                         }
                     }
                 }
+
+                if (listdonvi.Count > 0)
+                {
+                    _truclienthong.GuiVanBan(idvanbanTrucTinh, listdonvi);
+
+                    return Json("OK");
+                }
+                else
+                {
+                    return Json("Không tìm thấy đơn vị gửi văn bản điện tử");
+                }
             }
-            //donvi.listdonvi = listdonvi;
-            //if (donvi.listdonvi.Count() > 0)
-            //{
-            //    var edxml = _edxml.Sender(idvanbanEdxml, (int)enumGuiVanban.intloaivanban.Vanbandi, donvi);
-            //    //_edxml.Sender(idvanbanEdxml, (int)enumGuiVanban.intloaivanban.Vanbandi, donvi);
-            //    return Json(edxml);
-            //}
-            //else
-            //{
-            //    return Json("Không tìm thấy đơn vị gửi văn bản điện tử");
-            //}
-            return Json("OK");
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
+            }
         }
 
 

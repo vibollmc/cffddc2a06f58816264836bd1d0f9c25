@@ -138,6 +138,10 @@ namespace QLVB.Core.Contract
         /// <returns></returns>
         ResultFunction UploadImageProfile(HttpPostedFileBase filename);
 
-
+        /// <summary>
+        /// kiem tra quyen va lay duong dan download cua vanbanden/di
+        /// </summary>
+        /// <returns></returns>
+        string CheckFolderFileVanbanDownload(int intloai, int idfile, int idcanbo, int idvanban);
     }
 }

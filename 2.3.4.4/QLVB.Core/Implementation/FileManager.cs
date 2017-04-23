@@ -764,7 +764,7 @@ namespace QLVB.Core.Implementation
         /// kiem tra quyen va lay duong dan download cua vanbanden/di
         /// </summary>
         /// <returns></returns>
-        private string CheckFolderFileVanbanDownload(int intloai, int idfile, int idcanbo, int idvanban)
+        public string CheckFolderFileVanbanDownload(int intloai, int idfile, int idcanbo, int idvanban)
         {
             string strLoaiFile = string.Empty;
             switch (intloai)

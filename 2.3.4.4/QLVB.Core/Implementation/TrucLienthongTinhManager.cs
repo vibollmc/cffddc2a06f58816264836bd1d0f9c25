@@ -19,8 +19,8 @@ using Newtonsoft.Json;
 using System.Xml;
 using System.Data;
 using System.Net.Http;
-
-
+using System.Web;
+using QLVB.Common.Utilities;
 using QLVB.Core.WebServiceTruclienthongTinh;
 
 
@@ -34,13 +34,26 @@ namespace QLVB.Core.Implementation
         private ILogger _logger;
         private ISessionServices _session;
         private IConfigRepository _configRepo;
-
+        private IVanbandiRepository _vanbandiRepository;
+        private IPhanloaiVanbanRepository _phanloaiVanbanRepository;
+        private ITinhchatvanbanRepository _tinhchatvanbanRepository;
+        private IAttachVanbanRepository _attachVanbanRepository;
+        private IFileManager _fileManager;
+        private IVanbandenmailRepository _vanbandenmailRepository;
+        private IMailFormatManager _mailFormatManager;
         public TrucLienthongTinhManager(
-               ILogger logger, IConfigRepository configRepo, ISessionServices session)
+               ILogger logger, IConfigRepository configRepo, ISessionServices session, IVanbandiRepository vanbandiRepository, IPhanloaiVanbanRepository phanloaiVanbanRepository, ITinhchatvanbanRepository tinhchatvanbanRepository, IAttachVanbanRepository attachVanbanRepository, IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager)
         {
             _logger = logger;
             _configRepo = configRepo;
             _session = session;
+            _vanbandiRepository = vanbandiRepository;
+            _phanloaiVanbanRepository = phanloaiVanbanRepository;
+            _tinhchatvanbanRepository = tinhchatvanbanRepository;
+            _attachVanbanRepository = attachVanbanRepository;
+            _fileManager = fileManager;
+            _vanbandenmailRepository = vanbandenmailRepository;
+            _mailFormatManager = mailFormatManager;
         }
 
         #endregion Constructor
@@ -49,7 +62,7 @@ namespace QLVB.Core.Implementation
         {
             try
             {
-                ConfigTruclienthong config = new ConfigTruclienthong();
+                var config = new ConfigTruclienthong();
 
                 config.TrucLienthongTinh = _configRepo.GetConfig(ThamsoHethong.TrucLienthongTinh);
                 config.UsernameTrucTinh = _configRepo.GetConfig(ThamsoHethong.UsernameTrucTinh);
@@ -70,12 +83,12 @@ namespace QLVB.Core.Implementation
         {
             try
             {
-                ConfigTruclienthong config = _GetConfigTruc();
-                NSSGatewayServiceSoapService webService = new NSSGatewayServiceSoapService();
+                var config = _GetConfigTruc();
+                var webService = new NSSGatewayServiceSoapService();
                 webService.Url = config.TrucLienthongTinh;
 
-                NetworkCredential networkCredential = new NetworkCredential(config.UsernameTrucTinh, config.PasswordTrucTinh);
-                Uri uri = new Uri(config.TrucLienthongTinh);
+                var networkCredential = new NetworkCredential(config.UsernameTrucTinh, config.PasswordTrucTinh);
+                var uri = new Uri(config.TrucLienthongTinh);
 
                 ICredentials credentials = networkCredential.GetCredential(uri, "Basic");
                 webService.Credentials = credentials;
@@ -91,15 +104,24 @@ namespace QLVB.Core.Implementation
         {
             try
             {
-                List<OrganizationVM> AllDonvi = new List<OrganizationVM>();
+                var AllDonvi = new List<OrganizationVM>();
                 OrganizationVM donvi;
-                NSSGatewayServiceSoapService webService = ConnectGateway();
-                string[] Organizations = webService.getOrganizations("1");
+                var webService = ConnectGateway();
+                var Organizations = webService.getOrganizations("1");
+                var madonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
                 foreach (var obj in Organizations)
                 {
                     donvi = Deserialize<OrganizationVM>(obj);
                     donvi.ChuanLienThong = (int)(2803);
-                    AllDonvi.Add(donvi);
+
+                    if (madonviTrucTinh == donvi.code)
+                    {
+                        AllDonvi.Insert(0, donvi);
+                    }
+                    else
+                    {
+                        AllDonvi.Add(donvi);
+                    }
                 }
                 return AllDonvi;
             }
@@ -110,101 +132,152 @@ namespace QLVB.Core.Implementation
 
         }
 
-        public bool GuiCongVanDenLienThongGSoft(int DonViCVID, CongvandiVM Congvandi, 
-                            List<OrganizationVM> NoiNhanList, string userName)
+        private IList<string> GetFileAttachments(int vanbandiId)
+        {
+            var fileAttach = _attachVanbanRepository.AttachVanbans
+                .Where(p => p.intloai == (int) enumAttachVanban.intloai.Vanbandi && p.intidvanban == vanbandiId)
+                .OrderBy(p => p.intid).Select(x => GetFileAttachments(x)).ToList();
+
+            return fileAttach;
+        }
+
+        private string GetFileAttachments(AttachVanban attach)
+        {
+            var idcanbo = _session.GetUserId();
+            var idvanban = (int)attach.intidvanban;
+
+            var strLoaiFile = _fileManager.CheckFolderFileVanbanDownload((int)enumAttachVanban.intloai.Vanbandi, attach.intid, idcanbo, idvanban);
+            if (string.IsNullOrEmpty(strLoaiFile))
+            {
+                return null;
+            }
+
+            var filename = attach.strtenfile;
+            var folderPath = _fileManager.GetFolderDownload(strLoaiFile, (DateTime)attach.strngaycapnhat);
+            var filepath = folderPath + "/" + filename; //Server.MapPath(folderPath);
+
+            //var fileData = GetFileData(filename, filepath);
+            return HttpContext.Current.Server.MapPath(filepath);
+        }
+        public bool GuiVanBan(int vanbandiId, IList<OrganizationVM> noiNhan)
         {
             try
             {
-                bool isCompleted = false;
-                NSSGatewayServiceSoapService webService = ConnectGateway();
-                string urlUploadFile = webService.getUploadFileURL(GetIPAddress()); //IP may client
+                var vanbandi = _vanbandiRepository.Vanbandis.FirstOrDefault(x => x.intid == vanbandiId);
 
-                StringBuilder data = new StringBuilder();
-                string receivingsystemid = "";
-                foreach (var obj in NoiNhanList)
+                var webService = ConnectGateway();
+                var urlUploadFile = webService.getUploadFileURL(GetIPAddress()); //IP may client
+
+                var data = new StringBuilder();
+                var receivingsystemid = "";
+                foreach (var obj in noiNhan)
                 {
                     receivingsystemid += obj.code + ";";
                 }
                 receivingsystemid = receivingsystemid.TrimEnd(";".ToCharArray());
 
-                DateTime senddate = DateTime.UtcNow;
-                DateTime Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                long senddateLongTime = (long)((senddate - Jan1St1970).TotalMilliseconds);
-                
-                string content = "";
-                string MadinhdanhTruc = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
-                
-                    content = WriteCongVanDenToXML(Congvandi);
-                    data = new StringBuilder();
-                    data.Append("<message>");
-                    data.Append("<required-answer><![CDATA[0]]></required-answer>");
-                    data.Append("<send-date><![CDATA[" + senddateLongTime + "]]></send-date>");
-                    data.Append("<sending-system-id><![CDATA[" + MadinhdanhTruc + "]]></sending-system-id>");
-                    data.Append("<receiving-system-id><![CDATA[" + receivingsystemid + "]]></receiving-system-id>");
-                    data.Append("<document-type><![CDATA[1.1.0.1]]></document-type>");
-                    data.Append("<document-code><![CDATA[" + Congvandi.SoKyHieu + "]]></document-code>");
-                    data.Append("<description><![CDATA[" + Congvandi.TrichYeu + "]]></description>");
-                    data.Append("<content><![CDATA[" + content + "]]></content>");
-                  
-                    //Kiểm tra upload File
-                    string AttachFilePath = System.Web.HttpContext.Current.Server.MapPath("~/FileAttach" + "/" + Congvandi.IDFileAttach);
-                    if (!string.IsNullOrEmpty(Congvandi.AttachFile_Path))
+                var senddate = DateTime.UtcNow;
+                var Jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var senddateLongTime = (long)((senddate - Jan1St1970).TotalMilliseconds);
+
+                var content = "";
+                var MadinhdanhTruc = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
+
+                content = WriteVanBanDiToXML(vanbandi);
+                data = new StringBuilder();
+                data.Append("<message>");
+                data.Append("<required-answer><![CDATA[0]]></required-answer>");
+                data.Append("<send-date><![CDATA[" + senddateLongTime + "]]></send-date>");
+                data.Append("<sending-system-id><![CDATA[" + MadinhdanhTruc + "]]></sending-system-id>");
+                data.Append("<receiving-system-id><![CDATA[" + receivingsystemid + "]]></receiving-system-id>");
+                data.Append("<document-type><![CDATA[1.1.0.1]]></document-type>");
+                data.Append("<document-code><![CDATA[" + vanbandi.intso + "/" + vanbandi.strkyhieu + "]]></document-code>");
+                data.Append("<description><![CDATA[" + vanbandi.strtrichyeu + "]]></description>");
+                data.Append("<content><![CDATA[" + content + "]]></content>");
+
+                var attachments = GetFileAttachments(vanbandiId);
+                if (attachments != null && attachments.Count > 0)
+                {
+                    data.Append("<attach-files>");
+                    var k = 0;
+                    foreach (var attachment in attachments)
                     {
-                        data.Append("<attach-files>");
-                        string[] AttachmentFiles = Congvandi.AttachFile_Path.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        int k = 0;
-                        for (int i = 0; i < AttachmentFiles.Length; i++)
+                        if (File.Exists(attachment))
                         {
-                            string fullFileName = AttachFilePath + "\\" + AttachmentFiles[i];
-                            //if (File.Exists(fullFileName))
-                            //{
-                            //    var fileMetaTemp = GetMetadataFileUpload(fullFileName);
-                            //    GSoftResultUploadFile objGSoftResultUploadFile = UploadFile(urlUploadFile, "file_meta_data", fileMetaTemp, "file", fullFileName);
-                            //    if (objGSoftResultUploadFile.httpCode == "200")
-                            //    {
-                            //        data.Append("<attach-file>");
-                            //        data.Append("<attach-file-id><![CDATA[" + objGSoftResultUploadFile.fileEntryId + "]]></attach-file-id>");
-                            //        data.Append("<file-name><![CDATA[" + objGSoftResultUploadFile.fileName + "]]></file-name>");
-                            //        data.Append("<extension><![CDATA[" + objGSoftResultUploadFile.extension + "]]></extension>");
-                            //        data.Append("<mime-type><![CDATA[" + objGSoftResultUploadFile.mimeType + "]]></mime-type>");
-                            //        data.Append("<title><![CDATA[" + objGSoftResultUploadFile.title + "]]></title>");
-                            //        data.Append("<description><![CDATA[" + objGSoftResultUploadFile.description + "]]></description>");
-                            //        data.Append("<extra-settings><![CDATA[" + objGSoftResultUploadFile.extraSettings + "]]></extra-settings>");
-                            //        data.Append("<file-size><![CDATA[" + objGSoftResultUploadFile.fileSize + "]]></file-size>");
-                            //        data.Append("</attach-file>");
-                            //    }
-                            //    k++;
-                            //}
+                            var fileMetaTemp = GetMetadataFileUpload(attachment);
+                            var resultUploadFile = UploadFile(urlUploadFile, "file_meta_data", fileMetaTemp, "file", attachment);
+                            if (resultUploadFile.httpCode == "200")
+                            {
+                                data.Append("<attach-file>");
+                                data.Append("<attach-file-id><![CDATA[" + resultUploadFile.fileEntryId + "]]></attach-file-id>");
+                                data.Append("<file-name><![CDATA[" + resultUploadFile.fileName + "]]></file-name>");
+                                data.Append("<extension><![CDATA[" + resultUploadFile.extension + "]]></extension>");
+                                data.Append("<mime-type><![CDATA[" + resultUploadFile.mimeType + "]]></mime-type>");
+                                data.Append("<title><![CDATA[" + resultUploadFile.title + "]]></title>");
+                                data.Append("<description><![CDATA[" + resultUploadFile.description + "]]></description>");
+                                data.Append("<extra-settings><![CDATA[" + resultUploadFile.extraSettings + "]]></extra-settings>");
+                                data.Append("<file-size><![CDATA[" + resultUploadFile.fileSize + "]]></file-size>");
+                                data.Append("</attach-file>");
+                            }
+                            k++;
                         }
-                        data.Append("</attach-files>");
                     }
-                    data.Append("</message>");
-                    webService.sendMessage(data.ToString());
-                    isCompleted = true;
-               
-                return isCompleted;
+                    data.Append("</attach-files>");
+                }
+                data.Append("</message>");
+                webService.sendMessage(data.ToString());
+                return true;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw ex;
             }
         }
 
-        public string WriteCongVanDenToXML(CongvandiVM congvandi)
+        private string WriteVanBanDiToXML(Vanbandi vanbandi)
         {
             try
             {
-                string sXML = 
+                var tenLoaiVb = string.Empty;
+                var maLoaiVb = string.Empty;
+                var tendonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
+                var madonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
+                var ngayKy = vanbandi.strngayky;
+                var jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var ngayKyEncode = (long)((ngayKy - jan1St1970).TotalMilliseconds);
+                var dokhanVb = string.Empty;
+
+                if (vanbandi.intidphanloaivanbandi.HasValue)
+                {
+                    var loaivb = _phanloaiVanbanRepository.GetLoaiVB(vanbandi.intidphanloaivanbandi.Value);
+                    if (loaivb != null)
+                    {
+                        tenLoaiVb = loaivb.strtenvanban;
+                        maLoaiVb = loaivb.strmavanban;
+                    }
+                }
+                if (vanbandi.intidkhan.HasValue)
+                {
+                    var dokhan =
+                        _tinhchatvanbanRepository.GetAllTinhchatvanbans.FirstOrDefault(
+                            x => x.intid == vanbandi.intidkhan);
+                    if (dokhan != null)
+                    {
+                        dokhanVb = dokhan.strtentinhchatvb;
+                    }
+                }
+
+                var sXML = 
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                         + "<van-ban-qua-mang>"
-                            + "<ten-loai-van-ban> <![CDATA[" + congvandi.TenLoaiCV + "]]> </ten-loai-van-ban>"
-                            + "<ma-loai-van-ban> <![CDATA[]]> </ma-loai-van-ban>"
-                            + "<so-ky-hieu-van-ban> <![CDATA[" + congvandi.SoKyHieu + "]]> </so-ky-hieu-van-ban>"
-                            + "<ten-noi-phat-hanh> <![CDATA["  + congvandi.NoiGuiName + "]]> </ten-noi-phat-hanh>"
-                            + "<ma-noi-phat-hanh> <![CDATA[]]> </ma-noi-phat-hanh>"
-                            + "<ngay-phat-hanh> <![CDATA[1439139600000]]> </ngay-phat-hanh>"
-                            + "<nguoi-ky> <![CDATA[]]> </nguoi-ky>"
-                            + "<noi-dung-trich-yeu> <![CDATA[" + congvandi.TrichYeu + "]]> </noi-dung-trich-yeu>"
+                            + "<ten-loai-van-ban> <![CDATA[" + tenLoaiVb + "]]> </ten-loai-van-ban>"
+                            + "<ma-loai-van-ban> <![CDATA[" + maLoaiVb + "]]> </ma-loai-van-ban>"
+                            + "<so-ky-hieu-van-ban> <![CDATA[" + vanbandi.intso + "/" + vanbandi.strkyhieu + "]]> </so-ky-hieu-van-ban>"
+                            + "<ten-noi-phat-hanh> <![CDATA[" + tendonviTrucTinh + "]]> </ten-noi-phat-hanh>"
+                            + "<ma-noi-phat-hanh> <![CDATA[" + madonviTrucTinh + "]]> </ma-noi-phat-hanh>"
+                            + "<ngay-phat-hanh> <![CDATA[" + ngayKyEncode + "]]> </ngay-phat-hanh>"
+                            + "<nguoi-ky> <![CDATA[" + vanbandi.strnguoiky + "]]> </nguoi-ky>"
+                            + "<noi-dung-trich-yeu> <![CDATA[" + vanbandi.strtrichyeu + "]]> </noi-dung-trich-yeu>"
                             + "<ten-cap-gui> <![CDATA[]]> </ten-cap-gui>"
                             + "<ma-cap-gui> <![CDATA[]]> </ma-cap-gui>"
                             + "<truong-mo-rong> <![CDATA[]]> </truong-mo-rong>"
@@ -215,9 +288,9 @@ namespace QLVB.Core.Implementation
                             + "<trang-thai-tep-tin-dinh-kem> <![CDATA[]]> </trang-thai-tep-tin-dinh-kem>"
                             + "<thu-tu-gui> <![CDATA[0]]> </thu-tu-gui>"
                             + "<chuc-vu-nguoi-ky> <![CDATA[]]> </chuc-vu-nguoi-ky>"
-                            + "<so-to> <![CDATA[0]]> </so-to>"
-                            + "<so-ban> <![CDATA[0]]> </so-ban>"
-                            + "<do-khan> <![CDATA[0]]> </do-khan>"
+                            + "<so-to> <![CDATA[" + vanbandi.intsoto + "]]> </so-to>"
+                            + "<so-ban> <![CDATA[" + vanbandi.intsoban + "]]> </so-ban>"
+                            + "<do-khan> <![CDATA[" + dokhanVb + "]]> </do-khan>"
                             + "<phan-loai-van-ban> <![CDATA[0]]> </phan-loai-van-ban>"
                             + "<thoi-han-chi-dao> <![CDATA[0]]> </thoi-han-chi-dao>"
                             + "<don-vi-chi-dao> <![CDATA[]]> </don-vi-chi-dao>" 
@@ -233,12 +306,76 @@ namespace QLVB.Core.Implementation
             }
         }
 
+        public bool NhanVanBan()
+        {
+            try
+            {
+                var clientDownLoadFile = new WebClient();
+                var webService = ConnectGateway();
+                var loaiVb = _configRepo.GetConfig(ThamsoHethong.LoaiVanbanTrucTinh);
+                var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
+                
+                foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
+                {
+                    var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
+                    var objReceivedMessage = Deserialize<QlvbReceivedMessage>(sRespone);
+                    objReceivedMessage.attachfiles = getAttachFile(sRespone);
+                    sRespone = Base64Decode(objReceivedMessage.content);
+                    var objDocument = Deserialize<qlvbdocument>(sRespone);
+                    objDocument.attachfiles = objReceivedMessage.attachfiles;
+                    //xử lý văn bản
+
+                    var vbdenMail = new Vanbandenmail();
+
+                    vbdenMail.strtrichyeu = objDocument.noidungtrichyeu;
+                    //vbdenMail.strngayky = objDocument.ngayphathanh;
+                    vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
+                    vbdenMail.strnoigui = objDocument.tennoiphathanh;
+                    //vbdenMail.intsoto = objDocument.soto;
+                    //vbdenMail.intsoban = objDocument.soban;
+                    
+                    //Lưu tập tin đính kèm 
+
+                    var idmail = _vanbandenmailRepository.Them(vbdenMail);
+
+                    if (idmail > 0 && objDocument.attachfiles != null &&
+                        objDocument.attachfiles.Count > 0)
+                    {
+                        foreach (var item in objDocument.attachfiles)
+                        {
+                            try
+                            {
+                                var strmota = item.filename;
+                                var fileSavepath = _mailFormatManager.SaveAttachment(idmail, strmota, _fileManager.SetPathUpload(AppConts.FileEmail));
+
+                                var urlDownloadFile = webService.getDownloadFileURL(GetIPAddress(), item.attachfileid);
+                                var content = clientDownLoadFile.DownloadData(urlDownloadFile);
+                                File.WriteAllBytes(fileSavepath, content);
+
+                                _mailFormatManager.InsertAttachment(idmail, fileSavepath, strmota, (int)enumAttachMail.intloai.Vanbandendientu);
+                            }
+                            catch (Exception ex) // catch 404
+                            {
+                            }
+                        }
+                    }
+                    //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
+                    webService.updateReceiveFinish(messageIdsByDocument);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         #region PrivateMethods
 
         private string GetIPAddress()
         {
-            string ipAddress = "";
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            var ipAddress = "";
+            var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             ipAddress = Convert.ToString(ipHostInfo.AddressList
                                         .FirstOrDefault(address => address.AddressFamily == AddressFamily.InterNetwork));
             return ipAddress;
@@ -261,9 +398,9 @@ namespace QLVB.Core.Implementation
         private T Deserialize<T>(string input) where T : class
         {
             input = RemoveXmlDeclaration(input);
-            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(typeof(T));
+            var ser = new System.Xml.Serialization.XmlSerializer(typeof(T));
 
-            using (StringReader sr = new StringReader(input))
+            using (var sr = new StringReader(input))
             {
                 return (T)ser.Deserialize(sr);
             }
@@ -271,15 +408,249 @@ namespace QLVB.Core.Implementation
 
         private string Serialize<T>(T ObjectToSerialize)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(ObjectToSerialize.GetType());
+            var xmlSerializer = new XmlSerializer(ObjectToSerialize.GetType());
 
-            using (StringWriter textWriter = new StringWriter())
+            using (var textWriter = new StringWriter())
             {
                 xmlSerializer.Serialize(textWriter, ObjectToSerialize);
                 return textWriter.ToString();
             }
         }
 
+        private string GetMetadataFileUpload(string filePath)
+        {
+            var fileMetaData = new FileMetadataUpload();
+            if (!System.IO.File.Exists(filePath))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                var fileInfo = new FileInfo(filePath);
+
+                fileMetaData.FileName = fileInfo.Name;
+                fileMetaData.Extension = fileInfo.Extension;
+                fileMetaData.Title = fileInfo.Name;
+                fileMetaData.Description = string.Empty;
+                fileMetaData.ExtraSettings = string.Empty;
+                return JsonConvert.SerializeObject(fileMetaData);
+            }
+        }
+
+        private ResultUploadFile UploadFile(String url, String fileMetaDataParamName, String fileMetaDataValue, String fileParamName, string filePath)
+        {
+            var objResultUploadFile = new ResultUploadFile();
+            Stream fs = null;
+            try
+            {
+                using (var handler = new HttpClientHandler { Credentials = new NetworkCredential("hshc.vpubnd", "abc1234") })
+                {
+                    var client = new HttpClient(handler) { Timeout = TimeSpan.FromMinutes(6) };
+                    client.DefaultRequestHeaders.Add("Connection", "Keep-alive");
+                    fs = File.OpenRead(filePath);
+                    var streamContent = new StreamContent(fs, 10000);
+                    streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                    streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + Path.GetFileName(filePath) + "\"");
+                    var mulContent = new MultipartFormDataContent();
+                    mulContent.Add(new StringContent(fileMetaDataValue), fileMetaDataParamName);
+                    mulContent.Add(streamContent, "file", Path.GetFileName(filePath));
+                    var message = client.PostAsync(url, mulContent);
+
+                    var input = message.Result.Content.ReadAsStringAsync();
+                    objResultUploadFile = JsonConvert.DeserializeObject<ResultUploadFile>(input.Result);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    try
+                    {
+                        fs.Close();
+                    }
+                    catch (Exception e2)
+                    {
+                    }
+                }
+            }
+            return objResultUploadFile;
+        }
+
+        public List<attachfile> getAttachFile(string sXML)
+        {
+            var source = new List<attachfile>();
+            var xml = new XmlDocument();
+            xml.LoadXml(sXML);
+            var xnList = xml.SelectNodes("message/attach-files/attach-file");
+            if (xnList == null) return source;
+            foreach (XmlNode xn in xnList)
+            {
+                if (string.IsNullOrEmpty(xn.InnerText)) continue;
+
+                var objAttachFile = new attachfile
+                {
+                    attachfileid = xn["attach-file-id"].InnerText,
+                    filename = xn["file-name"].InnerText,
+                    extension = xn["extension"].InnerText,
+                    mimetype = xn["mime-type"].InnerText,
+                    title = xn["title"].InnerText,
+                    description = xn["description"].InnerText,
+                    extrasettings = xn["extra-settings"].InnerText,
+                    filesize = xn["file-size"].InnerText
+                };
+                source.Add(objAttachFile);
+            }
+            return source;
+        }
+
         #endregion PrivateMethods
+
+        #region public class
+        public class ResultUploadFile
+        {
+            public string fileSize { get; set; }
+            public string extension { get; set; }
+            public string title { get; set; }
+            public string httpCode { get; set; }
+            public string description { get; set; }
+            public string fileName { get; set; }
+            public string extraSettings { get; set; }
+            public string fileEntryId { get; set; }
+            public string mimeType { get; set; }
+        }
+
+        public class FileMetadataUpload
+        {
+            public string FileName { get; set; }
+            public string Extension { get; set; }
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string ExtraSettings { get; set; }
+        }
+
+        [XmlRoot("message")]
+        public class QlvbReceivedMessage
+        {
+            [XmlElement("message-id")]
+            public string messageid { get; set; }
+            [XmlElement("for-message-id")]
+            public string formessageid { get; set; }
+            [XmlElement("required-answer")]
+            public string requiredanswer { get; set; }
+            [XmlElement("send-date")]
+            public string senddate { get; set; }
+            [XmlElement("sending-system-id")]
+            public string sendingsystemid { get; set; }
+            [XmlElement("receiving-system-id")]
+            public string receivingsystemid { get; set; }
+            [XmlElement("document-type")]
+            public string documenttype { get; set; }
+            [XmlElement("document-code")]
+            public string documentcode { get; set; }
+            [XmlElement("description")]
+            public string description { get; set; }
+            [XmlElement("content")]
+            public string content { get; set; }
+            [XmlElement("title")]
+            public string title { get; set; }
+            [XmlElement("department-id")]
+            public string departmentid { get; set; }
+            [XmlElement("department-send-id")]
+            public string departmentsendid { get; set; }
+            [XmlElement("option")]
+            public string option { get; set; }
+            [XmlElement("stateProcess")]
+            public string stateProcess { get; set; }
+            [XmlElement("signature")]
+            public string signature { get; set; }
+            [XmlElement("edxml")]
+            public string edxml { get; set; }
+            [XmlElement("attach-files")]
+            public List<attachfile> attachfiles { get; set; }
+        }
+        [XmlRoot("attach-file")]
+        public class attachfile
+        {
+            [XmlElement("attach-file-id")]
+            public string attachfileid { get; set; }
+            [XmlElement("file-name")]
+            public string filename { get; set; }
+            [XmlElement("extension")]
+            public string extension { get; set; }
+            [XmlElement("mime-type")]
+            public string mimetype { get; set; }
+            [XmlElement("title")]
+            public string title { get; set; }
+            [XmlElement("description")]
+            public string description { get; set; }
+            [XmlElement("extra-settings")]
+            public string extrasettings { get; set; }
+            [XmlElement("file-size")]
+            public string filesize { get; set; }
+
+        }
+
+        [XmlRoot("van-ban-qua-mang")]
+        public class qlvbdocument
+        {
+            [XmlElement("ten-loai-van-ban")]
+            public string tenloaivanban { get; set; }
+            [XmlElement("ma-loai-van-ban")]
+            public string maloaivanban { get; set; }
+            [XmlElement("so-ky-hieu-van-ban")]
+            public string sokyhieuvanban { get; set; }
+            [XmlElement("ten-noi-phat-hanh")]
+            public string tennoiphathanh { get; set; }
+            [XmlElement("<ma-noi-phat-hanh")]
+            public string manoiphathanh { get; set; }
+            [XmlElement("ngay-phat-hanh")]
+            public string ngayphathanh { get; set; }
+            [XmlElement("nguoi-ky")]
+            public string nguoiky { get; set; }
+            [XmlElement("noi-dung-trich-yeu")]
+            public string noidungtrichyeu { get; set; }
+            [XmlElement("ten-cap-gui")]
+            public string tencapgui { get; set; }
+            [XmlElement("ma-cap-gui")]
+            public string macapgui { get; set; }
+            [XmlElement("truong-mo-rong")]
+            public string truongmorong { get; set; }
+            [XmlElement("van-ban-goc-id")]
+            public string vanbangocid { get; set; }
+            [XmlElement("ma-phong-ban-so-hoa")]
+            public string maphongbansohoa { get; set; }
+            [XmlElement("thu-tu-so-hoa")]
+            public string thutusohoa { get; set; }
+            [XmlElement("ma-nguoi-so-hoa")]
+            public string manguoisohoa { get; set; }
+            [XmlElement("trang-thai-tep-tin-dinh-kem")]
+            public string trangthaiteptindinhkem { get; set; }
+            [XmlElement("thu-tu-gui")]
+            public string thutugui { get; set; }
+            [XmlElement("chuc-vu-nguoi-ky")]
+            public string chucvunguoiky { get; set; }
+            [XmlElement("so-to")]
+            public string soto { get; set; }
+            [XmlElement("so-ban")]
+            public string soban { get; set; }
+            [XmlElement("do-khan")]
+            public string dokhan { get; set; }
+            [XmlElement("phan-loai-van-ban")]
+            public string phanloaivanban { get; set; }
+            [XmlElement("thoi-han-chi-dao")]
+            public string thoihanchidao { get; set; }
+            [XmlElement("don-vi-chi-dao")]
+            public string donvichidao { get; set; }
+            [XmlElement("so-phat-hanh-chi-dao")]
+            public string sophathanhchidao { get; set; }
+            [XmlElement("ngay-ban-hanh-chi-dao")]
+            public string ngaybanhanhchidao { get; set; }
+            [XmlElement("attach-files")]
+            public List<attachfile> attachfiles { get; set; }
+        }
+#endregion
     }
 }

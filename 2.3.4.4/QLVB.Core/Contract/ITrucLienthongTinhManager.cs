@@ -12,7 +12,7 @@ namespace QLVB.Core.Contract
     {
         NSSGatewayServiceSoapService ConnectGateway();
         List<OrganizationVM> GetAllOrganization();
-
-
+        bool GuiVanBan(int vanbandiId, IList<OrganizationVM> noiNhan);
+        bool NhanVanBan();
     }
 }

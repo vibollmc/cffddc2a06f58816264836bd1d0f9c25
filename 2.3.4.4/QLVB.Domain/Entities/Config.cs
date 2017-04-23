@@ -72,7 +72,8 @@ namespace QLVB.Domain.Entities
         public const string UsernameTrucTinh = "UsernameTrucTinh";
         public const string PasswordTrucTinh = "PasswordTrucTinh";
         public const string MaDonviTrucTinh = "MaDonviTrucTinh";
-
+        public const string TenDonviTrucTinh = "TenDonviTrucTinh";
+        public const string LoaiVanbanTrucTinh = "LoaiVanbanTrucTinh";
     }
 
     public class enumConfig
