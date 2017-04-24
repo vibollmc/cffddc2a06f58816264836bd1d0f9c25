@@ -30,12 +30,11 @@
                     <i class="glyphicon glyphicon-envelope"></i>&nbsp;Nhận VBĐT Chính phủ
                 </button>
             }   
-            @if (IsEdxml)
-            {
-                <button id="VBDT-Tructinhbtn" style="display:@Model.Capnhatvb;" type="button" class="btn btn-sm btn-primary btn-flat button-box">
-                    <i class="glyphicon glyphicon-envelope"></i>&nbsp;Nhận VBĐT Tỉnh
-                </button>
-            }                  
+            
+            <button id="VBDT-Tructinhbtn" style="display:@Model.Capnhatvb;" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+                <i class="glyphicon glyphicon-envelope"></i>&nbsp;Nhận VBĐT Tỉnh
+            </button>
+                            
             <button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
                 <i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
             </button>
@@ -187,7 +186,7 @@
         $.ajax(
         {
             type: "POST",
-            url: '@Url.Action("_NhanEdxml", "Vanbandendientu")',
+            url: '@Url.Action("_NhanVanbanTrucTinh", "Vanbandendientu")',
             beforeSend: function () {
                 ShowLoading();
                 ShowResult("ketquaNhanvb", "");
