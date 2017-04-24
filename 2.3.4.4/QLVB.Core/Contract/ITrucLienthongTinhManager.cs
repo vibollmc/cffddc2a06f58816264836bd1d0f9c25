@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using QLVB.DTO.Truclienthongtinh;
 using QLVB.Core.WebServiceTruclienthongTinh;
+using QLVB.DTO;
 
 namespace QLVB.Core.Contract
 {
@@ -13,6 +14,6 @@ namespace QLVB.Core.Contract
         NSSGatewayServiceSoapService ConnectGateway();
         List<OrganizationVM> GetAllOrganization();
         bool GuiVanBan(int vanbandiId, IList<OrganizationVM> noiNhan);
-        bool NhanVanBan();
+        ResultFunction NhanVanBan();
     }
 }

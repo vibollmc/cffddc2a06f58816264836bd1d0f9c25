@@ -26,11 +26,13 @@ namespace QLVB.WebUI.Controllers
         private IVanbandientuManager _vanban;
         private ISessionServices _session;
         private IEdxmlManager _edxml;
-        public VanbandendientuController(IVanbandientuManager vanban, ISessionServices session, IEdxmlManager edxml)
+        private ITrucLienthongTinhManager _trucLienthongTinhManager;
+        public VanbandendientuController(IVanbandientuManager vanban, ISessionServices session, IEdxmlManager edxml, ITrucLienthongTinhManager trucLienthongTinhManager)
         {
             _vanban = vanban;
             _session = session;
             _edxml = edxml;
+            _trucLienthongTinhManager = trucLienthongTinhManager;
         }
 
         #endregion Constructor
@@ -413,7 +415,7 @@ namespace QLVB.WebUI.Controllers
 
         #endregion Edxml
     
-    #region Xml
+        #region Xml
 
         [HttpPost]
         public ActionResult _NhanXml()
@@ -425,5 +427,16 @@ namespace QLVB.WebUI.Controllers
         }
 
         #endregion Xml
+
+
+        #region Truc Lien Thong Tinh
+
+        [HttpPost]
+        public ActionResult _NhanVanbanTrucTinh()
+        {
+            return Json(_trucLienthongTinhManager.NhanVanBan());
+        }
+
+        #endregion Truc Lien Thong Tinh
     }
 }
