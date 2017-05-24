@@ -66,12 +66,13 @@ namespace QLVB.WebUI.Controllers
         #region Login
 
         //[OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
             // CheckCA obj = new CheckCA();
             // bool ca = AppSettings.IsCA;
             string checkca = _checkCA.get_strCheckCA();
 
+            ViewBag.ReturnUrl = returnUrl;
             if ((checkca == ""))
             {
                 return RedirectToAction("CheckCA", "Certificate");
@@ -119,9 +120,11 @@ namespace QLVB.WebUI.Controllers
                     _account.SetTenDonvi(strtendonvi);
                     _account.CheckYKCD();
 
-
-                    HomeViewModel homepage = _account.GetHomePage(iduser);
-                    return RedirectToAction(homepage.straction, homepage.strcontroller);
+                    if (string.IsNullOrWhiteSpace(returnUrl)) //Authorize sign in don't redirect to homepages
+                    {
+                        HomeViewModel homepage = _account.GetHomePage(iduser);
+                        return RedirectToAction(homepage.straction, homepage.strcontroller);    
+                    }
                 }
                 else
                 {
@@ -136,14 +139,16 @@ namespace QLVB.WebUI.Controllers
                 }
             }
             model.TenDonvi = strtendonvi;
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 
         //[ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult LogOff(string returlUrl)
         {
             AuthenticationManager.SignOut();
             _session.ClearAllObject();
+            if (!string.IsNullOrWhiteSpace(returlUrl)) Redirect(returlUrl);
             // return RedirectToAction("Login", "Account");
             bool ca = AppSettings.IsCA;
             if (ca == true)
