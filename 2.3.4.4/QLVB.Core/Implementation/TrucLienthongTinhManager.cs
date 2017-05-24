@@ -18,29 +18,30 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using System.Xml;
 using System.Data;
+using System.Globalization;
 using System.Net.Http;
 using System.Web;
+using LinqToLdap;
 using QLVB.Common.Utilities;
 using QLVB.Core.WebServiceTruclienthongTinh;
-
-
+using QLVB.DTO;
 
 
 namespace QLVB.Core.Implementation
 {
     public class TrucLienthongTinhManager:ITrucLienthongTinhManager
     {
-        #region Constructor
-        private ILogger _logger;
-        private ISessionServices _session;
-        private IConfigRepository _configRepo;
-        private IVanbandiRepository _vanbandiRepository;
-        private IPhanloaiVanbanRepository _phanloaiVanbanRepository;
-        private ITinhchatvanbanRepository _tinhchatvanbanRepository;
-        private IAttachVanbanRepository _attachVanbanRepository;
-        private IFileManager _fileManager;
-        private IVanbandenmailRepository _vanbandenmailRepository;
-        private IMailFormatManager _mailFormatManager;
+        #region Constructor & private variables
+        private readonly ILogger _logger;
+        private readonly ISessionServices _session;
+        private readonly IConfigRepository _configRepo;
+        private readonly IVanbandiRepository _vanbandiRepository;
+        private readonly IPhanloaiVanbanRepository _phanloaiVanbanRepository;
+        private readonly ITinhchatvanbanRepository _tinhchatvanbanRepository;
+        private readonly IAttachVanbanRepository _attachVanbanRepository;
+        private readonly IFileManager _fileManager;
+        private readonly IVanbandenmailRepository _vanbandenmailRepository;
+        private readonly IMailFormatManager _mailFormatManager;
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, IVanbandiRepository vanbandiRepository, IPhanloaiVanbanRepository phanloaiVanbanRepository, ITinhchatvanbanRepository tinhchatvanbanRepository, IAttachVanbanRepository attachVanbanRepository, IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager)
         {
@@ -58,34 +59,13 @@ namespace QLVB.Core.Implementation
 
         #endregion Constructor
 
-        private ConfigTruclienthong _GetConfigTruc()
-        {
-            try
-            {
-                var config = new ConfigTruclienthong();
-
-                config.TrucLienthongTinh = _configRepo.GetConfig(ThamsoHethong.TrucLienthongTinh);
-                config.UsernameTrucTinh = _configRepo.GetConfig(ThamsoHethong.UsernameTrucTinh);
-                config.PasswordTrucTinh = _configRepo.GetConfig(ThamsoHethong.PasswordTrucTinh);
-                config.MaDonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
-
-                return config;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                return null;
-            }
-            
-        }
-
+        #region implement functions
         public NSSGatewayServiceSoapService ConnectGateway()
         {
             try
             {
                 var config = _GetConfigTruc();
-                var webService = new NSSGatewayServiceSoapService();
-                webService.Url = config.TrucLienthongTinh;
+                var webService = new NSSGatewayServiceSoapService {Url = config.TrucLienthongTinh};
 
                 var networkCredential = new NetworkCredential(config.UsernameTrucTinh, config.PasswordTrucTinh);
                 var uri = new Uri(config.TrucLienthongTinh);
@@ -100,6 +80,7 @@ namespace QLVB.Core.Implementation
                 throw;
             }
         }
+
         public List<OrganizationVM> GetAllOrganization()
         {
             try
@@ -131,34 +112,7 @@ namespace QLVB.Core.Implementation
             }
 
         }
-
-        private IList<string> GetFileAttachments(int vanbandiId)
-        {
-            var fileAttach = _attachVanbanRepository.AttachVanbans
-                .Where(p => p.intloai == (int) enumAttachVanban.intloai.Vanbandi && p.intidvanban == vanbandiId)
-                .OrderBy(p => p.intid).Select(x => GetFileAttachments(x)).ToList();
-
-            return fileAttach;
-        }
-
-        private string GetFileAttachments(AttachVanban attach)
-        {
-            var idcanbo = _session.GetUserId();
-            var idvanban = (int)attach.intidvanban;
-
-            var strLoaiFile = _fileManager.CheckFolderFileVanbanDownload((int)enumAttachVanban.intloai.Vanbandi, attach.intid, idcanbo, idvanban);
-            if (string.IsNullOrEmpty(strLoaiFile))
-            {
-                return null;
-            }
-
-            var filename = attach.strtenfile;
-            var folderPath = _fileManager.GetFolderDownload(strLoaiFile, (DateTime)attach.strngaycapnhat);
-            var filepath = folderPath + "/" + filename; //Server.MapPath(folderPath);
-
-            //var fileData = GetFileData(filename, filepath);
-            return HttpContext.Current.Server.MapPath(filepath);
-        }
+        
         public bool GuiVanBan(int vanbandiId, IList<OrganizationVM> noiNhan)
         {
             try
@@ -183,7 +137,7 @@ namespace QLVB.Core.Implementation
                 var content = "";
                 var MadinhdanhTruc = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
 
-                content = WriteVanBanDiToXML(vanbandi);
+                content = WriteVanBanDiToXml(vanbandi);
                 data = new StringBuilder();
                 data.Append("<message>");
                 data.Append("<required-answer><![CDATA[0]]></required-answer>");
@@ -234,7 +188,157 @@ namespace QLVB.Core.Implementation
             }
         }
 
-        private string WriteVanBanDiToXML(Vanbandi vanbandi)
+        public ResultFunction NhanVanBan()
+        {
+            var kq = new ResultFunction {id = -1};
+            try
+            {
+                var clientDownLoadFile = new WebClient();
+                var webService = ConnectGateway();
+                var loaiVb = _configRepo.GetConfig(ThamsoHethong.LoaiVanbanTrucTinh);
+                var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
+                
+                foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
+                {
+                    var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
+                    var objReceivedMessage = Deserialize<QlvbReceivedMessage>(sRespone);
+                    objReceivedMessage.attachfiles = getAttachFile(sRespone);
+                    sRespone = Base64Decode(objReceivedMessage.content);
+                    var objDocument = Deserialize<QlvbDocument>(sRespone);
+                    objDocument.attachfiles = objReceivedMessage.attachfiles;
+                    //xử lý văn bản
+
+                    var vbdenMail = new Vanbandenmail();
+                    vbdenMail.intattach = objDocument.attachfiles != null && objDocument.attachfiles.Count > 0 ? (int)enumVanbandenmail.intattach.Co : (int)enumVanbandenmail.intattach.Khong;
+
+
+                    if (!string.IsNullOrWhiteSpace(objDocument.tenloaivanban))
+                    {
+                        var loaivb =
+                            _phanloaiVanbanRepository.GetActivePhanloaiVanbans.FirstOrDefault(
+                                x => string.Equals(x.strtenvanban, objDocument.tenloaivanban, StringComparison.CurrentCultureIgnoreCase));
+                        if (loaivb != null)
+                        {
+                            vbdenMail.intidphanloaivanbanden = loaivb.intid;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(objDocument.dokhan))
+                    {
+                        var dokhan =
+                            _tinhchatvanbanRepository.GetActiveTinhchatvanbans.FirstOrDefault(
+                                x => string.Equals(x.strtentinhchatvb, objDocument.dokhan, StringComparison.CurrentCultureIgnoreCase));
+                        if (dokhan != null)
+                        {
+                            vbdenMail.intkhan = dokhan.intid;
+                        }
+                    }
+
+                    vbdenMail.strtrichyeu = objDocument.noidungtrichyeu;
+                    vbdenMail.strngaynhanvb = DateTime.Now;
+
+                    DateTime outDateTime;
+                    var jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    double outd;
+                    int outi;
+
+                    if (double.TryParse(objDocument.ngayphathanh, out outd))
+                    {
+                        vbdenMail.strngayky = jan1St1970.AddMilliseconds(outd);
+                    }
+                    else if (DateTime.TryParseExact(objDocument.ngayphathanh, "dd/MM/yyyy", null, DateTimeStyles.None, out outDateTime))
+                    {
+                        vbdenMail.strngayky = outDateTime;
+                    }
+
+                    vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
+                    vbdenMail.strnoiguivb = objDocument.tennoiphathanh;
+
+                    vbdenMail.strnguoiky = objDocument.nguoiky;
+
+                    if (int.TryParse(objDocument.soto, out outi))
+                    {
+                        vbdenMail.intsoto = outi;
+                    }
+                    if (int.TryParse(objDocument.soban, out outi))
+                    {
+                        vbdenMail.intsoban = outi;
+                    }
+
+
+                    //Lưu tập tin đính kèm 
+
+                    var idmail = _vanbandenmailRepository.Them(vbdenMail);
+
+                    if (idmail > 0 && objDocument.attachfiles != null &&
+                        objDocument.attachfiles.Count > 0)
+                    {
+                        foreach (var item in objDocument.attachfiles)
+                        {
+                            try
+                            {
+                                var strmota = item.filename;
+                                var fileSavepath = _mailFormatManager.SaveAttachment(idmail, strmota, _fileManager.SetPathUpload(AppConts.FileEmail));
+
+                                var urlDownloadFile = webService.getDownloadFileURL(GetIPAddress(), item.attachfileid);
+                                var content = clientDownLoadFile.DownloadData(urlDownloadFile);
+                                File.WriteAllBytes(fileSavepath, content);
+
+                                _mailFormatManager.InsertAttachment(idmail, fileSavepath, strmota, (int)enumAttachMail.intloai.Vanbandendientu);
+                            }
+                            catch (Exception ex) // catch 404
+                            {
+                            }
+                        }
+                    }
+                    //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
+                    webService.updateReceiveFinish(messageIdsByDocument);
+                }
+
+                kq.id = (int) ResultViewModels.Success;
+                kq.message = receivedMessageIdsByDocument.Count().ToString();
+                
+            }
+            catch (Exception ex)
+            {
+                kq.message = ex.Message;
+            }
+
+            return kq;
+        }
+        #endregion implement functions
+
+        #region PrivateMethods
+
+        private IList<string> GetFileAttachments(int vanbandiId)
+        {
+            var fileAttachs = Enumerable.ToList(_attachVanbanRepository.AttachVanbans
+                    .Where(p => p.intloai == (int)enumAttachVanban.intloai.Vanbandi && p.intidvanban == vanbandiId)
+                    .OrderBy(p => p.intid));
+
+            return fileAttachs.Select(fileAttach => GetFileAttachments(fileAttach)).ToList();
+        }
+
+        private string GetFileAttachments(AttachVanban attach)
+        {
+            var idcanbo = _session.GetUserId();
+            var idvanban = (int)attach.intidvanban;
+
+            var strLoaiFile = _fileManager.CheckFolderFileVanbanDownload((int)enumAttachVanban.intloai.Vanbandi, attach.intid, idcanbo, idvanban);
+            if (string.IsNullOrEmpty(strLoaiFile))
+            {
+                return null;
+            }
+
+            var filename = attach.strtenfile;
+            var folderPath = _fileManager.GetFolderDownload(strLoaiFile, (DateTime)attach.strngaycapnhat);
+            var filepath = folderPath + "/" + filename; //Server.MapPath(folderPath);
+
+            //var fileData = GetFileData(filename, filepath);
+            return HttpContext.Current.Server.MapPath(filepath);
+        }
+
+        private string WriteVanBanDiToXml(Vanbandi vanbandi)
         {
             try
             {
@@ -267,7 +371,7 @@ namespace QLVB.Core.Implementation
                     }
                 }
 
-                var sXML = 
+                var sXML =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                         + "<van-ban-qua-mang>"
                             + "<ten-loai-van-ban> <![CDATA[" + tenLoaiVb + "]]> </ten-loai-van-ban>"
@@ -284,7 +388,7 @@ namespace QLVB.Core.Implementation
                             + "<van-ban-goc-id> <![CDATA[]]> </van-ban-goc-id>"
                             + "<ma-phong-ban-so-hoa> <![CDATA[]]> </ma-phong-ban-so-hoa>"
                             + "<thu-tu-so-hoa> <![CDATA[0]]> </thu-tu-so-hoa>"
-                            + "<ma-nguoi-so-hoa> <![CDATA[]]> </ma-nguoi-so-hoa>" 
+                            + "<ma-nguoi-so-hoa> <![CDATA[]]> </ma-nguoi-so-hoa>"
                             + "<trang-thai-tep-tin-dinh-kem> <![CDATA[]]> </trang-thai-tep-tin-dinh-kem>"
                             + "<thu-tu-gui> <![CDATA[0]]> </thu-tu-gui>"
                             + "<chuc-vu-nguoi-ky> <![CDATA[]]> </chuc-vu-nguoi-ky>"
@@ -293,8 +397,8 @@ namespace QLVB.Core.Implementation
                             + "<do-khan> <![CDATA[" + dokhanVb + "]]> </do-khan>"
                             + "<phan-loai-van-ban> <![CDATA[0]]> </phan-loai-van-ban>"
                             + "<thoi-han-chi-dao> <![CDATA[0]]> </thoi-han-chi-dao>"
-                            + "<don-vi-chi-dao> <![CDATA[]]> </don-vi-chi-dao>" 
-                            + "<so-phat-hanh-chi-dao> <![CDATA[]]> </so-phat-hanh-chi-dao>" 
+                            + "<don-vi-chi-dao> <![CDATA[]]> </don-vi-chi-dao>"
+                            + "<so-phat-hanh-chi-dao> <![CDATA[]]> </so-phat-hanh-chi-dao>"
                             + "<ngay-ban-hanh-chi-dao> <![CDATA[]]> </ngay-ban-hanh-chi-dao>"
                         + " </van-ban-qua-mang>";
                 return Base64Encode(sXML);
@@ -305,72 +409,26 @@ namespace QLVB.Core.Implementation
                 throw;
             }
         }
-
-        public bool NhanVanBan()
+        private ConfigTruclienthong _GetConfigTruc()
         {
             try
             {
-                var clientDownLoadFile = new WebClient();
-                var webService = ConnectGateway();
-                var loaiVb = _configRepo.GetConfig(ThamsoHethong.LoaiVanbanTrucTinh);
-                var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
-                
-                foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
-                {
-                    var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
-                    var objReceivedMessage = Deserialize<QlvbReceivedMessage>(sRespone);
-                    objReceivedMessage.attachfiles = getAttachFile(sRespone);
-                    sRespone = Base64Decode(objReceivedMessage.content);
-                    var objDocument = Deserialize<qlvbdocument>(sRespone);
-                    objDocument.attachfiles = objReceivedMessage.attachfiles;
-                    //xử lý văn bản
+                var config = new ConfigTruclienthong();
 
-                    var vbdenMail = new Vanbandenmail();
+                config.TrucLienthongTinh = _configRepo.GetConfig(ThamsoHethong.TrucLienthongTinh);
+                config.UsernameTrucTinh = _configRepo.GetConfig(ThamsoHethong.UsernameTrucTinh);
+                config.PasswordTrucTinh = _configRepo.GetConfig(ThamsoHethong.PasswordTrucTinh);
+                config.MaDonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
 
-                    vbdenMail.strtrichyeu = objDocument.noidungtrichyeu;
-                    //vbdenMail.strngayky = objDocument.ngayphathanh;
-                    vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
-                    vbdenMail.strnoigui = objDocument.tennoiphathanh;
-                    //vbdenMail.intsoto = objDocument.soto;
-                    //vbdenMail.intsoban = objDocument.soban;
-                    
-                    //Lưu tập tin đính kèm 
-
-                    var idmail = _vanbandenmailRepository.Them(vbdenMail);
-
-                    if (idmail > 0 && objDocument.attachfiles != null &&
-                        objDocument.attachfiles.Count > 0)
-                    {
-                        foreach (var item in objDocument.attachfiles)
-                        {
-                            try
-                            {
-                                var strmota = item.filename;
-                                var fileSavepath = _mailFormatManager.SaveAttachment(idmail, strmota, _fileManager.SetPathUpload(AppConts.FileEmail));
-
-                                var urlDownloadFile = webService.getDownloadFileURL(GetIPAddress(), item.attachfileid);
-                                var content = clientDownLoadFile.DownloadData(urlDownloadFile);
-                                File.WriteAllBytes(fileSavepath, content);
-
-                                _mailFormatManager.InsertAttachment(idmail, fileSavepath, strmota, (int)enumAttachMail.intloai.Vanbandendientu);
-                            }
-                            catch (Exception ex) // catch 404
-                            {
-                            }
-                        }
-                    }
-                    //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
-                    webService.updateReceiveFinish(messageIdsByDocument);
-                }
-                return true;
+                return config;
             }
             catch (Exception ex)
             {
-                throw ex;
+                _logger.Error(ex.Message);
+                return null;
             }
-        }
 
-        #region PrivateMethods
+        }
 
         private string GetIPAddress()
         {
@@ -391,9 +449,9 @@ namespace QLVB.Core.Implementation
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
-        private string RemoveXmlDeclaration(string strXML)
+        private string RemoveXmlDeclaration(string strXml)
         {
-            return strXML.Remove(0, strXML.IndexOf(@"?>", 0) + 2).Replace("\n", "");
+            return strXml.Remove(0, strXml.IndexOf(@"?>", 0) + 2).Replace("\n", "");
         }
         private T Deserialize<T>(string input) where T : class
         {
@@ -406,13 +464,13 @@ namespace QLVB.Core.Implementation
             }
         }
 
-        private string Serialize<T>(T ObjectToSerialize)
+        private string Serialize<T>(T objectToSerialize)
         {
-            var xmlSerializer = new XmlSerializer(ObjectToSerialize.GetType());
+            var xmlSerializer = new XmlSerializer(objectToSerialize.GetType());
 
             using (var textWriter = new StringWriter())
             {
-                xmlSerializer.Serialize(textWriter, ObjectToSerialize);
+                xmlSerializer.Serialize(textWriter, objectToSerialize);
                 return textWriter.ToString();
             }
         }
@@ -437,13 +495,15 @@ namespace QLVB.Core.Implementation
             }
         }
 
-        private ResultUploadFile UploadFile(String url, String fileMetaDataParamName, String fileMetaDataValue, String fileParamName, string filePath)
+        private ResultUploadFile UploadFile(string url, string fileMetaDataParamName, string fileMetaDataValue, string fileParamName, string filePath)
         {
             var objResultUploadFile = new ResultUploadFile();
             Stream fs = null;
             try
             {
-                using (var handler = new HttpClientHandler { Credentials = new NetworkCredential("hshc.vpubnd", "abc1234") })
+                var config = _GetConfigTruc();
+
+                using (var handler = new HttpClientHandler { Credentials = new NetworkCredential(config.UsernameTrucTinh, config.PasswordTrucTinh) })
                 {
                     var client = new HttpClient(handler) { Timeout = TimeSpan.FromMinutes(6) };
                     client.DefaultRequestHeaders.Add("Connection", "Keep-alive");
@@ -471,7 +531,7 @@ namespace QLVB.Core.Implementation
                     {
                         fs.Close();
                     }
-                    catch (Exception e2)
+                    catch (Exception ex)
                     {
                     }
                 }
@@ -479,18 +539,18 @@ namespace QLVB.Core.Implementation
             return objResultUploadFile;
         }
 
-        public List<attachfile> getAttachFile(string sXML)
+        private List<AttachFile> getAttachFile(string xmlInput)
         {
-            var source = new List<attachfile>();
+            var source = new List<AttachFile>();
             var xml = new XmlDocument();
-            xml.LoadXml(sXML);
+            xml.LoadXml(xmlInput);
             var xnList = xml.SelectNodes("message/attach-files/attach-file");
             if (xnList == null) return source;
             foreach (XmlNode xn in xnList)
             {
                 if (string.IsNullOrEmpty(xn.InnerText)) continue;
 
-                var objAttachFile = new attachfile
+                var objAttachFile = new AttachFile
                 {
                     attachfileid = xn["attach-file-id"].InnerText,
                     filename = xn["file-name"].InnerText,
@@ -508,7 +568,7 @@ namespace QLVB.Core.Implementation
 
         #endregion PrivateMethods
 
-        #region public class
+        #region public related class
         public class ResultUploadFile
         {
             public string fileSize { get; set; }
@@ -569,10 +629,10 @@ namespace QLVB.Core.Implementation
             [XmlElement("edxml")]
             public string edxml { get; set; }
             [XmlElement("attach-files")]
-            public List<attachfile> attachfiles { get; set; }
+            public List<AttachFile> attachfiles { get; set; }
         }
         [XmlRoot("attach-file")]
-        public class attachfile
+        public class AttachFile
         {
             [XmlElement("attach-file-id")]
             public string attachfileid { get; set; }
@@ -594,7 +654,7 @@ namespace QLVB.Core.Implementation
         }
 
         [XmlRoot("van-ban-qua-mang")]
-        public class qlvbdocument
+        public class QlvbDocument
         {
             [XmlElement("ten-loai-van-ban")]
             public string tenloaivanban { get; set; }
@@ -649,8 +709,8 @@ namespace QLVB.Core.Implementation
             [XmlElement("ngay-ban-hanh-chi-dao")]
             public string ngaybanhanhchidao { get; set; }
             [XmlElement("attach-files")]
-            public List<attachfile> attachfiles { get; set; }
+            public List<AttachFile> attachfiles { get; set; }
         }
-#endregion
+        #endregion
     }
 }
