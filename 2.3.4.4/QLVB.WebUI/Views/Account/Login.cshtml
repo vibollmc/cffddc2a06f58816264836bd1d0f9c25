@@ -12,12 +12,20 @@
                 <h2>@Model.TenDonvi</h2>
             </p>
             <p>
-                <h4>@QLVB.Common.Utilities.AppSettings.SiteName</h4>
+                @if (Request.QueryString["ReturnUrl"] != null && Request.QueryString["ReturnUrl"].StartsWith("/OAuth/Authorize", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>HỆ THỐNG CƠ SỞ DỮ LIỆU THEO DÕI</h4>
+                }
+                else
+                {
+                    <h4>@QLVB.Common.Utilities.AppSettings.SiteName</h4>
+                }
+
             </p>
         </div>
 
         <div id="login" class="tab-pane active">
-            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-signin" }))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
             {
                 @*@Html.AntiForgeryToken()*@
                 @Html.ValidationSummary(true, null, new { style = "color: #b94a48;" })

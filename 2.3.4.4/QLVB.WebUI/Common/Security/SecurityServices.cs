@@ -42,9 +42,10 @@ namespace QLVB.WebUI.Common.Security
                 configuration.DefaultPolicyViolationHandlerIs(() => new DefaultPolicyViolationHandler());
 
                 //=================CÁC MỤC DÙNG CHUNG==========================================
-
+                configuration.For<OAuthController>().Ignore();
                 configuration.For<HomeController>().DenyAnonymousAccess();
                 configuration.For<AccountController>().Ignore();
+                configuration.For<FileController>().Ignore();
                 configuration.For<CertificateController>().Ignore();
 
                 //configuration.For<SessionController>().DenyAnonymousAccess();

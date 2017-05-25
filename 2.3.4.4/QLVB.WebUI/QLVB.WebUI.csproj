@@ -389,6 +389,7 @@
     <Compile Include="Common\Session\SessionOwin.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\AutoSynchController.cs" />
+    <Compile Include="Controllers\Api\MeController.cs" />
     <Compile Include="Controllers\BaocaoController.cs" />
     <Compile Include="Controllers\CapcoquanController.cs" />
     <Compile Include="Controllers\CertificateController.cs" />
@@ -404,6 +405,7 @@
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\LuutruController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\OAuthController.cs" />
     <Compile Include="Controllers\QuytrinhController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\SovbController.cs" />
@@ -5585,6 +5587,7 @@
     <Folder Include="Noidung\Email\" />
     <Folder Include="Noidung\Hoso\" />
     <Folder Include="Noidung\Vanbanduthao\" />
+    <Folder Include="Views\OAuth\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
