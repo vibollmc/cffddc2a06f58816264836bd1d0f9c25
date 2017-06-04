@@ -132,22 +132,30 @@ namespace QLVB.Common.Date
         {
             //input: dd/mm/yyyy
             //output: mm/dd/yyy
-            if (!string.IsNullOrEmpty(strngayVn))
+            DateTime outDatetime;
+            if (DateTime.TryParseExact(strngayVn, "dd/MM/yyyy", null, DateTimeStyles.None, out outDatetime))
             {
-                string ngay = strngayVn.Substring(0, 2);
-                string thang = strngayVn.Substring(3, 2);
-                string nam = strngayVn.Substring(strngayVn.Length - 4, 4);
-                string _date3 = thang + "/" + ngay + "/" + nam;
-
-                DateTime _date2 = DateTime.Now;
-                _date2 = Convert.ToDateTime(_date3);
-
-                return _date2;
+                return outDatetime;
             }
-            else
-            {
-                return DateTime.Now;
-            }
+
+            return DateTime.Now;
+
+            //if (!string.IsNullOrEmpty(strngayVn))
+            //{
+            //    string ngay = strngayVn.Substring(0, 2);
+            //    string thang = strngayVn.Substring(3, 2);
+            //    string nam = strngayVn.Substring(strngayVn.Length - 4, 4);
+            //    string _date3 = thang + "/" + ngay + "/" + nam;
+
+            //    DateTime _date2 = DateTime.Now;
+            //    _date2 = Convert.ToDateTime(_date3);
+
+            //    return _date2;
+            //}
+            //else
+            //{
+            //    return DateTime.Now;
+            //}
         }
 
 

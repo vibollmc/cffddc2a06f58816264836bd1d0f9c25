@@ -216,7 +216,7 @@ namespace QLVB.Core.Implementation
                     {
                         var loaivb =
                             _phanloaiVanbanRepository.GetActivePhanloaiVanbans.FirstOrDefault(
-                                x => string.Equals(x.strtenvanban, objDocument.tenloaivanban, StringComparison.CurrentCultureIgnoreCase));
+                                x => x.strtenvanban.ToLower() == objDocument.tenloaivanban.ToLower());
                         if (loaivb != null)
                         {
                             vbdenMail.intidphanloaivanbanden = loaivb.intid;
@@ -227,7 +227,7 @@ namespace QLVB.Core.Implementation
                     {
                         var dokhan =
                             _tinhchatvanbanRepository.GetActiveTinhchatvanbans.FirstOrDefault(
-                                x => string.Equals(x.strtentinhchatvb, objDocument.dokhan, StringComparison.CurrentCultureIgnoreCase));
+                                x => x.strtentinhchatvb.ToLower() == objDocument.dokhan.ToLower());
                         if (dokhan != null)
                         {
                             vbdenMail.intkhan = dokhan.intid;
