@@ -28,6 +28,10 @@ using QLVB.DTO.Mail;
 using QLVB.DTO.Edxml;
 using QLVB.DTO;
 using System.IO;
+using INet.StatusXml;
+using INet.StatusXml.SOAP.SOAPHeader;
+using From = INet.EdXml2.Header.From;
+using ResponseFor = INet.EdXml2.Header.ResponseFor;
 
 namespace QLVB.Core.Implementation
 {
@@ -637,7 +641,92 @@ namespace QLVB.Core.Implementation
 
         #region SendStatus
 
+        public string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban)
+        {
+            //Read from file
+            var statusXml = new StatusXml();
 
+            var headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
+
+            var from = headerStatus.From;
+            from.OrganId = GetMadinhdanhTruclienthong(); 
+            //from.OrganizationInCharge = "From OrganizationInCharge";
+            from.OrganName = GetTendonvi();
+            //from.OrganizationInCharge = "From OrganizationInCharge";
+            from.OrganAdd = _configRepo.GetConfig(ThamsoHethong.DiachiDonvi);
+            from.Email = _configRepo.GetConfig(ThamsoHethong.UsernameMail);
+            from.Telephone = _configRepo.GetConfig(ThamsoHethong.DienthoaiDonvi);
+            //from.Fax = "From Fax";
+            //from.Website = "From Website";
+
+            var responseFor = headerStatus.ResponseFor;
+            //TODO: truyen ma don vi nhan
+            //responseFor.Code = "ResponseFor Code";
+            //responseFor.OrganId = "ResponseFor OrganId";
+            responseFor.PromulgationDateValue = DateTime.Now;
+
+            headerStatus.StatusCode = status;
+            headerStatus.Description = statusDescription;
+
+            headerStatus.TimestampValue = DateTime.Now;
+
+            var staffInfo = headerStatus.StaffInfo;
+            staffInfo.Department = phongban;
+            staffInfo.Staff = nguoigui;
+            
+            var filepathEdxml = _fileManager.SetPathUpload(AppConts.FileEdxmlOutbox);
+            var fileEdxml = filepathEdxml + "\\" + idvanban.ToString() + ".edxml";
+
+            var count = 0;
+            while (System.IO.File.Exists(fileEdxml))
+            {
+                count++;
+                fileEdxml = filepathEdxml + "\\" + idvanban.ToString() + "_" + count.ToString() + ".edxml";
+            }
+
+            var statusXmlInfo = statusXml.ToFile(fileEdxml);
+
+            statusXml.Dispose();
+
+            //Send o day
+
+            if (string.IsNullOrEmpty(fileEdxml))
+            {
+                return "Error file edxml";
+            }
+
+            try
+            {
+                var serviceEdxml = QLVB.Common.Utilities.AppSettings.ServiceEdxml;
+                var service = IWSClientFactory.CreateMercuryService(serviceEdxml);
+
+                //send knobstick.
+                var slotResponse = service.RequestSlot(new GetSlotRequest().WithType(KnobStickType.StatusDocument));
+
+                // build the slot.
+                SendKnobStickResponse knobStickResponse = null;
+
+                using (var stream = System.IO.File.OpenRead(fileEdxml))
+                {
+                    var knobstickRequest = new SendKnobStickRequest()
+                            .WithSlot(slotResponse.Slot.Id)
+                            .WithContent(stream)
+                            .WithKey("knobstick.edxml");
+
+                    knobStickResponse = service.SendKnobStick(knobstickRequest);
+                }
+                // send knobtick to T371002.
+                var deliverKnobstickRequest = new DeliverKnobStickRequest().WithId(knobStickResponse.KnobStickMetadata.Id);
+                var deliverKnobstickResponse = service.DeliverKnobStick(deliverKnobstickRequest);
+
+                return deliverKnobstickResponse.Status;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error send edxml :  " + ex.Message);
+                return "Error Edxml";
+            }
+        }
 
         #endregion  SendStatus
 
