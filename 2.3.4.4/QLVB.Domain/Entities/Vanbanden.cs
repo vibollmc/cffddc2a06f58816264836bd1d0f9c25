@@ -87,6 +87,8 @@ namespace QLVB.Domain.Entities
         public int? intdangvb { get; set; }
 
         public int? intpublic { get; set; }
+
+        public  int? intidvanbandenmail { get; set; }
     }
 
     public class enumVanbanden

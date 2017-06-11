@@ -2884,6 +2884,7 @@ namespace QLVB.Core.Implementation
                     vanban.Vanbanden.strtrichyeu = vbmail.strtrichyeu;
                     vanban.Vanbanden.strnguoiky = vbmail.strnguoiky;
                     vanban.Vanbanden.strnoiphathanh = vbmail.strnoiguivb;
+                    vanban.Vanbanden.intidvanbandenmail = idmail;
                 }
 
             }

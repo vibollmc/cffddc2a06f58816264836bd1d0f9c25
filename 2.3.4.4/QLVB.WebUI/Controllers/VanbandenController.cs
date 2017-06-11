@@ -459,6 +459,11 @@ namespace QLVB.WebUI.Controllers
                     if (p == "idkhoiphathanh") { vanban.Vanbanden.intidkhoiphathanh = Convert.ToInt32(strgiatri); }
                     if (p == "idnguoiduyet") { vanban.Vanbanden.intidnguoiduyet = Convert.ToInt32(strgiatri); }
 
+                    if (p == "idmail" && !string.IsNullOrEmpty(strgiatri))
+                    {
+                        vanban.Vanbanden.intidvanbandenmail = Convert.ToInt32(strgiatri);
+                    }
+
                     if (p == "IsQPPL")
                     {
                         if (strgiatri.ToLower().Contains("true"))
@@ -487,7 +492,8 @@ namespace QLVB.WebUI.Controllers
                 // reset cac truong
                 vanban.Vanbanden.intid = 0;
                 vanban.Vanbanden.strngayden = DateTime.Now;
-                vanban.idmail = 0;
+                vanban.idmail = idmail;
+                vanban.Vanbanden.intidvanbandenmail = idmail;
                 ModelState.Clear();
                 return View(vanban);
                 //return RedirectToAction("Themvanban", "Vanbanden", new { id = string.Empty });

@@ -35,6 +35,7 @@
 				@Html.Hidden("idloaivb")
 				@Html.Hidden("intAddNext", 0)
 				@Html.Hidden("idmail", Model.idmail)
+                @Html.HiddenFor(u => u.Vanbanden.intidvanbandenmail);
 
 				@foreach (var m in Model.PhanloaiTruong)
 				{
