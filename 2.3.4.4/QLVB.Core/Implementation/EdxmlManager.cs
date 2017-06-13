@@ -643,6 +643,19 @@ namespace QLVB.Core.Implementation
 
         public string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban)
         {
+            var vanbanden = _vbdenRepo.GetVanbandenById(idvanban);
+            if (vanbanden == null) return null;
+
+            var vanbandenMail =
+                _vbdenMailRepo.Vanbandenmails.FirstOrDefault(x => x.intid == vanbanden.intidvanbandenmail);
+
+            if (vanbandenMail == null) return null;
+
+            var madonviNhan = vanbandenMail.strmadinhdanh;
+            var tendonviNhan = vanbandenMail.strnoiguivb;
+
+            if (string.IsNullOrEmpty(madonviNhan)) return null;
+
             //Read from file
             var statusXml = new StatusXml();
 
@@ -661,8 +674,8 @@ namespace QLVB.Core.Implementation
 
             var responseFor = headerStatus.ResponseFor;
             //TODO: truyen ma don vi nhan
-            //responseFor.Code = "ResponseFor Code";
-            //responseFor.OrganId = "ResponseFor OrganId";
+            responseFor.Code = madonviNhan;
+            responseFor.OrganId = tendonviNhan;
             responseFor.PromulgationDateValue = DateTime.Now;
 
             headerStatus.StatusCode = status;
