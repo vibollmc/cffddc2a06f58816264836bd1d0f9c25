@@ -1,4 +1,5 @@
-﻿
+﻿--==========cập nhật: 14/06/2017 --cập nhật trạng thái xử lý văn bản trên trục chính phủ ================================
+alter table vanbanden add intidvanbandenmail int null
 
 --==========cập nhật: 15/04/2017 -- trục liên thông của tỉnh ================================
 
