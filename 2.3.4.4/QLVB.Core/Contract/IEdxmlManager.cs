@@ -28,6 +28,8 @@ namespace QLVB.Core.Contract
 
         int ReadEdxml(string fileEdxml);
 
+        string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban);
+
         //string WriteStatusEdxml();
     }
 }
