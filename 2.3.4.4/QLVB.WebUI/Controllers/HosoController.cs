@@ -23,11 +23,15 @@ namespace QLVB.WebUI.Controllers
         private IHosoManager _hoso;
         private ILogger _logger;
         private ISessionServices _session;
-        public HosoController(IHosoManager hoso, ILogger logger, ISessionServices session)
+        private IVanbandenManager _vanban;
+        private IEdxmlManager _edxmlManager;
+        public HosoController(IHosoManager hoso, ILogger logger, ISessionServices session, IEdxmlManager edxmlManager, IVanbandenManager vanban)
         {
             _hoso = hoso;
             _logger = logger;
             _session = session;
+            _edxmlManager = edxmlManager;
+            _vanban = vanban;
         }
 
         #endregion Constructor
@@ -583,8 +587,12 @@ namespace QLVB.WebUI.Controllers
         public ActionResult _LuuHoso(int idhoso)
         {
             ResultFunction kq = _hoso.LuuHoso(idhoso);
+            
+            
+
             if (kq.id == (int)ResultViewModels.Success)
             {
+                
                 return Json(kq.id);
             }
             else

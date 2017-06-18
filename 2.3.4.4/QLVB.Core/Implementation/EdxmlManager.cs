@@ -687,7 +687,7 @@ namespace QLVB.Core.Implementation
             staffInfo.Department = phongban;
             staffInfo.Staff = nguoigui;
             
-            var filepathEdxml = _fileManager.SetPathUpload(AppConts.FileEdxmlOutbox);
+            var filepathEdxml = _fileManager.SetPathUpload(AppConts.FileStatusEdxmlOutbox);
             var fileEdxml = filepathEdxml + "\\" + idvanban.ToString() + ".edxml";
 
             var count = 0;

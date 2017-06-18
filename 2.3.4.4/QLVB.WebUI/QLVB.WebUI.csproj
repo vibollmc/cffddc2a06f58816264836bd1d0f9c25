@@ -5586,6 +5586,8 @@
     <Folder Include="Noidung\EmailContent\Outbox\" />
     <Folder Include="Noidung\Email\" />
     <Folder Include="Noidung\Hoso\" />
+    <Folder Include="Noidung\StatusEdxml\Inbox\" />
+    <Folder Include="Noidung\StatusEdxml\Outbox\" />
     <Folder Include="Noidung\Vanbanduthao\" />
     <Folder Include="Views\OAuth\" />
   </ItemGroup>

@@ -88,6 +88,9 @@ namespace QLVB.Common.Utilities
         public const string FileEdxmlInbox = "Edxml/Inbox";
         public const string FileEdxmlOutbox = "Edxml/Outbox";
 
+        public const string FileStatusEdxmlInbox = "StatusEdxml/Inbox";
+        public const string FileStatusEdxmlOutbox = "StatusEdxml/Outbox";
+
         //=====================================================
         //  ERROR: cac loi khi truy cap
         //=====================================================
