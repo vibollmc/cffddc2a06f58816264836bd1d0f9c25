@@ -607,6 +607,13 @@ namespace QLVB.WebUI.Controllers
             ResultFunction kq = _hoso.HoanthanhHoso(idhoso);
             if (kq.id == (int)ResultViewModels.Success)
             {
+                var idvanbanden = _hoso.GetIdVanbanden(idhoso);
+
+                if (idvanbanden != null)
+                {
+                    _edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
+                }
+
                 return Json(kq.id);
             }
             else

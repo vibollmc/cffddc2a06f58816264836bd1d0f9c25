@@ -2731,6 +2731,16 @@ namespace QLVB.Core.Implementation
             return kq;
         }
 
+        public int? GetIdVanbanden(int idhoso)
+        {
+            var hosovb =
+                _hosovanbanRepo.Hosovanbans.FirstOrDefault(
+                    x => x.intidhosocongviec == idhoso && x.intloai == (int) enumHosovanban.intloai.Vanbanden);
+
+            if (hosovb == null) return null;
+
+            return hosovb.intidvanban;
+        }
         public ResultFunction HoanthanhNhieuHoso(List<int> listidvanban)
         {
             ResultFunction kq = new ResultFunction();

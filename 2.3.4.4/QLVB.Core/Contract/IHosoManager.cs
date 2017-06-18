@@ -187,6 +187,8 @@ namespace QLVB.Core.Contract
 
         ResultFunction HoanthanhNhieuHoso(List<int> listidvanban);
 
+        int? GetIdVanbanden(int idhoso);
+
         #endregion KetthucHoso
 
         #region Phieutrinh
