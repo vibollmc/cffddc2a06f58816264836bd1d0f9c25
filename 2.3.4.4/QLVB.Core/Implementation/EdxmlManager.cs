@@ -28,10 +28,18 @@ using QLVB.DTO.Mail;
 using QLVB.DTO.Edxml;
 using QLVB.DTO;
 using System.IO;
-using INet.StatusXml;
-using INet.StatusXml.SOAP.SOAPHeader;
 using From = INet.EdXml2.Header.From;
 using ResponseFor = INet.EdXml2.Header.ResponseFor;
+
+using System.Text.RegularExpressions;
+using ThirdParty.Sharp.Zlib;
+using INet.StatusXml;
+using INet.StatusXml.Util;
+using FromRe = INet.StatusXml.SOAP.SOAPHeader.From;
+using ReponseforRe = INet.StatusXml.SOAP.SOAPHeader.ResponseFor;
+using INet.StatusXml.SOAP.SOAPHeader;
+
+
 
 namespace QLVB.Core.Implementation
 {
@@ -55,7 +63,7 @@ namespace QLVB.Core.Implementation
         private IMailOutboxRepository _outboxRepo;
         private IPhanloaiVanbanRepository _plvanbanRepo;
         private IVanbandenRepository _vbdenRepo;
-        private IMailFormatManager _mailFormat;
+        private IMailFormatManager _mailFormat;       
 
 
         public EdxmlManager(ICanboRepository canborepo,
@@ -655,6 +663,7 @@ namespace QLVB.Core.Implementation
 
                 var madonviNhan = vanbandenMail.strmadinhdanh;
                 var tendonviNhan = vanbandenMail.strnoiguivb;
+                var sokyhieuvanban = vanbandenMail.intsoban + vanbandenMail.strkyhieu;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
 
@@ -677,9 +686,9 @@ namespace QLVB.Core.Implementation
                 //from.Website = "From Website";
 
                 var responseFor = headerStatus.ResponseFor;
-                //TODO: truyen ma don vi nhan
-                responseFor.Code = madonviNhan;
-                responseFor.OrganId = tendonviNhan;
+                //TODO: truyen ma don vi nhan               
+                responseFor.OrganId= madonviNhan;
+                responseFor.Code = sokyhieuvanban;
                 responseFor.PromulgationDateValue = DateTime.Now;
 
                 headerStatus.StatusCode = status;
@@ -757,6 +766,49 @@ namespace QLVB.Core.Implementation
 
         #region ReceiveStatus
 
+        public string ReceiveStatus(String statusXmlName)
+        {
+            try
+            {
+                StatusXml statusXml = new StatusXml();
+                statusXml.FromFile(AppSettings.Noidung + "/" + AppConts.FileStatusEdxmlOutbox + statusXmlName);
+
+                Status headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
+
+                FromRe from = headerStatus.From;
+              
+                ReponseforRe responseFor = headerStatus.ResponseFor; 
+                string sokyhieu = responseFor.Code;
+                string madinhdanhdonvi = from.OrganId;
+                string trangthai = headerStatus.StatusCode;
+                DateTime ngayphathanhvanban = headerStatus.TimestampValue.Value;
+                StaffInfo staffInfo = headerStatus.StaffInfo;
+
+                var vanbandi = _vanbandiRepo.Vanbandis            
+               .Where(p => p.strngayky == ngayphathanhvanban)  
+               .Where(p=> p.intid + p.strkyhieu == sokyhieu)
+               .FirstOrDefault();
+                if (vanbandi != null)
+                {
+                    var guivanban = _guivbRepo.GuiVanbans
+                        .Where (p=>p.intidvanban ==vanbandi.intid)
+                        .FirstOrDefault();
+                    if (guivanban!=null)
+                    { //_guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban,)
+                    } 
+                }
+
+                statusXml.Dispose();
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.Warn(e.Message);
+                return null;
+            }
+
+        }
 
         #endregion ReceiveStatus
 

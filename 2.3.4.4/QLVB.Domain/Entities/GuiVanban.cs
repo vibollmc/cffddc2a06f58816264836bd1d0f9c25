@@ -19,6 +19,9 @@ namespace QLVB.Domain.Entities
         public int? inttrangthainhan { get; set; }
 
         public DateTime? strngaynhan { get; set; }
+        public DateTime? strngaytiepnhan { get; set; }
+        public DateTime? strngayhoanthanh { get; set; }
+        public DateTime? strngaydangxuly { get; set; }
     }
 
     public class enumGuiVanban
@@ -38,6 +41,15 @@ namespace QLVB.Domain.Entities
         {
             Chuanhan = 0,
             Danhan = 1
+        }
+        public enum inttrangthaiphanhoi
+        { 
+            Guinham=02,
+            Datiepnhan = 03,
+            Phancong =04,
+            Dangxuly = 05,
+            Hoanthanh=06          
+            
         }
     }
 }
