@@ -780,22 +780,32 @@ namespace QLVB.Core.Implementation
                 ReponseforRe responseFor = headerStatus.ResponseFor; 
                 string sokyhieu = responseFor.Code;
                 string madinhdanhdonvi = from.OrganId;
-                string trangthai = headerStatus.StatusCode;
+                var trangthai = headerStatus.StatusCode;
                 DateTime ngayphathanhvanban = headerStatus.TimestampValue.Value;
                 StaffInfo staffInfo = headerStatus.StaffInfo;
-
-                var vanbandi = _vanbandiRepo.Vanbandis            
+                var tochucdoitac = _tochucRepo.GetActiveTochucdoitacs
+                    .Where(p => p.strmadinhdanh == madinhdanhdonvi)
+                    .FirstOrDefault();
+                if (tochucdoitac!=null)
+                {
+               var vanbandi = _vanbandiRepo.Vanbandis            
                .Where(p => p.strngayky == ngayphathanhvanban)  
-               .Where(p=> p.intid + p.strkyhieu == sokyhieu)
+               .Where(p=> p.intid + p.strkyhieu == sokyhieu)              
                .FirstOrDefault();
                 if (vanbandi != null)
                 {
+                  
                     var guivanban = _guivbRepo.GuiVanbans
                         .Where (p=>p.intidvanban ==vanbandi.intid)
+                        .Where(p=>p.intiddonvi==tochucdoitac.intid)
                         .FirstOrDefault();
+                   
                     if (guivanban!=null)
-                    { //_guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban,)
+                    {
+                       var ketqua= _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban, guivanban.intid,enumGuiVanban.intloaivanban.Vanbandi,trangthai, ngayphathanhvanban);
                     } 
+                }
+               
                 }
 
                 statusXml.Dispose();
