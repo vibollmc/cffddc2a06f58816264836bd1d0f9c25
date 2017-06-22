@@ -771,7 +771,7 @@ namespace QLVB.Core.Implementation
             try
             {
                 StatusXml statusXml = new StatusXml();
-                statusXml.FromFile(AppSettings.Noidung + "/" + AppConts.FileStatusEdxmlOutbox + statusXmlName);
+                statusXml.FromFile(AppSettings.Noidung + "/" + AppConts.FileEdxmlInbox + "/" + statusXmlName);
 
                 Status headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
 
@@ -784,25 +784,25 @@ namespace QLVB.Core.Implementation
                 DateTime ngayphathanhvanban = headerStatus.TimestampValue.Value;
                 StaffInfo staffInfo = headerStatus.StaffInfo;
                 var tochucdoitac = _tochucRepo.GetActiveTochucdoitacs
-                    .Where(p => p.strmadinhdanh == madinhdanhdonvi)
-                    .FirstOrDefault();
+                    .FirstOrDefault(p => p.strmadinhdanh == madinhdanhdonvi);
                 if (tochucdoitac!=null)
                 {
-               var vanbandi = _vanbandiRepo.Vanbandis            
-               .Where(p => p.strngayky == ngayphathanhvanban)  
-               .Where(p=> p.intid + p.strkyhieu == sokyhieu)              
-               .FirstOrDefault();
+               var vanbandi = _vanbandiRepo.Vanbandis  
+               .Where(p=> p.strngayky == ngayphathanhvanban)              
+               .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
                 if (vanbandi != null)
                 {
                   
                     var guivanban = _guivbRepo.GuiVanbans
-                        .Where (p=>p.intidvanban ==vanbandi.intid)
-                        .Where(p=>p.intiddonvi==tochucdoitac.intid)
-                        .FirstOrDefault();
+                        .Where(p=>p.intidvanban==vanbandi.intid)
+                        .FirstOrDefault(p => p.intiddonvi==tochucdoitac.intid);
                    
                     if (guivanban!=null)
                     {
-                       var ketqua= _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban, guivanban.intid,enumGuiVanban.intloaivanban.Vanbandi,trangthai, ngayphathanhvanban);
+                       var ketqua= _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban.Value, 
+                           guivanban.intid, 
+                           (int)enumGuiVanban.intloaivanban.Vanbandi, 
+                           (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngayphathanhvanban);
                     } 
                 }
                
