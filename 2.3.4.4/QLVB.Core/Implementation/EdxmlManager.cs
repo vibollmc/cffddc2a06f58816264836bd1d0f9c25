@@ -38,6 +38,7 @@ using INet.StatusXml.Util;
 using FromRe = INet.StatusXml.SOAP.SOAPHeader.From;
 using ReponseforRe = INet.StatusXml.SOAP.SOAPHeader.ResponseFor;
 using INet.StatusXml.SOAP.SOAPHeader;
+using EdXmlEnum = INet.EdXml2.Util.EdXmlEnum;
 
 
 
@@ -63,7 +64,7 @@ namespace QLVB.Core.Implementation
         private IMailOutboxRepository _outboxRepo;
         private IPhanloaiVanbanRepository _plvanbanRepo;
         private IVanbandenRepository _vbdenRepo;
-        private IMailFormatManager _mailFormat;       
+        private IMailFormatManager _mailFormat;
 
 
         public EdxmlManager(ICanboRepository canborepo,
@@ -687,7 +688,7 @@ namespace QLVB.Core.Implementation
 
                 var responseFor = headerStatus.ResponseFor;
                 //TODO: truyen ma don vi nhan               
-                responseFor.OrganId= madonviNhan;
+                responseFor.OrganId = madonviNhan;
                 responseFor.Code = sokyhieuvanban;
                 responseFor.PromulgationDateValue = DateTime.Now;
 
@@ -754,7 +755,7 @@ namespace QLVB.Core.Implementation
                     return "Error Edxml";
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Warn(e.Message);
                 return null;
@@ -776,8 +777,8 @@ namespace QLVB.Core.Implementation
                 Status headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
 
                 FromRe from = headerStatus.From;
-              
-                ReponseforRe responseFor = headerStatus.ResponseFor; 
+
+                ReponseforRe responseFor = headerStatus.ResponseFor;
                 string sokyhieu = responseFor.Code;
                 string madinhdanhdonvi = from.OrganId;
                 var trangthai = headerStatus.StatusCode;
@@ -785,27 +786,27 @@ namespace QLVB.Core.Implementation
                 StaffInfo staffInfo = headerStatus.StaffInfo;
                 var tochucdoitac = _tochucRepo.GetActiveTochucdoitacs
                     .FirstOrDefault(p => p.strmadinhdanh == madinhdanhdonvi);
-                if (tochucdoitac!=null)
+                if (tochucdoitac != null)
                 {
-               var vanbandi = _vanbandiRepo.Vanbandis  
-               .Where(p=> p.strngayky == ngayphathanhvanban)              
-               .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
-                if (vanbandi != null)
-                {
-                  
-                    var guivanban = _guivbRepo.GuiVanbans
-                        .Where(p=>p.intidvanban==vanbandi.intid)
-                        .FirstOrDefault(p => p.intiddonvi==tochucdoitac.intid);
-                   
-                    if (guivanban!=null)
+                    var vanbandi = _vanbandiRepo.Vanbandis
+                    .Where(p => p.strngayky == ngayphathanhvanban)
+                    .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
+                    if (vanbandi != null)
                     {
-                       var ketqua= _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban.Value, 
-                           guivanban.intid, 
-                           (int)enumGuiVanban.intloaivanban.Vanbandi, 
-                           (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngayphathanhvanban);
-                    } 
-                }
-               
+
+                        var guivanban = _guivbRepo.GuiVanbans
+                            .Where(p => p.intidvanban == vanbandi.intid)
+                            .FirstOrDefault(p => p.intiddonvi == tochucdoitac.intid);
+
+                        if (guivanban != null)
+                        {
+                            var ketqua = _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban.Value,
+                                guivanban.intid,
+                                (int)enumGuiVanban.intloaivanban.Vanbandi,
+                                (enumGuiVanban.inttrangthaiphanhoi)int.Parse(trangthai), ngayphathanhvanban);
+                        }
+                    }
+
                 }
 
                 statusXml.Dispose();
@@ -821,7 +822,72 @@ namespace QLVB.Core.Implementation
         }
 
         #endregion ReceiveStatus
+        public ResultFunction ReceiveStatusFile()
+        {
+            ResultFunction kq = new ResultFunction();
+            kq.id = -1;
+            try
+            {
+                string serviceEdxml = QLVB.Common.Utilities.AppSettings.ServiceEdxml;
+                MercuryService service = new MercuryServiceClient(serviceEdxml);
 
+                List<string> listfileEdxml = new List<string>();
+                var checkKnobStickResponse = service.CheckKnobStick(new CheckKnobStickRequest().WithType(KnobStickType.StatusDocument));
+                foreach (var knobstick in checkKnobStickResponse.KnobStickMetadatas)
+                {
+                    var processKnobStick = new ProcessKnobStickRequest()
+                            .WithId(knobstick.Id)
+                            .WithStatus(ProcessStatus.processing);
+
+                    var processKnobstickResponse = service.ProcessKnobStick(processKnobStick);
+
+
+                    if (string.Equals("OK", processKnobstickResponse.Status, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            string filepathEdxml = _fileManager.SetPathUpload(AppConts.FileStatusEdxmlInbox);
+                            string fileEdxml = filepathEdxml + "\\" + knobstick.Id + ".edxml";
+
+                            int count = 0;
+                            while (System.IO.File.Exists(fileEdxml))
+                            {
+                                count++;
+                                fileEdxml = filepathEdxml + "\\" + knobstick.Id + "_" + count.ToString() + ".edxml";
+                            }
+
+                            var getKnobstickResponse = service.GetKnobStick(new GetKnobStickRequest().WithId(knobstick.Id));
+                            getKnobstickResponse.WriteResponseStreamToFile(fileEdxml);
+                            getKnobstickResponse.Dispose();
+                            listfileEdxml.Add(fileEdxml);
+
+                            ReceiveStatus(fileEdxml);
+
+                        }
+
+                        catch (Exception ex)
+                        {
+                            _logger.Warn("Error Receive edxml : " + ex.Message);
+                            service.ProcessKnobStick(processKnobStick.WithStatus(ProcessStatus.fail));
+                            
+                        }
+                    }
+                }
+                kq.message = listfileEdxml.Count().ToString();
+                kq.id = (int)ResultViewModels.Success;
+                return kq;
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn("Error Receive edxml : " + ex.Message);
+                kq.message = "Lỗi nhận trạng thái xử lý văn bản";
+                return kq;
+            }
+
+
+
+        }
 
     }
 }
+          
