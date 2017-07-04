@@ -13,6 +13,7 @@ insert into Config values('PasswordTrucTinh', '12345qwe', N'Password tài khoả
 insert into Config values('MaDonviTrucTinh', '1:30:0:0:0:0:1', N'Mã đơn vị trên Trục liên thông tỉnh', 4,4,1)
 insert into Config values('TenDonviTrucTinh', 'Ủy ban nhân dân Tỉnh Đồng Nai', N'Tên đơn vị trên Trục liên thông tỉnh', 4,4,1)
 insert into Config values('LoaiVanbanTrucTinh', '1.1.0.1', N'Phiên bản văn bản Trục liên thông tỉnh', 4,4,1)
+alter table Tochucdoitac add strmatructinh nvarchar(100) null
 
 
 
