@@ -30,6 +30,7 @@ namespace QLVB.Core.Contract
 
         string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban);
 
+        ResultFunction ReceiveStatusFile();
         //string WriteStatusEdxml();
     }
 }

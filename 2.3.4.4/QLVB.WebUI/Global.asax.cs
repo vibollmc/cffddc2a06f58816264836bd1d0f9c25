@@ -13,13 +13,19 @@ using QLVB.WebUI.Common.Security;
 using FluentSecurity;
 using System.Web.Helpers;
 using System.Security.Claims;
+using System.Threading;
 using QLVB.WebUI.Hubs;
 using Microsoft.AspNet.SignalR;
+using QLVB.Core.Contract;
+using QLVB.Core.Implementation;
 
 namespace QLVB.WebUI
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        private AutoResetEvent _autoResetEvent;
+
+        private Timer _timer;
 
         protected void Application_Start()
         {
@@ -73,6 +79,24 @@ namespace QLVB.WebUI
             var serializerSettings = GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings;
             var contractResolver = (Newtonsoft.Json.Serialization.DefaultContractResolver)serializerSettings.ContractResolver;
             contractResolver.IgnoreSerializableAttribute = true;
+
+            _autoResetEvent = new AutoResetEvent(false);
+
+            var isProcessing = false;
+
+            _timer = new Timer((o) =>
+            {
+                if(isProcessing) return;
+
+                isProcessing = true;
+
+                var edxmlManager = GlobalHost.DependencyResolver.Resolve<IEdxmlManager>();
+
+                edxmlManager.ReceiveStatusFile();
+
+               isProcessing = false;
+
+            }, _autoResetEvent, 1000, 200000);
         }
 
         //protected void Application_BeginRequest()
