@@ -162,6 +162,7 @@ namespace QLVB.WebUI.Controllers
                     if (p == "IsHoibao") { if (strgiatri.Contains("true")) tochuc.IsHoibao = true; }
                     if (p == "Isvbdt") { if (strgiatri.Contains("true")) tochuc.Isvbdt = true; }
                     if (p == "stremailvbdt") tochuc.stremailvbdt = strgiatri;
+                    if (p == "strmatructinh") tochuc.strmatructinh = strgiatri;
                 }
             }
 

@@ -35,6 +35,8 @@ namespace QLVB.Domain.Entities
 
         // ma dinh danh theo quy dinh cua bo TTTT
         public string strmadinhdanh { get; set; }
+
+        public string strmatructinh { get; set; }
     }
 
     public class enumTochucdoitac

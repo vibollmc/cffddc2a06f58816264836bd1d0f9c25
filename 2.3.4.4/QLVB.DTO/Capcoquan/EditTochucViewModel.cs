@@ -41,5 +41,8 @@ namespace QLVB.DTO.Capcoquan
         [Display(Name = ("Mã định danh"))]
         public string strmadinhdanh { get; set; }
 
+        [Display(Name = ("Mã trục tỉnh"))]
+        public string strmatructinh { get; set; }
+
     }
 }

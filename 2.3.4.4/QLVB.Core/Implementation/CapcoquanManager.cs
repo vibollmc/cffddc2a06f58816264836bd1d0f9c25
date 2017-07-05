@@ -122,7 +122,8 @@ namespace QLVB.Core.Implementation
                     strmatochucdoitac = p.strmatochucdoitac,
                     strphone = p.strphone,
                     strtentochucdoitac = p.strtentochucdoitac,
-                    strmadinhdanh = p.strmadinhdanh
+                    strmadinhdanh = p.strmadinhdanh,
+                    strmatructinh = p.strmatructinh
                 }).FirstOrDefault();
             return dv;
         }
