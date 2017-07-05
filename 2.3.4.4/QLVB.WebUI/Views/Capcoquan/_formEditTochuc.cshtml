@@ -102,22 +102,24 @@
         if (isCheckVBDT) {
             var strmadinhdanh = $('#strmadinhdanh').val();
             var stremailvbdt = $('#stremailvbdt').val();
-            var strdiachi = $('#strdiachi').val();
-            var strphone = $('#strphone').val();
+            var strtructinh = $('#strtructinh').val();
+            //var strdiachi = $('#strdiachi').val();
+            //var strphone = $('#strphone').val();
             
-            if (strdiachi == "") {
-                $('#strdiachi').focus();
-            }
-            if (strphone == "") {
-                $('#strphone').focus();
-            }            
-            if (stremailvbdt == "") {
-                $('#stremailvbdt').focus();
-            }
-            if (strmadinhdanh == "") {
-                $('#strmadinhdanh').focus();
-            }
-            if ((strdiachi != "") && (strphone != "") && (stremailvbdt != "") && (strmadinhdanh != "")) {
+            //if (strdiachi == "") {
+            //    $('#strdiachi').focus();
+            //}
+            //if (strphone == "") {
+            //    $('#strphone').focus();
+            //}            
+            //if (stremailvbdt == "") {
+            //    $('#stremailvbdt').focus();
+            //}
+            //if (strmadinhdanh == "") {
+            //    $('#strmadinhdanh').focus();
+            //}
+
+            if ((strtructinh != "") || (stremailvbdt != "") || (strmadinhdanh != "")) {
                 return true;
             } else {
                 return false;
