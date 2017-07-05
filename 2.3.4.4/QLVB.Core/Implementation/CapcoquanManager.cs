@@ -144,6 +144,7 @@ namespace QLVB.Core.Implementation
                 tochuc.intidkhoi = model.intidkhoiph;
                 tochuc.inthoibao = model.IsHoibao == true ? (int)enumTochucdoitac.inthoibao.IsActive : (int)enumTochucdoitac.inthoibao.NotActive;
                 tochuc.Isvbdt = model.Isvbdt == true ? (int)enumTochucdoitac.isvbdt.IsActive : (int)enumTochucdoitac.isvbdt.NotActive;
+                tochuc.strmatructinh = model.strmatructinh;
 
                 if (model.intid == 0)
                 {

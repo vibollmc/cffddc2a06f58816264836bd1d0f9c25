@@ -54,6 +54,7 @@ namespace QLVB.DAL
             _tochuc.strmadinhdanh = tochuc.strmadinhdanh;
             _tochuc.strphone = tochuc.strphone;
             _tochuc.strtentochucdoitac = tochuc.strtentochucdoitac;
+            _tochuc.strmatructinh = tochuc.strmatructinh;
             context.SaveChanges();
         }
 
