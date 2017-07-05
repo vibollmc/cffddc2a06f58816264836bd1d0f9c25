@@ -2240,7 +2240,8 @@ namespace QLVB.Core.Implementation
                     strtendonvi = p.strtentochucdoitac,
                     IsVbdt = p.Isvbdt == (int)enumTochucdoitac.isvbdt.IsActive ? true : false,
                     stremailvbdt = string.IsNullOrEmpty(p.stremailvbdt) ? string.Empty : p.stremailvbdt,
-                    stremail = string.IsNullOrEmpty(p.stremail) ? string.Empty : p.stremail
+                    stremail = string.IsNullOrEmpty(p.stremail) ? string.Empty : p.stremail,
+                    strmatructinh = p.strmatructinh
                     //IsSend = p.g.Any(a => a.intiddonvi == p.intid)
                 })
                 .ToList();
@@ -2262,7 +2263,8 @@ namespace QLVB.Core.Implementation
                     IsVbdt = p.tc.IsVbdt,
                     stremailvbdt = string.IsNullOrEmpty(p.tc.stremailvbdt) ? string.Empty : p.tc.stremailvbdt,
                     stremail = string.IsNullOrEmpty(p.tc.stremail) ? string.Empty : p.tc.stremail,
-                    IsSend = p.g.Any(a => a.intiddonvi == p.tc.iddonvi)
+                    IsSend = p.g.Any(a => a.intiddonvi == p.tc.iddonvi),
+                    strmatructinh = p.tc.strmatructinh
                 })
                 .OrderBy(p => p.strtendonvi);
 
@@ -2284,7 +2286,8 @@ namespace QLVB.Core.Implementation
                    IsVbdt = p.tc.IsVbdt,
                    stremailvbdt = string.IsNullOrEmpty(p.tc.stremailvbdt) ? string.Empty : p.tc.stremailvbdt,
                    stremail = string.IsNullOrEmpty(p.tc.stremail) ? string.Empty : p.tc.stremail,
-                   IsSend = p.g.Any(a => a.intiddonvi == p.tc.iddonvi)
+                   IsSend = p.g.Any(a => a.intiddonvi == p.tc.iddonvi),
+                   strmatructinh = p.tc.strmatructinh
                })
                .OrderBy(p => p.strtendonvi);
 

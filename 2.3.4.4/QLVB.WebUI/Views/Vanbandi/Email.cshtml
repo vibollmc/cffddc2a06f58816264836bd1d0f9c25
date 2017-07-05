@@ -34,9 +34,12 @@
 							<i class="glyphicon glyphicon-envelope"></i>&nbsp;Gửi Email
 						</button>
 						<button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
-						<button id="SendDonviAgainbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
-							<i class="glyphicon glyphicon-refresh"></i>&nbsp;Gửi Email lần nữa
-						</button>
+					    <button id="SendDonviAgainbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+					        <i class="glyphicon glyphicon-refresh"></i>&nbsp;Gửi Email lần nữa
+					    </button>
+
+                        <input type="checkbox" id="chkShowAll" /><span> Hiển thị các đơn vị có mã trục tỉnh</span>
+
 					</nav>
 				</header>
 				<span id="ketquaSendvb" class="validation-summary-valid"></span>
@@ -67,7 +70,7 @@
 							<tbody id="listdonvi">
 								@foreach (var p in Model.donvi)
 							{
-								<tr>
+								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none\" hastructinh=\"yes\"")>
 									<td style="width:10%; text-align:center">
 										@if (p.IsSend)
 										{
@@ -90,7 +93,7 @@
 
 								@foreach (var p in Model.donvikhac)
 							{
-								<tr>
+								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none\" hastructinh=\"yes\"")>
 									<td style="width:10%; text-align:center">
 										@if (p.IsSend)
 										{
@@ -226,14 +229,22 @@
 	});
 	$('#parentcheckbox').click(function () {
 		var ischeck = $(this).prop('checked');
-		$("#listdonvi").find(':checkbox').each(function () {
-			var disable = $(this).prop('disabled');
-			if (disable == false) {
-				$(this).prop('checked', ischeck);
-			}
-		})
-		//$("input[type='checkbox']").prop('checked', $(this).prop('checked'));
+	    $("#listdonvi").find(':checkbox').each(function() {
+	        var disable = $(this).prop('disabled');
+	        var visible = $(this).is(':visible');
+	        if (!disable && visible) {
+	            $(this).prop('checked', ischeck);
+	        }
+	    });
+	    //$("input[type='checkbox']").prop('checked', $(this).prop('checked'));
 	});
+	$('#chkShowAll').click(function() {
+	    var ischeck = $(this).prop('checked');
+	    if (ischeck)
+	        $("#listdonvi").find('tr[hastructinh=yes]').show();
+	    else $("#listdonvi").find('tr[hastructinh=yes]').hide();
+	});
+
 	$('#SendDonvibtn').click(function () {
 		$.ajax(
 		{
