@@ -70,7 +70,7 @@
 							<tbody id="listdonvi">
 								@foreach (var p in Model.donvi)
 							{
-								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none\" hastructinh=\"yes\"")>
+								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none;color:#333\" hastructinh=\"yes\"")>
 									<td style="width:10%; text-align:center">
 										@if (p.IsSend)
 										{
@@ -93,7 +93,7 @@
 
 								@foreach (var p in Model.donvikhac)
 							{
-								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none\" hastructinh=\"yes\"")>
+								<tr@(string.IsNullOrEmpty(p.strmatructinh) ? "" : " style=\"display:none;color:#333\" hastructinh=\"yes\"")>
 									<td style="width:10%; text-align:center">
 										@if (p.IsSend)
 										{
