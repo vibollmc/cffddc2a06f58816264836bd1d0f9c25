@@ -167,31 +167,74 @@
 
         <div class="tab-pane" id="TrucLienthongTinh-tab">
             <nav style="padding: 3px;">
-                <div class="btn-group">
-                    @*<button id="GetDonviTinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
-                <i class="glyphicon glyphicon-envelope"></i>&nbsp;DS các đơn vị
-            </button>*@
-
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        DS các đơn vị <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="javascript:void(0);" id="GetDonviTinhLocal">Tải từ Cơ sở dữ liệu</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="javascript:void(0);" id="GetDonviTinhService">Tải từ Trục liên thông</a></li>
-                    </ul>
-
-                    <button id="SendDonviTinhbtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
-                        <i class="glyphicon glyphicon-envelope"></i>&nbsp;Gửi VBĐT
-                    </button>
-                    <button id="BackTinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
-                    <button id="SendDonviAgainTinhbtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
-                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;Gửi VBĐT lần nữa
-                    </button>
-                </div>
+                <button id="GetDonviTinhService" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+                    <i class="glyphicon glyphicon-envelope"></i>&nbsp;DS đơn vị từ Trục liên thông
+                </button>
+                <button id="SendDonviTinhbtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+                    <i class="glyphicon glyphicon-envelope"></i>&nbsp;Gửi VBĐT
+                </button>
+                <button id="BackTinhbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+                <button id="SendDonviAgainTinhbtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+                    <i class="glyphicon glyphicon-refresh"></i>&nbsp;Gửi VBĐT lần nữa
+                </button>
             </nav>
             <span id="ketquaSendTinhvb" class="validation-summary-valid"></span>
-            <div id="chitiet-Tinh-tab"></div>
+            <div id="chitiet-Tinh-tab">
+                @if (Model.donvi.Any(x => x.strmatructinh != null))
+                {
+                    var count = 0;
+
+                    <form class="form-horizontal" id="formSendTrucTinh">
+                        @Html.Hidden("idvanbanTrucTinh", Model.idvanban)
+                        <table class="table responsive-table">
+                            <thead>
+                                <tr>
+                                    <td style="width:5%; text-align:center">STT</td>
+                                    <td style="width:5%; text-align:center"><b>@Html.CheckBox("parentcheckboxTrucTinh")</b></td>
+                                    <td style="width:40%;">
+                                        <b>Tên đơn vị</b>
+                                    </td>
+                                    <td style="width:20%; text-align:center">Mã định danh Trục của tỉnh</td>
+                                    <td style="width:20%; text-align:center">Mã định danh Chính phủ</td>
+
+                                </tr>
+                            </thead>
+                            <tbody id="listdonviTrucTinh">
+                                @foreach (var p in Model.donvi.Where(x=>x.strmatructinh != null))
+                                {
+                                    count++;
+                                    <tr>
+                                        <td style="width: 5%; text-align: center;">@count</td>
+                                        <td style="width: 5%; text-align: center">
+                                            <b>@Html.CheckBox(p.strmatructinh)</b>
+                                            @Html.Hidden(p.strmatructinh, p.strtendonvi)
+                                        </td>
+                                        <td style="width: 40%;">@p.strtendonvi</td>
+                                        <td style="width: 20%; text-align: center;">@p.strmatructinh</td>
+                                        <td style="width: 20%; text-align: center;">@p.strmadinhdanh</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </form>
+                    <script type="text/javascript">
+                        ButtonEnable("SendDonviTinhbtn", true);
+                        ButtonEnable("SendDonviAgainTinhbtn", true);
+
+                        $('#parentcheckboxTrucTinh').click(function () {
+                            var ischeck = $(this).prop('checked');
+                            $("#listdonviTrucTinh").find(':checkbox').each(function() {
+                                var disable = $(this).prop('disabled');
+                                if (disable == false) {
+                                    $(this).prop('checked', ischeck);
+                                }
+                            });
+                        });
+
+                    </script>
+                }
+            </div>
         </div>
 
 		@if (IsEdxml)
@@ -343,20 +386,28 @@
     $('#BackTinhbtn').click(function () {
         Back();
     });
-    $('#GetDonviTinhLocal').click(function () {
-        ShowLoading();
+
+	var isProcessing = false;
+
+	$('#GetDonviTinhService').click(function () {
+	    if (isProcessing) return;
+	    isProcessing = true;
+	    ShowLoading();
+
+	    var local = "true";
+	    if ($('#GetDonviTinhService').innerText.toLowerCase().indexOf('trục liên thông') > 0) local = "false";
+
         var url = '@Url.Action("_GetDonviTrucTinh","Vanbandi")';
-        url = url + '?id=@Model.idvanban&local=true';
+	    url = url + '?id=@Model.idvanban&local=' + local;
         $("#chitiet-Tinh-tab").load(url, function () {
             HideLoading();
-        });
-    });
-    $('#GetDonviTinhService').click(function () {
-        ShowLoading();
-        var url = '@Url.Action("_GetDonviTrucTinh","Vanbandi")';
-        url = url + '?id=@Model.idvanban&local=false';
-        $("#chitiet-Tinh-tab").load(url, function () {
-            HideLoading();
+
+            if (local == "false") {
+                $('#GetDonviTinhService').html('<i class="glyphicon glyphicon-envelope"></i> DS đơn vị từ Cơ sở dữ liệu');
+            } else {
+                $('#GetDonviTinhService').html('<i class="glyphicon glyphicon-envelope"></i> DS đơn vị từ Trục liên thông');
+            }
+            isProcessing = false;
         });
     });
 
