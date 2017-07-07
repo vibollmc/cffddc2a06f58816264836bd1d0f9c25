@@ -404,10 +404,10 @@
 
             if (local == "false") {
                 $('#GetDonviTinhService').html('<i class="glyphicon glyphicon-envelope"></i> DS đơn vị từ Cơ sở dữ liệu');
-                $('').removeClass('btn-primary').addClass('btn-info');
+                $('#GetDonviTinhService').removeClass('btn-primary').addClass('btn-info');
             } else {
                 $('#GetDonviTinhService').html('<i class="glyphicon glyphicon-envelope"></i> DS đơn vị từ Trục liên thông');
-                $('').removeClass('btn-info').addClass('btn-primary');
+                $('#GetDonviTinhService').removeClass('btn-info').addClass('btn-primary');
             }
             isProcessing = false;
         });
