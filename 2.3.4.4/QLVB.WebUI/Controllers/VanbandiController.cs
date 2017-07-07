@@ -975,11 +975,12 @@ namespace QLVB.WebUI.Controllers
             if (!local)
             {
                 donvi = _truclienthong.GetAllOrganization();
+                ViewBag.FromDB = false;
             }
             else
             {
                 var tochuc = _vanban.GetListEmailDonvi(id);
-
+                ViewBag.FromDB = true;
                 if (tochuc != null)
                 {
                     if (tochuc.donvi != null)
