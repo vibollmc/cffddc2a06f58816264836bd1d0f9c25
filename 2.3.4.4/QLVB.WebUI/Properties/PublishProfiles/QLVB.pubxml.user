@@ -6,11 +6,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>F:\TestLab\VS2015\QLVB5\Website</_PublishTargetUrl>
+    <_PublishTargetUrl>E:\Publishqlvb</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appSettings.config">
-      <publishTime>02/27/2017 23:02:04</publishTime>
+      <publishTime>07/06/2017 09:34:42</publishTime>
     </File>
     <File Include="App_Readme/Elmah.SqlServer.sql">
       <publishTime>12/31/2013 11:01:17</publishTime>
@@ -199,25 +199,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2013 16:01:28</publishTime>
     </File>
     <File Include="bin/QLVB.Common.dll">
-      <publishTime>03/12/2017 15:53:34</publishTime>
+      <publishTime>07/07/2017 14:20:19</publishTime>
     </File>
     <File Include="bin/QLVB.Core.dll">
-      <publishTime>03/12/2017 16:26:03</publishTime>
+      <publishTime>07/07/2017 14:20:34</publishTime>
+    </File>
+    <File Include="bin/QLVB.Core.XmlSerializers.dll">
+      <publishTime>07/07/2017 14:20:41</publishTime>
     </File>
     <File Include="bin/QLVB.DAL.dll">
-      <publishTime>03/12/2017 15:53:40</publishTime>
+      <publishTime>07/07/2017 14:20:31</publishTime>
     </File>
     <File Include="bin/QLVB.Domain.dll">
-      <publishTime>03/12/2017 15:53:36</publishTime>
+      <publishTime>07/07/2017 14:20:24</publishTime>
     </File>
     <File Include="bin/QLVB.Donvi.dll">
-      <publishTime>03/12/2017 15:53:37</publishTime>
+      <publishTime>07/07/2017 14:20:25</publishTime>
     </File>
     <File Include="bin/QLVB.DTO.dll">
-      <publishTime>03/12/2017 15:53:38</publishTime>
+      <publishTime>07/07/2017 14:20:26</publishTime>
     </File>
     <File Include="bin/QLVB.WebUI.dll">
-      <publishTime>03/12/2017 16:26:11</publishTime>
+      <publishTime>07/07/2017 14:21:13</publishTime>
     </File>
     <File Include="bin/Report/rptSovanbanden.xlsx">
       <publishTime>09/16/2016 21:30:44</publishTime>
@@ -238,10 +241,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/13/2015 09:41:09</publishTime>
     </File>
     <File Include="bin/Store.Core.dll">
-      <publishTime>03/12/2017 16:26:04</publishTime>
+      <publishTime>07/07/2017 14:20:47</publishTime>
     </File>
     <File Include="bin/Store.DAL.dll">
-      <publishTime>03/12/2017 15:53:42</publishTime>
+      <publishTime>07/07/2017 14:20:30</publishTime>
     </File>
     <File Include="bin/System.IO.Packaging.dll">
       <publishTime>04/17/2016 11:21:19</publishTime>
@@ -289,7 +292,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/27/2014 10:37:30</publishTime>
     </File>
     <File Include="bin/WindowsBase.dll">
-      <publishTime>08/13/2013 14:19:06</publishTime>
+      <publishTime>08/13/2013 00:19:06</publishTime>
     </File>
     <File Include="bin/YAXLib.dll">
       <publishTime>05/22/2014 13:56:29</publishTime>
@@ -319,7 +322,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/30/2015 08:01:48</publishTime>
     </File>
     <File Include="ConnectionString.config">
-      <publishTime>10/02/2016 04:36:32</publishTime>
+      <publishTime>04/24/2017 09:35:43</publishTime>
     </File>
     <File Include="Content/assets/css/bootstrap-fileupload.min.css">
       <publishTime>07/11/2014 14:30:09</publishTime>
@@ -21304,7 +21307,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2013 16:01:22</publishTime>
     </File>
     <File Include="Views/Account/Login.cshtml">
-      <publishTime>12/29/2015 09:42:26</publishTime>
+      <publishTime>05/25/2017 16:02:34</publishTime>
     </File>
     <File Include="Views/Account/Manage.cshtml">
       <publishTime>10/22/2013 16:01:22</publishTime>
@@ -21385,7 +21388,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/19/2014 15:22:31</publishTime>
     </File>
     <File Include="Views/Capcoquan/_formEditTochuc.cshtml">
-      <publishTime>05/07/2015 16:35:21</publishTime>
+      <publishTime>07/05/2017 15:39:19</publishTime>
     </File>
     <File Include="Views/Capcoquan/_GetKhoiph.cshtml">
       <publishTime>05/17/2015 16:00:33</publishTime>
@@ -21394,7 +21397,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/19/2014 15:21:57</publishTime>
     </File>
     <File Include="Views/Capcoquan/_ListTochuc.cshtml">
-      <publishTime>05/13/2015 05:48:13</publishTime>
+      <publishTime>07/06/2017 09:27:07</publishTime>
     </File>
     <File Include="Views/Certificate/CheckCA.cshtml">
       <publishTime>12/28/2015 15:31:13</publishTime>
@@ -21460,7 +21463,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/24/2015 10:15:23</publishTime>
     </File>
     <File Include="Views/Hethong/Config.cshtml">
-      <publishTime>02/28/2017 00:13:05</publishTime>
+      <publishTime>04/15/2017 15:35:40</publishTime>
     </File>
     <File Include="Views/Hethong/RoleGroup.cshtml">
       <publishTime>11/19/2014 15:08:54</publishTime>
@@ -21925,7 +21928,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/29/2015 06:17:39</publishTime>
     </File>
     <File Include="Views/Vanbanden/Themvanban.cshtml">
-      <publishTime>08/13/2015 09:06:17</publishTime>
+      <publishTime>06/14/2017 09:20:09</publishTime>
     </File>
     <File Include="Views/Vanbanden/_Capquyenxem.cshtml">
       <publishTime>04/16/2014 15:05:19</publishTime>
@@ -21973,7 +21976,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/20/2015 15:32:55</publishTime>
     </File>
     <File Include="Views/Vanbandendientu/Index.cshtml">
-      <publishTime>08/30/2015 11:15:13</publishTime>
+      <publishTime>04/24/2017 11:33:10</publishTime>
     </File>
     <File Include="Views/Vanbandendientu/Tonghop.cshtml">
       <publishTime>10/11/2015 00:11:41</publishTime>
@@ -22006,10 +22009,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/29/2015 16:51:12</publishTime>
     </File>
     <File Include="Views/Vanbandi/Email.cshtml">
-      <publishTime>08/30/2015 15:57:50</publishTime>
+      <publishTime>07/06/2017 09:34:43</publishTime>
     </File>
     <File Include="Views/Vanbandi/Index.cshtml">
-      <publishTime>12/13/2015 16:45:44</publishTime>
+      <publishTime>05/25/2017 16:02:34</publishTime>
     </File>
     <File Include="Views/Vanbandi/ListVBDiLienquan.cshtml">
       <publishTime>05/26/2015 08:17:49</publishTime>
@@ -22028,6 +22031,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Views/Vanbandi/_GetDonviEdxml.cshtml">
       <publishTime>08/30/2015 08:20:20</publishTime>
+    </File>
+    <File Include="Views/Vanbandi/_GetDonviTrucTinh.cshtml">
+      <publishTime>04/24/2017 08:47:42</publishTime>
     </File>
     <File Include="Views/Vanbandi/_ListUserCapquyenxem.cshtml">
       <publishTime>11/19/2014 15:52:23</publishTime>
@@ -22057,7 +22063,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/27/2017 23:20:52</publishTime>
     </File>
     <File Include="Views/Vanbandidientu/Tonghop.cshtml">
-      <publishTime>03/12/2017 16:19:04</publishTime>
+      <publishTime>04/01/2017 16:38:59</publishTime>
     </File>
     <File Include="Views/Vanbandidientu/TonghopDonvi.cshtml">
       <publishTime>06/08/2015 19:02:34</publishTime>
@@ -22084,7 +22090,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/12/2016 14:26:49</publishTime>
     </File>
     <File Include="Views/Vanbandidientu/_TonghopVBDT.cshtml">
-      <publishTime>06/12/2016 14:28:24</publishTime>
+      <publishTime>04/01/2017 16:11:18</publishTime>
+    </File>
+    <File Include="Views/Vanbandidientu/_TonghopVBDT_chuyenvien.cshtml">
+      <publishTime>04/01/2017 16:42:33</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>03/17/2014 09:37:44</publishTime>
@@ -22099,7 +22108,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/19/2014 09:22:04</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/03/2017 10:30:18</publishTime>
+      <publishTime>07/07/2017 14:21:56</publishTime>
     </File>
   </ItemGroup>
 </Project>
