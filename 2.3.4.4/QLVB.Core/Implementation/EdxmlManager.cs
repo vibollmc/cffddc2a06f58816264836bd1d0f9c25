@@ -634,6 +634,8 @@ namespace QLVB.Core.Implementation
                 }
                 vb.strmadinhdanh = strmadinhdanh;
 
+                vb.intnhanvanbantu = enumVanbandenmail.intnhanvanbantu.TrucLienThongChinhPhu;
+
                 int id = _vbdenMailRepo.Them(vb);
 
                 return id;

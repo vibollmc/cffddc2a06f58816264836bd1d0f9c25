@@ -56,10 +56,18 @@ namespace QLVB.Domain.Entities
         public string strmadinhdanh { get; set; }
 
         public DateTime? strhantraloi { get; set; }
+
+        public enumVanbandenmail.intnhanvanbantu? intnhanvanbantu { get; set; }
     }
 
     public class enumVanbandenmail
     {
+        public enum intnhanvanbantu
+        {
+            Email = 1,
+            TrucLienThongTinh = 2,
+            TrucLienThongChinhPhu = 3
+        }
         public enum intloai
         {
             Vanbanden = 1,

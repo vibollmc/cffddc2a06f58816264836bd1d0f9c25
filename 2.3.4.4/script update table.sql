@@ -1,11 +1,4 @@
-﻿--==========cập nhật: 14/06/2017 --cập nhật trạng thái xử lý văn bản trên trục chính phủ ================================
-
-alter table vanbanden add intidvanbandenmail int null
-alter table GuiVanban add strngaytiepnhan datetime null
-alter table GuiVanban add strngayhoanthanh datetime null
-alter table GuiVanban add strngaydangxuly datetime null
-
---==========cập nhật: 15/04/2017 -- trục liên thông của tỉnh ================================
+﻿--==========cập nhật: 15/04/2017 -- trục liên thông của tỉnh ================================
 
 insert into Config values('TrucLienthongTinh', 'http://123.30.75.134:8079/gw-portlet/api/secure/axis/Plugin_NSSGateway_NSSGatewayService?wsdl', N'Đường dẫn trục liên thông tỉnh', 1,4,1)
 insert into Config values('UsernameTrucTinh', 'qlvb.vpubnd', N'Tài khoản Trục liên thông tỉnh', 2,4,1)
@@ -14,7 +7,14 @@ insert into Config values('MaDonviTrucTinh', '1:30:0:0:0:0:1', N'Mã đơn vị 
 insert into Config values('TenDonviTrucTinh', 'Ủy ban nhân dân Tỉnh Đồng Nai', N'Tên đơn vị trên Trục liên thông tỉnh', 4,4,1)
 insert into Config values('LoaiVanbanTrucTinh', '1.1.0.1', N'Phiên bản văn bản Trục liên thông tỉnh', 4,4,1)
 alter table Tochucdoitac add strmatructinh nvarchar(100) null
+alter table Vanbandenmail add intnhanvanbantu int null
 
+--==========cập nhật: 14/06/2017 --cập nhật trạng thái xử lý văn bản trên trục chính phủ ================================
+
+alter table vanbanden add intidvanbandenmail int null
+alter table GuiVanban add strngaytiepnhan datetime null
+alter table GuiVanban add strngayhoanthanh datetime null
+alter table GuiVanban add strngaydangxuly datetime null
 
 
 --==========cập nhật: 07/03/2017-- lưu nhật ký gửi số liệu văn bản ==========================

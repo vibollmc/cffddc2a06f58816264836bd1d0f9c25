@@ -567,6 +567,8 @@ namespace QLVB.Core.Implementation
 
                 vb.strngaynhanvb = DateTime.Now;
 
+                vb.intnhanvanbantu = enumVanbandenmail.intnhanvanbantu.Email;
+
                 int id = _vbdenMailRepo.Them(vb);
 
                 return id;
@@ -1689,6 +1691,8 @@ namespace QLVB.Core.Implementation
                 vb.strAddressSend = stremailguivb;
 
                 vb.strngaynhanvb = DateTime.Now;
+
+                vb.intnhanvanbantu = enumVanbandenmail.intnhanvanbantu.Email;
 
                 int id = _vbdenMailRepo.Them(vb);
 

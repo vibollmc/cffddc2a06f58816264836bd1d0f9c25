@@ -234,7 +234,7 @@ namespace QLVB.Core.Implementation
                         }
                     }
                     DateTime date;
-                    if (DateTime.TryParseExact(objDocument.ngaybanhanhchidao, "dd'.'MM'.'yyyy",
+                    if (DateTime.TryParseExact(objDocument.ngaybanhanhchidao, "dd/MM/yyyy",
                                                CultureInfo.InvariantCulture,
                                                DateTimeStyles.None,
                                                out date))
@@ -265,6 +265,7 @@ namespace QLVB.Core.Implementation
 
                     vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
                     vbdenMail.strnoiguivb = objDocument.tennoiphathanh;
+                    vbdenMail.strmadinhdanh = objDocument.manoiphathanh;
 
                     vbdenMail.strnguoiky = objDocument.nguoiky;
 
@@ -277,6 +278,7 @@ namespace QLVB.Core.Implementation
                         vbdenMail.intsoban = outi;
                     }
 
+                    vbdenMail.intnhanvanbantu = enumVanbandenmail.intnhanvanbantu.TrucLienThongTinh;
 
                     //Lưu tập tin đính kèm 
 
