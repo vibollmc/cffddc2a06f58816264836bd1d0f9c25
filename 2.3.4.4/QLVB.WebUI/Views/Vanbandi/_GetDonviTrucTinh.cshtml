@@ -62,12 +62,12 @@
 
     $('#parentcheckboxTrucTinh').click(function () {
         var ischeck = $(this).prop('checked');
-        $("#listdonviTrucTinh").find(':checkbox').each(function () {
+        $("#listdonviTrucTinh").find(':checkbox').each(function() {
             var disable = $(this).prop('disabled');
             if (disable == false) {
                 $(this).prop('checked', ischeck);
             }
-        })        
+        });
     });
 
 </script>

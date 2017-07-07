@@ -395,7 +395,7 @@
 	    ShowLoading();
 
 	    var local = "true";
-	    if ($('#GetDonviTinhService').innerText.toLowerCase().indexOf('trục liên thông') > 0) local = "false";
+	    if ($('#GetDonviTinhService').innerText.indexOf('Trục liên thông') > 0) local = "false";
 
         var url = '@Url.Action("_GetDonviTrucTinh","Vanbandi")';
 	    url = url + '?id=@Model.idvanban&local=' + local;
