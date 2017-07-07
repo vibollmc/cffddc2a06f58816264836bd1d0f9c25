@@ -233,7 +233,19 @@ namespace QLVB.Core.Implementation
                             vbdenMail.intkhan = dokhan.intid;
                         }
                     }
-
+                    DateTime date;
+                    if (DateTime.TryParseExact(objDocument.ngaybanhanhchidao, "dd'.'MM'.'yyyy",
+                                               CultureInfo.InvariantCulture,
+                                               DateTimeStyles.None,
+                                               out date))
+                    {
+                        vbdenMail.strngayguivb = date;
+                    }
+                    else
+                    {
+                        // Parse failed
+                    }
+                    //
                     vbdenMail.strtrichyeu = objDocument.noidungtrichyeu;
                     vbdenMail.strngaynhanvb = DateTime.Now;
 
