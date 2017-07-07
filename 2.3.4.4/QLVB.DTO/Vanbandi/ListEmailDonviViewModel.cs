@@ -40,5 +40,7 @@ namespace QLVB.DTO.Vanbandi
         public bool IsSend { get; set; }
 
         public string strmatructinh { get; set; }
+
+        public string strmadinhdanh { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using QLVB.Common.Date;
 using DocumentFormat.OpenXml.Packaging;
 using QLVB.WebUI.Common.OpenXML;
 using DocumentFormat.OpenXml.Spreadsheet;
+using LinqToLdap.Collections;
 using QLVB.DTO.Edxml;
 using QLVB.DTO.Truclienthongtinh;
 
@@ -967,9 +968,33 @@ namespace QLVB.WebUI.Controllers
             }
         }
 
-        public ActionResult _GetDonviTrucTinh(int id)
+        public ActionResult _GetDonviTrucTinh(int id, bool local)
         {
-            var donvi = _truclienthong.GetAllOrganization();
+            var donvi = new List<OrganizationVM>();
+
+            if (!local)
+            {
+                donvi = _truclienthong.GetAllOrganization();
+            }
+            else
+            {
+                var tochuc = _vanban.GetListEmailDonvi(id);
+
+                if (tochuc != null)
+                {
+                    if (tochuc.donvi != null)
+                    {
+                        donvi = tochuc.donvi.Where(x => x.strmatructinh != null).Select(x => new OrganizationVM()
+                        {
+                            name = x.strtendonvi,
+                            code = x.strmatructinh,
+                            edxmlCode = x.strmadinhdanh
+                        }).ToList();
+                    }
+                }
+
+            }
+
             ViewBag.idvanban = id;
             return PartialView(donvi);
         }
