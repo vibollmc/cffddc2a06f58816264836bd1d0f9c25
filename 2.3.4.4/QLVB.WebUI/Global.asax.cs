@@ -80,23 +80,28 @@ namespace QLVB.WebUI
             var contractResolver = (Newtonsoft.Json.Serialization.DefaultContractResolver)serializerSettings.ContractResolver;
             contractResolver.IgnoreSerializableAttribute = true;
 
-            //_autoResetEvent = new AutoResetEvent(false);
+            _autoResetEvent = new AutoResetEvent(false);
 
-            //var isProcessing = false;
+            var isProcessing = false;
 
-            //_timer = new Timer((o) =>
-            //{
-            //    if(isProcessing) return;
+            _timer = new Timer((o) =>
+            {
+                if (!NinjectWebCommon.Started) return;
 
-            //    isProcessing = true;
+                if (isProcessing) return;
 
-            //    var edxmlManager = GlobalHost.DependencyResolver.Resolve<IEdxmlManager>();
+                isProcessing = true;
 
-            //    edxmlManager.ReceiveStatusFile();
+                var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
 
-            //   isProcessing = false;
+                if (edxmlManager != null)
+                {
+                    edxmlManager.ReceiveStatusFile();
+                }
 
-            //}, _autoResetEvent, 1000, 200000);
+                isProcessing = false;
+
+            }, _autoResetEvent, 1000, 200000);
         }
 
         //protected void Application_BeginRequest()

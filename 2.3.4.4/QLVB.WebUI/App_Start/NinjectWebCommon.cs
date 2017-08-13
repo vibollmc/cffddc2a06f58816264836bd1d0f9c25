@@ -22,6 +22,9 @@ namespace QLVB.WebUI.App_Start
     public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+        private static IKernel _kernel;
+
+        public static bool Started = false;
 
         /// <summary>
         /// Starts the application
@@ -31,6 +34,8 @@ namespace QLVB.WebUI.App_Start
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
+
+            Started = true;
         }
 
         /// <summary>
@@ -39,6 +44,13 @@ namespace QLVB.WebUI.App_Start
         public static void Stop()
         {
             bootstrapper.ShutDown();
+
+            Started = false;
+        }
+
+        public static T Resolve<T>() where T : class
+        {
+            return _kernel.Get<T>();
         }
 
         /// <summary>
@@ -47,18 +59,18 @@ namespace QLVB.WebUI.App_Start
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
+            _kernel = new StandardKernel();
             try
             {
-                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+                _kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                _kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-                RegisterServices(kernel);
-                return kernel;
+                RegisterServices(_kernel);
+                return _kernel;
             }
             catch
             {
-                kernel.Dispose();
+                _kernel.Dispose();
                 throw;
             }
         }
