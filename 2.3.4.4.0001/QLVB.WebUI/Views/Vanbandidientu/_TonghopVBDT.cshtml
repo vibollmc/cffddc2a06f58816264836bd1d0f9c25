@@ -1,0 +1,32 @@
+﻿@model IEnumerable<QLVB.DTO.Vanbandientu.TonghopVBDiViewModel>
+@{
+    int count = 0;    
+}
+
+<table class="table table-bordered table-condensed responsive-table" style="width: 100%">
+    <tr style="font-weight:bold;">
+        <td style="width: 5%; text-align: center;">STT</td>
+        <td style="width:auto">Đơn vị</td>
+        <td style="width: 30% ;text-align:center;">Email</td>
+        <td style="width: 15%; text-align: center;">VB gửi điện tử</td>
+        <td style="width: 15%; text-align: center;">VB đã nhận</td>
+    </tr>
+    @foreach (var m in Model)
+    {
+        count++;
+        <tr id="@m.intid" >
+            <td style="width:5%; text-align: center;">@count</td>
+            <td style="width:auto;">@m.strten</td>
+            <td style="width:30%;text-align:center; ">@m.stremail</td>
+            <td style="width: 15%; text-align: center;cursor:pointer" onclick="OpenDetail(@m.intid)" >@m.intTongVB</td>
+            <td style="width: 15%; text-align: center;">@m.intVBCapnhat</td>
+        </tr>
+    }
+
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        HideLoading();
+    })   
+</script>

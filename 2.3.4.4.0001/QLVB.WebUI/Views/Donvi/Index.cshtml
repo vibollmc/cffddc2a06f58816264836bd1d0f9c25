@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section header{
+    <i class="glyphicon glyphicon-user">&nbsp;</i>Đơn vị trực thuộc
+}
+
+<div class="row">
+    <div class="col-sm-4">
+        @Html.Action("_Listdonvi","Donvi")
+    </div>
+    <div class="col-sm-8" id="listUser">
+    </div>
+    @Html.Hidden("iddonvi")
+    @Html.Hidden("iduser")
+</div>
+<script type="text/javascript">
+    $(window).resize(function () {
+        //SetGridHeight();
+    });
+    $(document).ready(function () {
+        // SetGridHeight();
+    })
+    function onChangeUser(arg) {
+        var selected = $.map(this.select(), function (item) {
+            var value = $(item).text();
+            var grid = $("#grid").data("kendoGrid");
+            var row = grid.select();
+            var intid = grid.dataItem(row).intid;
+            SetIdUser(intid);
+        });
+    }
+    function SetIdDonvi(iddonvi) {
+        $('#iddonvi').val(iddonvi);
+    }
+    function GetIdDonvi() {
+        var id = $('#iddonvi').val();
+        return id;
+    }
+    function SetIdUser(iduser) {
+        $('#iduser').val(iduser);
+    }
+    function GetIdUser() {
+        var id = $('#iduser').val();
+        return id;
+    }
+    function CloseEditDonvi() {
+        var window = $("#EditDonvi").data("kendoWindow");
+        window.close();
+    }
+    function OpenEditDonvi() {
+        var window = $("#EditDonvi").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    function CloseEditUser() {
+        var window = $("#EditUser").data("kendoWindow");
+        window.close();
+    }
+    function OpenEditUser() {
+        var window = $("#EditUser").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    function CloseMoveUser() {
+        var window = $("#MoveUser").data("kendoWindow");
+        window.close();
+    }
+    function OpenMoveUser() {
+        var window = $("#MoveUser").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    function CloseVaitroUser() {
+        var window = $("#VaitroUser").data("kendoWindow");
+        window.close();
+    }
+    function OpenVaitroUser() {
+        var window = $("#VaitroUser").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    $("#AddDonvibtn").bind("click", function () {
+        var id = GetIdDonvi();
+        if (id != 0) {
+            var url = '@Url.Action("_formEditDonvi", "Donvi")';
+            url = url + '?type=add&id=' + id;
+            $('#detail-editDonvi').load(url);
+            OpenEditDonvi();
+        } else {
+            SetThongbao("Bạn chưa chọn đơn vị");
+        }
+    });
+    $("#EditDonvibtn").bind("click", function () {
+        var id = GetIdDonvi();
+        if (id != 0) {
+            if (id != 1) {
+                var url = '@Url.Action("_formEditDonvi", "Donvi")';
+                url = url + '?type=edit&id=' + id;
+                $('#detail-editDonvi').load(url);
+                OpenEditDonvi();
+            } else {
+                SetThongbao("Bạn không thể cập nhật tên đơn vị gốc");
+            }
+        } else {
+            SetThongbao("Bạn chưa chọn đơn vị");
+        }
+    });
+    $("#DeleteDonvibtn").bind("click", function () {
+        var id = GetIdDonvi();
+        if (id != 0) {
+            if (id != 1) {
+                var url = '@Url.Action("_formDeleteDonvi", "Donvi", (new { id = "__id__" }))'.replace('__id__', id);
+                $('#detail-editDonvi').load(url);
+                OpenEditDonvi();
+            } else {
+                SetThongbao("Bạn không thể xóa tên đơn vị gốc");
+            }
+        } else {
+            SetThongbao("Bạn chưa chọn đơn vị");
+        }
+    });    
+</script>
+@(Html.Kendo().Window()
+    .Name("EditDonvi")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Cập nhật đơn vị")
+    .Resizable()
+    .Width(500)
+    .HtmlAttributes(new { style = "height:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-editDonvi">
+        </div>
+    </text>
+    )
+)
+@(Html.Kendo().Window()
+    .Name("EditUser")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Cập nhật cán bộ")
+    .Resizable()
+    .Width(650)
+    .Height(480)
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-editUser">
+        </div>
+    </text>
+    )
+)
+@(Html.Kendo().Window()
+    .Name("MoveUser")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Chuyển cán bộ")
+    .Resizable()
+    .Width(650)
+    .Height(400)
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-MoveUser">
+        </div>
+    </text>
+    )
+)
+
+@(Html.Kendo().Window()
+    .Name("VaitroUser")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Vai trò cán bộ")
+    .Resizable()
+    .Width(650)
+    .Height(400)
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-VaitroUser">
+        </div>
+    </text>
+    )
+)
+

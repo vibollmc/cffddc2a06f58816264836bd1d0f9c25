@@ -1,0 +1,112 @@
+﻿@model QLVB.DTO.Vanbanden.DetailVBDenViewModel
+
+<table class="table table-condensed table-bordered responsive-table">
+    <tbody>
+        <tr>
+            <td colspan="4" class="title-header">
+                <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN VĂN BẢN
+            </td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Ngày đến</th>
+            <td class="table-col-4">@Model.strngayden</td>
+            <th class="table-col-4">Số đến</th>
+            <td class="table-col-4">@Model.intsoden</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Sổ văn bản</th>
+            <td class="table-col-4">@Model.strsovanban</td>
+            <th class="table-col-4">Loại văn bản</th>
+            <td class="table-col-4">@Model.strloaivanban</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Số, Ký hiệu</th>
+            <td class="table-col-4">@Model.strkyhieu</td>
+            <th class="table-col-4">Khối phát hành</th>
+            <td class="table-col-4">@Model.strtenkhoiphathanh</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Cơ quan phát hành</th>
+            <td class="table-col-4" colspan="3">@Model.strtencoquanphathanh</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Trích yếu </th>
+            <td class="table-col-4" colspan="3">@Model.strtrichyeu</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Ngày ký</th>
+            <td class="table-col-4">@Model.strngayky</td>
+            <th class="table-col-4">Người ký</th>
+            <td class="table-col-4">@Model.strnguoiky</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Độ mật</th>
+            <td class="table-col-4">@Model.strvbmat</td>
+            <th class="table-col-4">Độ khẩn</th>
+            <td class="table-col-4">@Model.strvbkhan</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Người xử lý ban đầu</th>
+            <td class="table-col-4">@Model.strnguoixulybandau</td>
+            <th class="table-col-4">Người xử lý chính</th>
+            <td class="table-col-4">@Model.strnguoixulychinh</td>
+        </tr>
+        <tr>
+            <th class="table-col-4">Hạn trả lời</th>
+            <td class="table-col-4">@Model.strhantraloi</td>
+            <th class="table-col-4">Trả lời văn bản</th>
+            <td class="table-col-4">
+                @if (Model.idvanbandi != 0)
+                {
+                    <a style='color:blue' href='javascript:OpenVBPhathanh(@Model.idvanbandi)'><i>@Model.strtraloivanban</i></a>
+                }
+                else
+                {
+                    @Model.strtraloivanban
+                }
+            </td>
+
+        </tr>
+        @if (Model.idvanbanphathanh > 0)
+        {
+            <tr>
+                <th class="table-col-4">Văn bản phát hành</th>
+                <td class="table-col-4" colspan="3">
+                    <a style='color:blue' href='javascript:OpenVBPhathanh(@Model.idvanbanphathanh)'><i>@Model.strvanbanphathanh</i></a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <th class="table-col-4">Hồ sơ văn bản</th>
+            <td class="table-col-4" colspan="3">
+                <a style='color:blue' href='javascript:OpenDetailHoso(@Model.intidhosocongviec)' title='Nội dung hồ sơ'><i>@Model.strhosovanban</i></a>
+
+            </td>
+        </tr>
+        <tr>
+            <td class="table-col-4 title-header" colspan="4">
+                <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;VĂN BẢN TOÀN VĂN
+            </td>
+        </tr>
+        <tr>
+            <td id="strfileattach" colspan="4" class="table-col-4" style="text-align:center;">
+                @if (Model.isattach)
+                {
+                    Html.RenderPartial("_ViewStoreFile", Model.DownloadFiles);
+                }
+                else
+                {
+                    @Html.Raw("Không có file đính kèm")
+                }
+
+            </td>
+
+
+        </tr>
+    </tbody>
+
+
+
+</table>
+
+

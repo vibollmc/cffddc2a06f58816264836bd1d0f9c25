@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{822199F3-8B55-42A2-86F8-BD5382D684BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QLVB.DTO</RootNamespace>
+    <AssemblyName>QLVB.DTO</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\QLVB.Common\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Account\ChangePasswordViewModel.cs" />
+    <Compile Include="Account\HomeViewModel.cs" />
+    <Compile Include="Account\ListUserUyquyenViewModel.cs" />
+    <Compile Include="Account\LoginViewModel.cs" />
+    <Compile Include="Account\OptionViewModel.cs" />
+    <Compile Include="Account\RegisterViewModel.cs" />
+    <Compile Include="Account\TuychonViewModel.cs" />
+    <Compile Include="Account\UserUyquyenViewModel.cs" />
+    <Compile Include="Baocao\CategoryBaocaoViewModel.cs" />
+    <Compile Include="Baocao\ListDonviViewModel.cs" />
+    <Compile Include="Baocao\LoaivanbandenViewModel.cs" />
+    <Compile Include="Baocao\LoaivanbandiViewModel.cs" />
+    <Compile Include="Baocao\PhieunhanVBDenViewModels.cs" />
+    <Compile Include="Baocao\SoVanbandenViewModel.cs" />
+    <Compile Include="Baocao\SovanbandiViewModel.cs" />
+    <Compile Include="Capcoquan\CapnhatDanhmucDonviViewModel.cs" />
+    <Compile Include="Capcoquan\EditKhoiphViewModel.cs" />
+    <Compile Include="Capcoquan\EditTochucViewModel.cs" />
+    <Compile Include="Capcoquan\EmailDonviDBViewModel.cs" />
+    <Compile Include="Chat\MessageInfo.cs" />
+    <Compile Include="Chat\UserInfo.cs" />
+    <Compile Include="Chucdanh\DeleteChucdanhViewModel.cs" />
+    <Compile Include="Chucdanh\EditChucdanhViewModel.cs" />
+    <Compile Include="Chucdanh\ListChucdanhViewModel.cs" />
+    <Compile Include="Donvi\DeleteDonviViewModel.cs" />
+    <Compile Include="Donvi\DeleteUserViewModel.cs" />
+    <Compile Include="Donvi\EditDonviViewModel.cs" />
+    <Compile Include="Donvi\EditUserViewModel.cs" />
+    <Compile Include="Capcoquan\EmailDonviXMLViewModel.cs" />
+    <Compile Include="Donvi\ListUserViewModel.cs" />
+    <Compile Include="Donvi\ListVaitroUserViewModel.cs" />
+    <Compile Include="Donvi\MoveUserViewModel.cs" />
+    <Compile Include="Edxml\AgencyViewModel.cs" />
+    <Compile Include="Edxml\TrangthaiEdxml.cs" />
+    <Compile Include="File\CommonFileViewer.cs" />
+    <Compile Include="File\DocxViewerModel.cs" />
+    <Compile Include="File\DownloadFileViewModel.cs" />
+    <Compile Include="File\FileDownloadResult.cs" />
+    <Compile Include="File\PdfViewerModel.cs" />
+    <Compile Include="File\UploadFileViewModel.cs" />
+    <Compile Include="Hethong\BackupViewModel.cs" />
+    <Compile Include="Hethong\EditGroupViewModel.cs" />
+    <Compile Include="Hethong\ListRoleGroupViewModel.cs" />
+    <Compile Include="Hethong\ListUserViewModel.cs" />
+    <Compile Include="Hethong\MoveNhomquyenUserViewModel.cs" />
+    <Compile Include="Hethong\RoleGroupCheckViewModel.cs" />
+    <Compile Include="Hethong\RoleGroupViewModel.cs" />
+    <Compile Include="Hethong\SettingSendTonghopVBViewModel.cs" />
+    <Compile Include="Hethong\UserViewModel.cs" />
+    <Compile Include="Hoso\AddYkienViewModel.cs" />
+    <Compile Include="Hoso\CategoryCongviecViewModel.cs" />
+    <Compile Include="Hoso\DanhsachNguoixulyViewModel.cs" />
+    <Compile Include="Hoso\DetailHosoViewModel.cs" />
+    <Compile Include="Hoso\EditHosoQuytrinhXulyViewModel.cs" />
+    <Compile Include="Hoso\FileAttachViewModel.cs" />
+    <Compile Include="Hoso\HosoykienxulyViewModel.cs" />
+    <Compile Include="Hoso\ListCongviecViewModel.cs" />
+    <Compile Include="Hoso\LuanchuyenvanbanViewModel.cs" />
+    <Compile Include="Hoso\PhanQuytrinhViewModel.cs" />
+    <Compile Include="Hoso\PhanXLVBViewModel.cs" />
+    <Compile Include="Hoso\PhathanhVBViewModel.cs" />
+    <Compile Include="Hoso\PhieutrinhViewModel.cs" />
+    <Compile Include="Hoso\PhoihopXulyViewModel.cs" />
+    <Compile Include="Hoso\SearchCongviecViewModel.cs" />
+    <Compile Include="Hoso\ThongtinHosoViewModel.cs" />
+    <Compile Include="Hoso\ToolbarCongviecViewModel.cs" />
+    <Compile Include="Hoso\ToolbarXulyViewModel.cs" />
+    <Compile Include="Linhvuc\DeleteLinhvucViewModel.cs" />
+    <Compile Include="Linhvuc\EditLinhvucViewModel.cs" />
+    <Compile Include="Linhvuc\ListLinhvucViewModel.cs" />
+    <Compile Include="Log\LogViewModel.cs" />
+    <Compile Include="Luutru\DeleteDonviViewModel.cs" />
+    <Compile Include="Luutru\EditDonviViewModel.cs" />
+    <Compile Include="Mail\AccountSettingViewModel.cs" />
+    <Compile Include="Mail\ThongtinVanbanViewModel.cs" />
+    <Compile Include="Quytrinh\CategoryNgayViewModel.cs" />
+    <Compile Include="Quytrinh\EditLoaiQuytrinhViewModel.cs" />
+    <Compile Include="Quytrinh\EditQuytrinhViewModel.cs" />
+    <Compile Include="Quytrinh\EditThongtinXulyViewModel.cs" />
+    <Compile Include="Quytrinh\FlowchartViewModel.cs" />
+    <Compile Include="Quytrinh\ListLoaiQuytrinhViewModel.cs" />
+    <Compile Include="Quytrinh\QuytrinhXulyViewModels.cs" />
+    <Compile Include="Quytrinh\ViewThongtinXulyViewModel.cs" />
+    <Compile Include="ResultViewModels.cs" />
+    <Compile Include="KendoGridDisplay.cs" />
+    <Compile Include="Loaivanban\DeleteLoaivanbanViewModel.cs" />
+    <Compile Include="Loaivanban\EditLoaivanbanViewModel.cs" />
+    <Compile Include="Loaivanban\ListTruongvbViewModel.cs" />
+    <Compile Include="Menu\HeaderViewModel.cs" />
+    <Compile Include="Menu\MenuViewModels.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sovb\EditSovanbanViewModel.cs" />
+    <Compile Include="Sovb\ListKhoiphathanhViewModel.cs" />
+    <Compile Include="Sovb\ListLoaivanbanViewModel.cs" />
+    <Compile Include="Sovb\ListSovanbanViewModel.cs" />
+    <Compile Include="Tinhchatvb\EditTinhchatViewModel.cs" />
+    <Compile Include="CanboViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\ChartCommonViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\D3DashboardXLVBDenViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\FlowchartTonghopViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\ListdonviViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\ListQuytrinhViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\ListVanbandenViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\QuytrinhVBDenViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\XLVanbanden.cs" />
+    <Compile Include="TonghopVanbanViewModel.cs" />
+    <Compile Include="Tonghop\ListTonghopVBDenViewModel.cs" />
+    <Compile Include="TracuuLuutru\CapnhatLuutruViewModel.cs" />
+    <Compile Include="TracuuVanbandi\ToolbarViewModel.cs" />
+    <Compile Include="Truclienthongtinh\ConfigTruclienthong.cs" />
+    <Compile Include="Truclienthongtinh\CongvandiVM.cs" />
+    <Compile Include="Truclienthongtinh\OrganizationVM.cs" />
+    <Compile Include="Vanbanden\CategoryViewModel.cs" />
+    <Compile Include="Vanbanden\CheckVBTrungViewModel.cs" />
+    <Compile Include="Vanbanden\DeleteVBViewModel.cs" />
+    <Compile Include="Vanbanden\DetailVBDenViewModel.cs" />
+    <Compile Include="Vanbanden\ListTochucdoitacViewModel.cs" />
+    <Compile Include="Vanbanden\ListUserCapquyenxemViewModel.cs" />
+    <Compile Include="Vanbanden\ListVanbandenlienquanViewModel.cs" />
+    <Compile Include="Vanbanden\ListVanbandenViewModel.cs" />
+    <Compile Include="Vanbanden\SearchVBViewModel.cs" />
+    <Compile Include="Vanbanden\ThemVanbanViewModel.cs" />
+    <Compile Include="Vanbanden\ToolbarViewModel.cs" />
+    <Compile Include="Vanbanden\UploadVBDenViewModel.cs" />
+    <Compile Include="Vanbandientu\DeleteVBViewModel.cs" />
+    <Compile Include="Vanbandientu\DetailVBDenViewModel.cs" />
+    <Compile Include="Vanbandientu\DonviViewModel.cs" />
+    <Compile Include="Mail\ListFileToAttach.cs" />
+    <Compile Include="Vanbandientu\EdXMLBC\edXMLBCFrom.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLAttachment.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLBody.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLCode.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLDocument.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLDocumentType.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLDonvi.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLError.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLHeader.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLManifest.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLMessage.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLMessageHeader.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLOtherInfo.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLPromulgationInfo.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLReference.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLSignerInfo.cs" />
+    <Compile Include="Vanbandientu\EdXML\edXMLTraceHeader.cs" />
+    <Compile Include="Vanbandientu\EdXML\FileAttachMail.cs" />
+    <Compile Include="Vanbandientu\ListSendDonviViewModel.cs" />
+    <Compile Include="Vanbandientu\ListVanbandendientuViewModel.cs" />
+    <Compile Include="Vanbandientu\ListVanbandidientuViewModel.cs" />
+    <Compile Include="Vanbandientu\SearchVBDenDientuViewModel.cs" />
+    <Compile Include="Vanbandientu\SearchVBDiDientuViewModel.cs" />
+    <Compile Include="Vanbandientu\TonghopVBDenViewModel.cs" />
+    <Compile Include="Vanbandientu\TonghopVBDiViewModel.cs" />
+    <Compile Include="Vanbandientu\ToolbarVBDenViewModel.cs" />
+    <Compile Include="Vanbandientu\TraceVanbanViewModel.cs" />
+    <Compile Include="Vanbandientu\TTTHBaocaoViewModel.cs" />
+    <Compile Include="Vanbandientu\VanbanViewModel.cs" />
+    <Compile Include="Vanbandi\CategoryViewModel.cs" />
+    <Compile Include="Vanbandi\DeleteVBViewModel.cs" />
+    <Compile Include="Vanbandi\DetailVBDiViewModel.cs" />
+    <Compile Include="Vanbanden\FormPhanXLNhieuVBViewModel.cs" />
+    <Compile Include="Vanbandientu\ListDonviguiViewModels.cs" />
+    <Compile Include="Vanbandi\ListEmailDonviViewModel.cs" />
+    <Compile Include="Vanbandi\ListTochucdoitacViewModel.cs" />
+    <Compile Include="Vanbandi\ListUserCapquyenxemViewModel.cs" />
+    <Compile Include="Vanbandi\ListVanbandilienquanViewModel.cs" />
+    <Compile Include="Vanbandi\ListVanbandiViewModel.cs" />
+    <Compile Include="Vanbandi\SearchVBViewModel.cs" />
+    <Compile Include="Vanbandi\ThemvanbanViewModel.cs" />
+    <Compile Include="Vanbandi\ToolbarViewModel.cs" />
+    <Compile Include="Vanbandi\UploadVBDiViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QLVB.Common\QLVB.Common.csproj">
+      <Project>{2207e482-8499-4f38-af5d-5eee0ff41533}</Project>
+      <Name>QLVB.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLVB.Domain\QLVB.Domain.csproj">
+      <Project>{1662faef-aa23-4ce6-bb46-474ba4250252}</Project>
+      <Name>QLVB.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

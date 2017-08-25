@@ -1,0 +1,86 @@
+﻿@{
+    int idhoso = ViewBag.idhoso;
+}
+<script type="text/javascript">
+    function onChangeVBDi(arg) {
+        var selected = $.map(this.select(), function (item) {
+            var value = $(item).text();
+            var grid = $("#gridVBDi").data("kendoGrid");
+            var row = grid.select();
+            var intid = grid.dataItem(row).intid;
+            var inttrangthai = grid.dataItem(row).inttrangthai;
+           
+        });
+    }
+    function onDataBoundVBDi(arg) {
+        dataView = this.dataSource.view();
+        for (var i = 0; i < dataView.length; i++) {
+            if (dataView[i].inttrangthai == 0) {
+                var uid = dataView[i].uid;
+                $("#gridVBDi tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+            }			
+        }
+    }	
+    function onErrorVBDi(e, status) {
+        SetThongbao("Đã có lỗi xảy ra trên Server!");
+    };
+    function ViewDetailVBDi(id) {
+        OpenViewDetailVBDi(id);
+    };
+</script>
+
+<div class="row" style="padding-left:20px;padding-right:20px;">
+
+    @(Html.Kendo().Grid<QLVB.DTO.Vanbandi.ListVanbandiViewModel>()
+    .Name("gridVBDi")
+            .Columns(columns =>
+            {
+                columns.Bound(c => c.intid).Hidden();
+                columns.Bound(o => o.IsAttach).Title(" ")
+                    .ClientTemplate(
+                        "#if (IsAttach) { #" +
+                            "<img onclick='ViewDetailVBDi(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+                        "# } else { #" +
+                            "<img onclick='ViewDetailVBDi(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+                        "# } #"
+                    )
+                    .Width(28);
+                columns.Bound(o => o.dtengayky).Format("{0:dd/MM/yyyy}").Title("Ngày ký").Width(90);
+                columns.Bound(o => o.intso).Title("Số")
+                    .ClientTemplate(
+                        "#=intso##=strsophu#"
+                        )
+                    .Width(60);
+                columns.Bound(o => o.strkyhieu).Title("Ký hiệu").Width("12%");
+                columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("30%");
+                columns.Bound(o => o.strnoinhan).Title("Nơi nhận").Width("20%");
+                columns.Bound(o => o.inttrangthai).Hidden();
+                columns.Bound(o => o.dtehanxuly).Format("{0:dd/MM/yyyy}").Title("Hạn trả lời").Width(90);
+            })
+    .HtmlAttributes(new { style = "white-space: normal;height:470px;" })
+    .Scrollable()
+    .Sortable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("HosoVBDiLQ_Read", "Vanbandi", new { idhoso = idhoso })
+            )
+            .Events(events => events.Error("onErrorVBDi"))
+        )
+    .Events(events => events.Change("onChangeVBDi")
+                    .DataBound("onDataBoundVBDi"))
+    )
+
+</div>
+
+

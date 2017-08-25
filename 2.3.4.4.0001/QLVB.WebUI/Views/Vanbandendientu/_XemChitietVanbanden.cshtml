@@ -1,0 +1,78 @@
+﻿@model QLVB.DTO.Vanbandientu.DetailVBDenViewModel
+
+
+
+<table class="table-condensed table-bordered responsive-table">
+    <tr>
+        <td colspan="4" class="title-header">
+            <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN VĂN BẢN
+        </td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Đơn vị gửi văn bản</th>
+        <td class="table-col-4" colspan="3">@Model.strnoiguivb</td>       
+    </tr>
+    <tr>
+        <th class="table-col-4">Mã định danh</th>
+        <td class="table-col-4">@Model.strmadinhdanh</td>
+        <th class="table-col-4">Email</th>
+        <td class="table-col-4">@Model.stremail</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Số, ký hiệu</th>
+        <td class="table-col-4">
+            @if (Model.intso > 0)
+            {
+                string strkyhieu = Model.intso.ToString() + "/" + Model.strkyhieu;
+                @strkyhieu
+            }
+            else
+            {
+                @Model.strkyhieu
+            }
+        </td>
+        <th class="table-col-4">Ngày ký</th>
+        <td class="table-col-4">@Model.strngayky</td>
+    </tr>    
+    <tr>
+        <th class="table-col-4">Trích yếu nội dung</th>
+        <td class="table-col-4" colspan="3">@Model.strtrichyeu</td>
+    </tr>
+    <tr>        
+        <th class="table-col-4">Người ký</th>
+        <td class="table-col-4" colspan="3">@Model.strnguoiky</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Nơi nhận</th>
+        <td class="table-col-4" colspan="3">@Model.strnoinhan</td>
+    </tr> 
+    <tr>
+        <th class="table-col-4">Ngày gửi</th>
+        <td class="table-col-4">@Model.strngaygui</td>        
+        <th class="table-col-4">Độ khẩn</th>
+        <td class="table-col-4">@Model.strvbkhan</td>
+    </tr> 
+    <tr>        
+        <th class="table-col-4">Ngày nhận</th>
+        <td class="table-col-4">@Model.strngaynhan</td>
+        <th class="table-col-4">Độ mật</th>
+        <td class="table-col-4">@Model.strvbmat</td>
+    </tr> 
+    <tr>
+        <td colspan="4" class="title-header">
+            <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;VĂN BẢN TOÀN VĂN
+        </td>
+    </tr>
+    <tr>
+        <td id="strfileattach" colspan="4" class="table-col-4" style="text-align:center;">
+            @if (Model.isattach)
+            {
+                Html.RenderPartial("_ViewFile", Model.DownloadFiles);
+            }
+            else
+            {
+                @Html.Raw("Không có file đính kèm")
+            }
+        </td>
+    </tr>
+</table>

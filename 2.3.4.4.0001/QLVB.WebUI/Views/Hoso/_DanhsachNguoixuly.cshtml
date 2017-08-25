@@ -1,0 +1,44 @@
+﻿@model IEnumerable< QLVB.DTO.Hoso.DanhsachNguoixulyViewModel>
+
+<table class="table responsive-table" style="width:100%;">
+    <tr>
+        <td colspan="2" class="title-header">
+            <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;CÁN BỘ XỬ LÝ
+        </td>
+    </tr>    
+    @foreach (var p in Model)
+    {
+        <tr onclick="ViewXuly(@p.idcanbo)">
+            <td style="width:30px;">
+                @{
+                    string strcolor = string.Empty;
+                    switch (p.intvaitro)
+                    {
+                        case 1: // ldgv
+                            strcolor = "green";
+                            break;
+                        case 2: // ldpt
+                            strcolor = "yellowgreen";
+                            break;
+                        case 3: // xuly chinh
+                            strcolor = "#CC0000";
+                            break;
+                        case 4: // phoihop xuly
+                            strcolor = "#CC6600";
+                            break;
+                    }
+                }
+                <span style="color:@strcolor;"><i class="glyphicon glyphicon-user"></i></span>                
+            </td>
+
+            <td>@p.strhoten</td>
+        </tr>
+    }
+
+</table>
+<script type="text/javascript">
+    function ViewXuly(idcanbo) {
+        //console.log(idcanbo);
+    }
+
+</script>

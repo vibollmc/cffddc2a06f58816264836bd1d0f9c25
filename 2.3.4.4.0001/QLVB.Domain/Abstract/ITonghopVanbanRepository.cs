@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using QLVB.Domain.Entities;
+
+namespace QLVB.Domain.Abstract
+{
+    public interface ITonghopVanbanRepository
+    {
+        IQueryable<TonghopVanban> TonghopVanbans { get; }
+        int Them(TonghopVanban vb);
+    }
+}

@@ -1,0 +1,248 @@
+﻿@model QLVB.DTO.Hoso.DetailHosoViewModel
+
+<table class="table-condensed table-bordered responsive-table" id="Hosocongviec-details" style="width:100%;">
+	<tr>
+		<td colspan="4" class="title-header">
+			<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN CHUNG
+		</td>
+	</tr>
+	@*<tr>
+			<th class="table-col-4">Số hiệu HT:</th>
+			<td class="table-col-4">@Model.strsohieuht</td>
+			<th class="table-col-4">Cơ quan:</th>
+			<td class="table-col-4">@Model.strtendonvi</td>
+		</tr>*@
+	<tr>
+		<th class="table-col-4">Tiêu đề:</th>
+		<td class="table-col-4" colspan="3">@Model.strtieude</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Lĩnh vực:</th>
+		<td class="table-col-4">@Model.strtenlinhvuc</td>
+		<th class="table-col-4">Mức độ quan trọng:</th>
+		<td class="table-col-4">@Model.strmucquantrong</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Ngày mở hồ sơ:</th>
+		<td class="table-col-4" colspan="3">@Model.strngaymohoso</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Văn bản đến:</th>
+		<td class="table-col-4" colspan="3">
+			<a style='color:blue' href='javascript:ViewVBDen(@Model.idvanbanden)' title='Nội dung Văn bản'><i>@Model.strtrichyeuvanbanden</i></a>
+		</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Nội dung công việc:</th>
+		<td class="table-col-4" colspan="3">@Model.strnoidung</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Lãnh đạo giao việc:</th>
+		<td class="table-col-4" colspan="3">@Model.strlanhdaogiaoviec</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Lãnh đạo phụ trách:</th>
+		<td class="table-col-4" colspan="3">@Model.strlanhdaophutrach</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Xử lý chính:</th>
+		<td class="table-col-4" colspan="3">@Model.strxulychinh</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Phối hợp xử lý:</th>
+		<td class="table-col-4" id="strphoihopxuly" colspan="3">@Model.strphoihopxuly</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Thời hạn xử lý:</th>
+		<td class="table-col-4" colspan="3">@Model.strthoihanxuly</td>
+	</tr>
+	<tr>
+		<th class="table-col-4">Tình trạng hồ sơ:</th>
+		<td class="table-col-4" colspan="3">@Model.strtrangthai</td>
+	</tr>
+	<!--=================VAN BAN LIEN QUAN=================-->
+	<tr>
+		<td colspan="4" class="title-header">
+			<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;VĂN BẢN LIÊN QUAN
+		</td>
+	</tr>
+	<!--=================QUA TRINH XU LY=================-->
+	<tr>
+		<td colspan="4" class="title-header">
+			<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;QUÁ TRÌNH XỬ LÝ&nbsp;&nbsp;
+			@if (Model.intloai == 11)
+			{
+				<a style='color:blue' href='javascript:OpenViewQuytrinh(@Model.idhosocongviec)' title='Xem quy trình xử lý'><i>Xem quy trình xử lý</i></a>
+				<script type="text/javascript">
+					function CloseViewQuytrinh() {
+						var window = $("#ViewQuytrinh").data("kendoWindow");
+						window.close();
+					}
+					function OpenViewQuytrinh(idhoso) {
+						var window = $("#ViewQuytrinh").data("kendoWindow");
+						window.center();
+						window.open();
+						var url = '@Url.Action("_DisplayQuytrinh", "Hoso")';
+						url = url + "?idhoso=" + idhoso;
+						$('#detail-Quytrinh').load(url);
+					}
+					function onCloseDisplayQuytrinh() {
+						//deleteFlowchart();
+					}
+				</script>
+				@(Html.Kendo().Window()
+					.Name("ViewQuytrinh")
+					.Draggable()
+					.AutoFocus(true)
+					.Modal(false)
+					.Title("Quy trình xử lý")
+					.Resizable()
+					.Width(900)
+					.Height(500)
+					.Visible(false)
+					.Actions(actions => actions.Maximize().Close())
+					.Events(events => events.Close("onCloseDisplayQuytrinh"))
+					.Content(
+					@<text>
+						<div id="detail-Quytrinh"></div>
+					</text>
+							)
+				)
+
+			}
+		</td>
+	</tr>
+	<tr>
+		<td class="table-col-4" colspan="4">
+			<b>Phiếu trình</b>
+			@if (Model.phieutrinh.Count() > 0)
+			{
+				<table class="table-condensed table-bordered responsive-table table-striped" style="width:100%;">
+					<thead>
+						<tr>
+							<td style='width: 15%; text-align: center;'><i>Người trình</i></td>
+							<td style='width: 35%; text-align: center;'><i>Ý kiến đề xuất</i></td>
+							<td style='width: 15%; text-align: center;'><i>Lãnh đạo</i></td>
+							<td style='width: 35%; text-align: center;'><i>Ý kiến chỉ đạo</i></td>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var m in Model.phieutrinh)
+						{
+							<tr>
+								<td style='width: 15%; text-align: center;'>@m.strcanbotrinh</td>
+								<td style='width: 35%;'>@m.strnoidungtrinh<br />@m.strngaytrinh</td>
+								<td style='width: 15%; text-align: center;'>@m.strlanhdaotrinh</td>
+								<td style='width: 35%;'>@m.strykienchidao<br />@m.strngaychidao</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>
+					<i>Không có dữ liệu</i>
+				</p>
+			}
+		</td>
+
+	</tr>
+
+	<tr>
+		<td class="table-col-4" colspan="4">
+			<b>Thông tin xử lý</b>
+			@if (Model.hosoykien.Count() > 0)
+			{
+				<table class="table-condensed table-bordered responsive-table table-striped" style="width:100%;">
+					<thead>
+						<tr>
+							<td style='width: 15%; text-align: center;'><i>Thời gian</i></td>
+							<td style='width: 35%; text-align: center;'><i>Nội dung trao đổi</i></td>
+							<td style='width: 25%; text-align: center;'><i>Người xử lý</i></td>
+							<td style='width: 25%; text-align: center;'><i>Đơn vị </i></td>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var m in Model.hosoykien)
+						{
+							<tr>
+								<td style='width: 15%; text-align: center;'>@m.strthoigian</td>
+								<td style='width: 35%; '>
+									@m.strkykien
+									@if (m.DownloadFiles.Count() > 0)
+									{
+										<br />
+										Html.RenderPartial("_ViewStoreFile", m.DownloadFiles);
+									}
+								</td>
+								<td style='width: 25%; text-align: center;'>@m.strtencanbo</td>
+								<td style='width: 25%; text-align: center;'>@m.strtendonvi</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
+			else
+			{
+				<p>
+					<i>Không có dữ liệu</i>
+				</p>
+			}
+		</td>
+	</tr>
+	<tr>
+		<td class="table-col-4" colspan="4">
+			<b>Luân chuyển văn bản</b>
+			<table class="table-condensed table-bordered responsive-table" style="width:100%;">
+				<tr>
+					<td style='width: 15%; text-align: center;'><i>Thời gian</i></td>
+					<td style='width: 25%; text-align: center;'><i>Đơn vị xử lý</i></td>
+					<td style='width: 20%; text-align: center;'><i>Người xử lý</i></td>
+					<td style='width: 20%; text-align: center;'><i>Vai trò xử lý</i></td>
+					<td style='width: 20%; text-align: center;'><i>Người chuyển xử lý</i></td>
+				</tr>
+				@{
+					int stt = 1;
+					string strcolor = "#fff";
+					foreach (var m in Model.doituongxuly)
+					{
+						stt++;
+						strcolor = stt % 2 == 1 ? "#f5f5f5" : "#fff";
+
+						<tr style="background:@strcolor">
+							<td style='width: 15%; text-align: center;'>@m.strngaytao</td>
+							<td style='width: 25%; text-align: center;'>@m.strtendonvi</td>
+							<td style='width: 20%; text-align: center;'>@m.strtencanbo</td>
+							<td style='width: 20%; text-align: center;'>@Html.Raw(m.strvaitro)</td>
+							<td style='width: 20%; text-align: center;'>@m.strtennguoitao</td>
+						</tr>
+					}
+				}
+			</table>
+
+		</td>
+	</tr>
+	<!--=================VAN BAN LIEN QUAN=================-->
+	<tr>
+		<td colspan="4" class="title-header">
+			<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;KẾT QUẢ HỒ SƠ
+		</td>
+	</tr>
+	<tr>
+		<td class="table-col-4" colspan="4">
+			Tình trạng Xử lý: @Model.strtrangthai
+		</td>
+	</tr>
+	<tr>
+		<td class="table-col-4" colspan="4">
+			Ngày hoàn thành: @Model.strngayketthuc
+		</td>
+	</tr>
+	<tr>
+		<td class="table-col-4" colspan="4">
+			Người hoàn thành: @Model.strnguoihoanthanh
+		</td>
+	</tr>
+</table>
+

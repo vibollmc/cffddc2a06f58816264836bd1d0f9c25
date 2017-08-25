@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EF8895B7-C85D-4A03-93E2-622AA82A0F7C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QLVB.Core</RootNamespace>
+    <AssemblyName>QLVB.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ActiveUp.Net.Common">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Dns">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Dns.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Imap4">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Imap4.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Mail">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Mail.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Pop3">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Pop3.dll</HintPath>
+    </Reference>
+    <Reference Include="ActiveUp.Net.Smtp">
+      <HintPath>..\packages\ActiveUp.MailSystem_May2013_Binaries\Release\ActiveUp.Net.Smtp.dll</HintPath>
+    </Reference>
+    <Reference Include="CipherText">
+      <HintPath>..\packages\CipherText.dll</HintPath>
+    </Reference>
+    <Reference Include="EdXml2">
+      <HintPath>..\packages\EDXML\EdXml2.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZip\SharpZipLib_0860_Bin\net-20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IWSSDK">
+      <HintPath>..\packages\EDXML\IWSSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="LinqToLdap, Version=3.3.2.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqToLdap.4.0\lib\net45\LinqToLdap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqToLdap.Contrib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqToLdap.4.0\lib\net45\LinqToLdap.Contrib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MailBee.NET">
+      <HintPath>..\packages\MailBee.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpaqueMail.Net">
+      <HintPath>..\packages\OpaqueMail.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="StatusXml">
+      <HintPath>..\packages\EDXML\StatusXml.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices.Protocols" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="YAXLib">
+      <HintPath>..\packages\YAXLib.2.13\lib\YAXLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\QLVB.Common\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Contract\IAccountManager.cs" />
+    <Compile Include="Contract\IBaocaoManager.cs" />
+    <Compile Include="Contract\ICapcoquanManager.cs" />
+    <Compile Include="Contract\IChucdanhManager.cs" />
+    <Compile Include="Contract\IDonviManager.cs" />
+    <Compile Include="Contract\IEdxmlManager.cs" />
+    <Compile Include="Contract\IFileManager.cs" />
+    <Compile Include="Contract\IHethongManager.cs" />
+    <Compile Include="Contract\IHosoManager.cs" />
+    <Compile Include="Contract\ILinhvucManager.cs" />
+    <Compile Include="Contract\ILoaivanbanManager.cs" />
+    <Compile Include="Contract\ILogManager.cs" />
+    <Compile Include="Contract\ILuutruManager.cs" />
+    <Compile Include="Contract\IMailFormatManager.cs" />
+    <Compile Include="Contract\IMailManager.cs" />
+    <Compile Include="Contract\IMenuManager.cs" />
+    <Compile Include="Contract\IQuytrinhManager.cs" />
+    <Compile Include="Contract\IReportManager.cs" />
+    <Compile Include="Contract\IRoleManager.cs" />
+    <Compile Include="Contract\IRuleFileNameManager.cs" />
+    <Compile Include="Contract\ISovanbanManager.cs" />
+    <Compile Include="Contract\ITinhchatvanbanManager.cs" />
+    <Compile Include="Contract\ITinhhinhxulyManager.cs" />
+    <Compile Include="Contract\ITonghopManager.cs" />
+    <Compile Include="Contract\ITrucLienthongTinhManager.cs" />
+    <Compile Include="Contract\IVanbandenManager.cs" />
+    <Compile Include="Contract\IVanbandientuManager.cs" />
+    <Compile Include="Contract\IVanbandiManager.cs" />
+    <Compile Include="Contract\IYKCDDonviManager.cs" />
+    <Compile Include="Implementation\AccountManager.cs" />
+    <Compile Include="Implementation\BaocaoManager.cs" />
+    <Compile Include="Implementation\CapcoquanManager.cs" />
+    <Compile Include="Implementation\ChucdanhManager.cs" />
+    <Compile Include="Implementation\DonviManager.cs" />
+    <Compile Include="Implementation\EdxmlManager.cs" />
+    <Compile Include="Implementation\FileManager.cs" />
+    <Compile Include="Implementation\HethongManager.cs" />
+    <Compile Include="Implementation\HosoManager.cs" />
+    <Compile Include="Implementation\LinhvucManager.cs" />
+    <Compile Include="Implementation\LoaivanbanManager.cs" />
+    <Compile Include="Implementation\LogManager.cs" />
+    <Compile Include="Implementation\LuutruManager.cs" />
+    <Compile Include="Implementation\MailBeeManager.cs" />
+    <Compile Include="Implementation\MailFormatManager.cs" />
+    <Compile Include="Implementation\MaiActivelManager.cs" />
+    <Compile Include="Implementation\MenuManager.cs" />
+    <Compile Include="Implementation\QuytrinhManager.cs" />
+    <Compile Include="Implementation\ReportManager.cs" />
+    <Compile Include="Implementation\RoleManager.cs" />
+    <Compile Include="Implementation\RuleFileNameManager.cs" />
+    <Compile Include="Implementation\SovanbanManager.cs" />
+    <Compile Include="Implementation\TinhchatvanbanManager.cs" />
+    <Compile Include="Implementation\TinhhinhxulyManager.cs" />
+    <Compile Include="Implementation\TonghopManager.cs" />
+    <Compile Include="Implementation\TrucLienthongTinhManager.cs" />
+    <Compile Include="Implementation\VanbandenManager.cs" />
+    <Compile Include="Implementation\VanbandientuManager.cs" />
+    <Compile Include="Implementation\VanbandiManager.cs" />
+    <Compile Include="Implementation\YKCDDonviManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\WebServiceTruclienthongTinh\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QLVB.Common\QLVB.Common.csproj">
+      <Project>{2207e482-8499-4f38-af5d-5eee0ff41533}</Project>
+      <Name>QLVB.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLVB.DAL\QLVB.DAL.csproj">
+      <Project>{997cc3db-ab88-466f-8df7-c2df4e6e4e95}</Project>
+      <Name>QLVB.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLVB.Domain\QLVB.Domain.csproj">
+      <Project>{1662faef-aa23-4ce6-bb46-474ba4250252}</Project>
+      <Name>QLVB.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLVB.Donvi\QLVB.Donvi.csproj">
+      <Project>{7f96b259-b75e-449d-bec9-a2cf4760b68a}</Project>
+      <Name>QLVB.Donvi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QLVB.DTO\QLVB.DTO.csproj">
+      <Project>{822199f3-8b55-42a2-86f8-bd5382d684bf}</Project>
+      <Name>QLVB.DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\WebServiceTruclienthongTinh\Plugin_NSSGateway_NSSGatewayService.wsdl" />
+    <None Include="Web References\WebServiceTruclienthongTinh\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://123.30.75.134:8079/gw-portlet/api/secure/axis/Plugin_NSSGateway_NSSGatewayService%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\WebServiceTruclienthongTinh\</RelPath>
+      <UpdateFromURL>http://123.30.75.134:8079/gw-portlet/api/secure/axis/Plugin_NSSGateway_NSSGatewayService%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>QLVB_Core_WebServiceTruclienthongTinh_NSSGatewayServiceSoapService</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

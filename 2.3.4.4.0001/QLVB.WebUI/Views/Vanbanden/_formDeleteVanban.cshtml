@@ -1,0 +1,34 @@
+﻿@model QLVB.DTO.Vanbanden.DeleteVBViewModel
+
+
+<div class="modal-body">
+    Bạn có muốn xóa văn bản @Model.strtenvanban không?
+</div>
+<div class="modal-footer">
+    <button id="SubmitDeleteVBbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+    <button id="BackDeleteVBbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+</div>
+
+<script type="text/javascript">
+    $("#BackDeleteVBbtn").bind("click", function () {
+        CloseDeleteVB();
+    })
+    $('#SubmitDeleteVBbtn').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteVanban", "Vanbanden")',
+            data: { id: "@Model.intid" },
+            success: function (data) {
+                if (data == 1) {
+                    RefreshGrid();
+                    CloseDeleteVB();
+                }
+                else {
+                    CloseDeleteVB();
+                    SetThongbao("Lỗi, không xóa được");
+                }
+            },
+        });
+    })
+</script>
+

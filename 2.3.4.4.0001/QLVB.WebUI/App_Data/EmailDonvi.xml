@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ListDonvi Update="14-07-2017">
+  <Donvi>
+    <Ten>Văn phòng HĐND&amp;HĐND Tỉnh</Ten>
+    <Email>vbhdnd@dongnai.gov.vn</Email>
+    <Madinhdanh>00.01.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:70:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Văn phòng UBND tỉnh</Ten>
+    <Email>vbvpubnd@dongnai.gov.vn</Email>
+    <Madinhdanh>00.02.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:0:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Nội vụ</Ten>
+    <Email>vbsnoivu@dongnai.gov.vn</Email>
+    <Madinhdanh>00.03.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Văn hóa Thể thao &amp; Du lịch</Ten>
+    <Email>vbsvhtt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.04.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:16:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Giáo dục Đào tạo</Ten>
+    <Email>vbsgddt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.05.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:23:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Thông tin và Truyền thông</Ten>
+    <Email>vbstttt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.06.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:14:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Công thương</Ten>
+    <Email>vbscongthuong@dongnai.gov.vn</Email>
+    <Madinhdanh>00.07.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:12:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Kế hoạch &amp; Đầu tư</Ten>
+    <Email>vbskhdt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.08.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:8:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Khoa học Công nghệ</Ten>
+    <Email>vbskhcn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.09.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:7:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Y tế</Ten>
+    <Email>vbsyte@dongnai.gov.vn</Email>
+    <Madinhdanh>00.10.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:9:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Ngoại vụ</Ten>
+    <Email>vbsngoaivu@dongnai.gov.vn</Email>
+    <Madinhdanh>00.11.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:22:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Giao thông Vận tải</Ten>
+    <Email>vbsgtvt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.12.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:13:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Tư pháp</Ten>
+    <Email>vbstuphap@dongnai.gov.vn</Email>
+    <Madinhdanh>00.13.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:1:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Tài chính</Ten>
+    <Email>vbstaichinh@dongnai.gov.vn</Email>
+    <Madinhdanh>00.14.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:4:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Xây dựng</Ten>
+    <Email>vbsxaydung@dongnai.gov.vn</Email>
+    <Madinhdanh>00.15.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Nông nghiệp và Phát triển Nông thôn</Ten>
+    <Email>vbsnnptnt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.16.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:15:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Tài nguyên Môi trường</Ten>
+    <Email>vbstnmt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.17.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Lao động Thương binh &amp; Xã hội</Ten>
+    <Email>vbsldtbxh@dongnai.gov.vn</Email>
+    <Madinhdanh>00.18.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:5:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Sở Cảnh sát PCCC</Ten>
+    <Email>vbscspccc@dongnai.gov.vn</Email>
+    <Madinhdanh>00.19.H20.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:3:0:0:50:100:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Thanh tra tỉnh</Ten>
+    <Email>vbthanhtra@dongnai.gov.vn</Email>
+    <Madinhdanh>00.20.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:19:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Ban Quản lý các Khu công nghiệp</Ten>
+    <Email>vbqlkcn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.21.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:0:0:0:5:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Ban Dân tộc</Ten>
+    <Email>vbbdt@dongnai.gov.vn</Email>
+    <Madinhdanh>00.22.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:21:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND TP. Biên Hòa</Ten>
+    <Email>vbtpbienhoa@dongnai.gov.vn</Email>
+    <Madinhdanh>00.23.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:10:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Thị xã Long Khánh </Ten>
+    <Email>vbtxlongkhanh@dongnai.gov.vn</Email>
+    <Madinhdanh>00.24.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:11:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Tân phú</Ten>
+    <Email>vbhtanphu@dongnai.gov.vn</Email>
+    <Madinhdanh>00.25.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:2:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Vĩnh Cửu</Ten>
+    <Email>vbhvinhcuu@dongnai.gov.vn</Email>
+    <Madinhdanh>00.26.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:4:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Định Quán</Ten>
+    <Email>vbhdinhquan@dongnai.gov.vn</Email>
+    <Madinhdanh>00.27.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:3:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Trảng Bom</Ten>
+    <Email>vbhtrangbom@dongnai.gov.vn</Email>
+    <Madinhdanh>00.28.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:5:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Thống Nhất</Ten>
+    <Email>vbhthongnhat@dongnai.gov.vn</Email>
+    <Madinhdanh>00.29.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:1:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Cẩm Mỹ</Ten>
+    <Email>vbhcammy@dongnai.gov.vn</Email>
+    <Madinhdanh>00.30.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:12:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Long Thành</Ten>
+    <Email>vbhlongthanh@dongnai.gov.vn</Email>
+    <Madinhdanh>00.31.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:6:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Xuân Lộc</Ten>
+    <Email>vbhxuanloc@dongnai.gov.vn</Email>
+    <Madinhdanh>00.32.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:9:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND huyện Nhơn Trạch</Ten>
+    <Email>vbhnhontrach@dongnai.gov.vn</Email>
+    <Madinhdanh>00.33.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>1:30:7:0:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Cục thuế tỉnh</Ten>
+    <Email>ct@dongnai.gov.vn</Email>
+    <Madinhdanh>00.34.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:51:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Kho bạc nhà nước</Ten>
+    <Email>vbkbnn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.35.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Cục Hải quan</Ten>
+    <Email>chq@dongnai.gov.vn</Email>
+    <Madinhdanh>00.36.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Cục Thống kê</Ten>
+    <Email>vbctk@dongnai.gov.vn</Email>
+    <Madinhdanh>00.37.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:73:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Ngân hàng nhà nước tỉnh</Ten>
+    <Email>vbnhnn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.38.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:75:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Công an tỉnh</Ten>
+    <Email>vbcongan@dongnai.gov.vn</Email>
+    <Madinhdanh>00.39.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:50:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Đài PTTH Đồng Nai</Ten>
+    <Email>dptthdn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.40.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:78:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Bảo hiểm xã hội tỉnh Đồng Nai</Ten>
+    <Email>vbbhxh@dongnai.gov.vn</Email>
+    <Madinhdanh>00.41.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Viện Kiểm Sát tỉnh</Ten>
+    <Email>khongco@</Email>
+    <Madinhdanh>00.42.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:52:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Tòa Án Nhân Dân tỉnh</Ten>
+    <Email>vbtoaan@dongnai.gov.vn</Email>
+    <Madinhdanh>00.43.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Bộ chỉ huy Quân sự tỉnh</Ten>
+    <Email>vbbchqs@dongnai.gov.vn</Email>
+    <Madinhdanh>00.44.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Văn phòng Tỉnh ủy</Ten>
+    <Email>vbtinhuy@dongnai.gov.vn</Email>
+    <Madinhdanh>00.45.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:71:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Trường chính trị tỉnh</Ten>
+    <Email>tct@dongnai.gov.vn</Email>
+    <Madinhdanh>00.69.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh></MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội Nông dân tỉnh</Ten>
+    <Email>hnd@dongnai.gov.vn</Email>
+    <Madinhdanh>00.71.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:68:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Tỉnh đoàn</Ten>
+    <Email>vbtd@dongnai.gov.vn</Email>
+    <Madinhdanh>00.72.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:66:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội liên hiệp phụ nữ tỉnh</Ten>
+    <Email>vbhpn@dongnai.gov.vn</Email>
+    <Madinhdanh>00.74.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:67:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội cựu chiến binh tỉnh</Ten>
+    <Email>hccb@dongnai.gov.vn</Email>
+    <Madinhdanh>00.75.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:62:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Liên đoàn Lao động tỉnh</Ten>
+    <Email>vbldld@dongnai.gov.vn</Email>
+    <Madinhdanh>000.00.35.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:69:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Liên minh Hợp tác xã tỉnh Đồng Nai</Ten>
+    <Email>vblmhtx@dongnai.gov.vn</Email>
+    <Madinhdanh>000.00.36.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:74:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Đài Phát thanh và Truyền hình Đồng Nai</Ten>
+    <Email>dptthdn@dongnai.gov.vn</Email>
+    <Madinhdanh>000.00.37.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:78:0:1</MaTructinh>
+  </Donvi>
+ <Donvi>
+    <Ten>Nhà Thiếu nhi tỉnh</Ten>
+    <Email>nhathieunhitinh@dongnai.gov.vn</Email>
+    <Madinhdanh>000.00.38.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:61:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Ban quản lý dự án, đầu tư xây dựng tỉnh</Ten>
+    <Email>vbbqldadtxd@dongnai.gov.vn</Email>
+    <Madinhdanh>000.00.40.H19.e-doc.vn</Madinhdanh>
+	<MaTructinh>0:30:0:0:60:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Tổng Cty Công nghiệp thực phẩm Đồng Nai DOFICO</Ten>
+    <Email>vbtctcntp@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:54:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Khu Bảo tồn Thiên nhiên và văn hóa Đồng Nai</Ten>
+    <Email>vbkbttnvh@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:72:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Trung tâm hành chính công tỉnh</Ten>
+    <Email>vbtthcc@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:58:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội nhà báo</Ten>
+    <Email>vbhnb@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:63:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội chữ thập đỏ</Ten>
+    <Email>vbhctdt@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:64:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Hội chữ thập đỏ</Ten>
+    <Email>vbhctdt@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:64:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>Ủy ban mặt trận tổ quốc tỉnh</Ten>
+    <Email>vbubmttq@dongnai.gov.vn</Email>
+    <Madinhdanh></Madinhdanh>
+	<MaTructinh>0:30:0:0:65:0:1</MaTructinh>
+  </Donvi>
+</ListDonvi>

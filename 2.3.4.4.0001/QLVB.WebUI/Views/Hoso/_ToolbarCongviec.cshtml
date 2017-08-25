@@ -1,0 +1,61 @@
+﻿<div class="box ">
+	<header>
+		<nav class="box-toolbar">
+			<button id="Addbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box" title="Thêm mới văn bản">
+				<i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm mới
+			</button>
+			<button id="Editbtn" disabled  type="button" class="btn btn-sm btn-primary btn-flat button-box" title="Cập nhật văn bản">
+				<i class="glyphicon glyphicon-pencil"></i>&nbsp;Sửa
+			</button>
+			<button id="Deletebtn" disabled type="button" class="btn btn-danger btn-sm btn-primary btn-flat button-box" title="Xóa văn bản">
+				<i class="glyphicon glyphicon-trash"></i>&nbsp;Xóa
+			</button>
+			<button id="Searchbtn" class="btn btn-success btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-search"></i>&nbsp;Tìm kiếm
+			</button>
+			<button id="XLVBbtn" disabled class="btn btn-metis-4 btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-pencil"></i>&nbsp;Xử lý
+			</button>
+		</nav>
+	</header>
+</div>
+<script type="text/javascript">
+	$('#Searchbtn').click(function () {
+	    OpenSearchHSCV();
+	})
+	$('#Addbtn').click(function () {
+		var url = '@Url.Action("ThemHoso", "Hoso")';
+		window.location = url;
+	})
+	$('#Editbtn').click(function () {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		if (idhoso != 0) {
+		    var url = '@Url.Action("ThemHoso", "Hoso", (new { id = "__id__" }))'.replace('__id__', idhoso);
+			window.location = url;
+		} else {
+			SetThongbao("Bạn chưa chọn công việc");
+		}
+	})
+	$('#Deletebtn').click(function () {
+	    var idhoso = 0;
+	    idhoso = GetIdHoso();
+	    if (idhoso != 0) {			
+		    OpenDeleteHSCV();
+		} else {
+			SetThongbao("Bạn chưa chọn công việc");
+		}
+	})
+	
+	$('#XLVBbtn').click(function () {
+	    var idhoso = 0;
+	    idhoso = GetIdHoso();
+	    if (idhoso != 0) {
+	        var url = '@Url.Action("XulyHoso", "Hoso", (new { id = "__id__" }))'.replace('__id__', idhoso);
+	        window.location = url;
+	    } else {
+	        SetThongbao("Bạn chưa chọn công việc");
+	    }
+	})
+	
+</script>

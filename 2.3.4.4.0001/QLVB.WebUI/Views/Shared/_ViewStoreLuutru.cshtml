@@ -1,0 +1,30 @@
+﻿@model QLVB.DTO.Vanbandi.ThongtinLuutruViewModel
+
+@if (Model.intid > 0)
+{
+    <tr>
+        <td colspan="4" class="title-header">
+            <i class="glyphicon glyphicon-arrow-right"></i>&nbsp;THÔNG TIN LƯU TRỮ
+        </td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Hộp số</th>
+        <td class="table-col-4">@Model.inthopso</td>
+        <th class="table-col-4">Đơn vị bảo quản</th>
+        <td class="table-col-4">@Model.intdonvibaoquan</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Thời hạn bảo quản</th>
+        <td class="table-col-4" colspan="3">@Model.strthoihanbaoquan</td>        
+    </tr>
+    <tr>        
+        <th class="table-col-4">Nội dung</th>
+        <td class="table-col-4" colspan="3">@Model.strnoidung</td>
+    </tr>
+    <tr>
+        <th class="table-col-4">Người cập nhật</th>
+        <td class="table-col-4">@Model.strnguoicapnhat</td>
+        <th class="table-col-4">Ngày cập nhật</th>
+        <td class="table-col-4">@Model.strngaycapnhat</td>
+    </tr>
+}

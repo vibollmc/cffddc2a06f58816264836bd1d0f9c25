@@ -1,0 +1,58 @@
+﻿@model IEnumerable<QLVB.DTO.TonghopVanbanViewModel>
+@using QLVB.Common.Date
+@{
+    int count = 0;
+    int? VBGiayDen = 0;
+    int? VBGiayDi = 0;
+    int? VBDTDen = 0;
+    int? VBDTDi = 0;
+}
+
+<table class="table table-bordered table-condensed responsive-table" style="width: 100%">
+    <tr style="font-weight:bold;">
+        <td style="width: 3%; text-align: center;">STT</td>
+        <td style="width:8%">Ngày gửi</td>
+        <td style="width:8%">Ngày bắt đầu</td>
+        <td style="width:8%">Ngày kết thúc</td>
+        <td style="width: 5%; text-align: center;">Tổng số VB đến</td>
+        <td style="width: 5%; text-align: center;">VB Điện tử đến</td>
+        <td style="width: 5%; text-align: center;">Tổng số VB đi</td>
+        <td style="width: 5%; text-align: center;">VB Điện tử đi</td>
+    </tr>
+    @foreach (var m in Model)
+    {
+        count++;
+        VBGiayDen += m.VBGiayDen;
+        VBGiayDi += m.VBGiayDi;
+        VBDTDen += m.VBDientuDen;
+        VBDTDi += m.VBDientuDi;
+        <tr>
+            <td style="width:3%; text-align: center;">@count</td>
+            <td style="width:8%">@DateServices.FormatDateVN(m.Ngaygui)</td>
+            <td style="width:8%">@DateServices.FormatDateVN(m.Ngaytonghopbd)</td>
+            <td style="width:8%">@DateServices.FormatDateVN(m.Ngaytonghopkt)</td>
+            <td style="width: 5%; text-align: center;">@m.VBGiayDen</td>
+            <td style="width: 5%; text-align: center;">@m.VBDientuDen</td>
+            <td style="width: 5%; text-align: center;">@m.VBGiayDi</td>
+            <td style="width: 5%; text-align: center;">@m.VBDientuDi</td>
+            
+        </tr>
+    }
+    <tr>
+        <td colspan="4" style="text-align: center;">TỔNG CỘNG</td>
+       
+        <td style="width: 5%; text-align: center;">@VBGiayDen</td>
+        <td style="width: 5%; text-align: center;">@VBDTDen</td>
+        <td style="width: 5%; text-align: center;">@VBGiayDen</td>
+        <td style="width: 5%; text-align: center;">@VBDTDi</td>
+
+    </tr>
+
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        HideLoading();
+    })
+</script>

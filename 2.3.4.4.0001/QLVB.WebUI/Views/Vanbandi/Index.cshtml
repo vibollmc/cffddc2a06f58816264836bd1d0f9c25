@@ -1,0 +1,125 @@
+﻿@using System.Web.Configuration
+@{
+	ViewBag.Title = "Văn bản đi";
+	bool isBack = ViewBag.isBack;
+}
+
+@section header{
+	<i class="glyphicon glyphicon-file">&nbsp;</i>Văn bản đi
+}
+@Html.Action("_Toolbar")
+<div class="row">
+	<div class="col-sm-3 col-md-2" id="category">
+		@Html.Action("_Category")
+	</div>
+	<div class="col-sm-9 col-md-10" id="listvanbandi">
+		@Html.Action("_ListVanbandi", new { isBack = isBack })
+	</div>
+	@Html.Hidden("idvanban")	
+</div>
+<script type="text/javascript">
+	function onChange(arg) {
+		var selected = $.map(this.select(), function (item) {
+			var value = $(item).text();
+			var grid = $("#grid").data("kendoGrid");
+			var row = grid.select();
+			var intid = grid.dataItem(row).intid;
+			var inttrangthai = grid.dataItem(row).inttrangthai;
+			var isAttach = grid.dataItem(row).IsAttach;
+            
+			SetIdVanban(intid);
+			DisplayToolbar(inttrangthai, isAttach);
+			DisplayDuyet(inttrangthai);
+			var currentPage = grid.dataSource.page();
+			//console.log(currentPage);
+
+		});
+	}
+	function onDataBound(arg) {
+		dataView = this.dataSource.view();
+		for (var i = 0; i < dataView.length; i++) {
+			if (dataView[i].inttrangthai == 0) {
+				var uid = dataView[i].uid;
+				$("#grid tbody").find("tr[data-uid=" + uid + "]").addClass("chuaduyet");
+			}			
+		}
+	}	
+	function DisplayToolbar(inttrangthai, isAttach) {
+		ButtonEnable("Capquyenxembtn", true);
+		if (inttrangthai == 1) {
+			ButtonEnable("Editbtn", false);
+			ButtonEnable("Deletebtn", false);
+			if (isAttach) {
+			    ButtonEnable("Emailbtn", true);
+			} else {
+			    ButtonEnable("Emailbtn", false);
+			}			
+		} else {
+			ButtonEnable("Editbtn", true);
+			ButtonEnable("Deletebtn", true);
+			ButtonEnable("Emailbtn", false);
+		}
+	}	
+	function DisplayDuyet(inttrangthai) {
+		@if (ViewBag.IsDuyetvb == true)
+		{
+			<text>
+			if (inttrangthai == 1) {
+				$('#Duyetbtn').hide();
+				$('#Huyduyetbtn').show();
+			} else {
+				$('#Duyetbtn').show();
+				$('#Huyduyetbtn').hide();
+			}
+			</text>
+		}
+	}
+	function SetIdVanban(idvanban) {
+		$('#idvanban').val(idvanban);
+	}
+	function GetIdVanban() {
+		return $('#idvanban').val();		
+	}
+	
+	function ViewDetailVBDi(id) {
+		OpenViewDetailVBDi(id);
+	}
+	function CloseDeleteVB() {
+	    var window = $("#DeleteVB").data("kendoWindow");
+	    window.close();
+	}
+	function OpenDeleteVB() {
+	    var window = $("#DeleteVB").data("kendoWindow");
+	    window.center();
+	    window.open();
+	}
+</script>
+@Html.Action("_ViewDetailVBDi","Vanbandi")
+@Html.Action("_ViewDetailVBDen", "Vanbanden")
+@Html.Action("_ViewDetailHoso", "Hoso")
+@Html.Action("_Capquyenxem", "Vanbandi")
+@Html.Action("_SearchVBDi", "Vanbandi")
+
+@(Html.Kendo().Window()
+	.Name("DeleteVB")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Xóa văn bản")
+	.Resizable()
+	.Width(500)
+	.HtmlAttributes(new { style = "height:100%;" })
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-DeleteVB">
+		</div>
+	</text>
+	)
+)
+
+@if (QLVB.Common.Utilities.AppSettings.IsUseDLTD)
+{
+    <script type="text/javascript" src="@WebConfigurationManager.AppSettings["JsPlugInDLTD"]vanbandi"></script>
+}
+

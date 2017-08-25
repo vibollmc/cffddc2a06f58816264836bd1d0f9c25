@@ -1,0 +1,92 @@
+﻿@model QLVB.DTO.Vanbandientu.SearchVBDenDientuViewModel
+@using QLVB.DTO
+
+@(Html.Kendo().Grid<QLVB.DTO.Vanbandientu.ListVanbandendientuViewModel>()
+    .Name("grid").AutoBind(false)
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.intid).Hidden();
+        columns.Bound(o => o.IsAttach).Title(" ")
+            .ClientTemplate(
+                "#if (IsAttach) { #" +
+                    "<img onclick='ViewDetailVBDTDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung_attach.gif") + "' />" +
+                "# } else { #" +
+                    "<img onclick='ViewDetailVBDTDen(" + "#= intid #" + ")' alt='#= intid #' src='" + Url.Content("~/Content/Images/noidung.gif") + "' />" +
+                "# } #"
+            )
+            .Width(22);
+        columns.Bound(o => o.dtengayky).Format("{0:dd/MM/yyyy}").Title("Ngày ký").Width(60);
+        columns.Bound(o => o.intso).Title("Số ").Width(40);        
+        columns.Bound(o => o.strkyhieu).Title("Ký hiệu").Width("10%");
+        columns.Bound(o => o.strtrichyeu).Title("Trích yếu nội dung").Width("20%");
+        columns.Bound(o => o.strnoiguivb).Title("Đơn vị gửi").Width("12%");
+        columns.Bound(o => o.strAddressSend).Title("Mã định danh").Width("10%");
+        columns.Bound(o => o.dtengayguivb).Format("{0:dd/MM/yyyy HH:mm:ss }").Title("Ngày gửi").Width(60);
+        columns.Bound(o => o.dtengaynhanvb).Format("{0:dd/MM/yyyy HH:mm:ss }").Title("Ngày nhận").Width(60);
+        columns.Bound(o => o.inttrangthai).Hidden();
+        
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+        //.Sortable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        //.PageSizes(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("Vanbanden_Read", "Vanbandendientu",
+                new
+                {
+                    strngaykycat = Model.strngaykycat,
+                    strngaynhancat = Model.strngaynhancat,
+                    inttinhtrangcat = Model.inttinhtrangcat,                    
+                    intsodenbd = Model.intsodenbd,
+                    intsodenkt = Model.intsodenkt,
+                    strngaynhanbd = Model.strngaynhanbd,
+                    strngaynhankt = Model.strngaynhankt,
+                    strngaykybd = Model.strngaykybd,
+                    strngaykykt = Model.strngaykykt,
+                    strngayguibd = Model.strngayguibd,
+                    strngayguikt = Model.strngayguikt,
+                    strkyhieu = Model.strkyhieu,                    
+                    strnoigui = Model.strnoigui,
+                    strtrichyeu = Model.strtrichyeu,
+                    truclienthong = Model.truclienthong,
+                    strmadinhdanh = Model.strmadinhdanh  
+                })
+            )
+            .Events(events => events.Error("onError"))
+        )
+    .Events(events => events.Change("onChange")
+                            .DataBound("onDataBound")
+    )
+)
+<script type="text/javascript">
+    $(function () {
+        dataSource = $('#grid').data().kendoGrid.dataSource;
+        dataSource.query({
+            page: '@Model.intPage',
+            group: dataSource.group(),
+            filter: dataSource.filter(),
+            sort: dataSource.sort(),
+            pageSize: dataSource.pageSize()
+        })
+    })
+    $(window).resize(function () {
+        SetGridHeight();
+    });
+    $(document).ready(function () {
+        SetGridHeight();
+    })
+    function onError(e, status) {
+        SetThongbao("Đã có lỗi xảy ra trên Server!");
+    }
+</script>

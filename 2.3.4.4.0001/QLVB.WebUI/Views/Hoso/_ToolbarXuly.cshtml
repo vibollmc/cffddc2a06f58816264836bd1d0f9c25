@@ -1,0 +1,443 @@
+﻿@model QLVB.DTO.Hoso.ToolbarXulyViewModel
+@{
+    int IsDisableToolbar = (Model.IsDisable) ? 1 : 0;
+    int IsXulychinhDongHoso = (Model.IsXulychinhDongHoso) ? 1 : 0;
+    int IsXulychinh = (Model.IsXulychinh) ? 1 : 0;
+    int IsQuytrinh = (Model.IsQuytrinh) ? 1 : 0;
+    int IsXulyQuytrinh = (Model.IsXulyQuytrinh) ? 1 : 0;
+    string strtamngung = (Model.IsTamngungQuytrinh) ? "none" : "normal";
+    string strtieptuc = (Model.IsTamngungQuytrinh) ? "normal" : "none";
+    int IsChonBuocXuly = (Model.IsChonBuocXLQuytrinh) ? 1 : 0;
+    string url = string.Empty;
+    if (Model.IsXLVB)
+    {
+        url = Url.Action("Index", "Vanbanden", new { isBack = true });
+    }
+    else
+    {
+        url = Url.Action("Index", "Hoso", new { isBack = true });
+    }
+    if (Model.IsQuytrinh)
+    {
+        url = Url.Action("Index", "Vanbanden", new { isBack = true });
+    }
+    if (Model.intBack == 2)
+    {
+        url = Url.Action("ListVanbanDen", "Tinhhinhxuly", new { isBack = true });
+    }
+
+    int intDongHoso = (Model.IsDongHoso) ? 1 : 0;
+
+}
+<div class="box ">
+	<header>
+		<nav class="box-toolbar">
+
+			@*<button id="Duthaobtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="fa fa-file-text"></i>&nbsp;Dự thảo
+				</button>*@
+
+			@if (Model.IsQuytrinh)
+			{
+				<button id="YkienQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-pencil"></i>&nbsp;Ý kiến
+				</button>
+				@*if (Model.IsDieukienXuly)
+				{
+					<button id="Quytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+						<i class="glyphicon glyphicon-ok"></i>&nbsp;Hoàn thành bước xử lý
+					</button>
+					<button id="ReturnQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+						<i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Gửi trả Hồ sơ
+					</button>
+				}
+				else
+				{
+					<button id="Quytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+						<i class="glyphicon glyphicon-ok"></i>&nbsp;Hoàn thành bước xử lý
+					</button>
+				}*@
+				
+				<button id="Quytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-ok"></i>&nbsp;Hoàn thành bước xử lý
+				</button>
+				
+				<button id="AddCanboQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-user"></i>&nbsp;Thêm cán bộ
+				</button>
+
+				<button id="TamngungQuytrinhbtn" style="display:@strtamngung;" type="button" class="btn btn-warning btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-pause"></i>&nbsp;Tạm ngừng XL
+				</button>
+				<button id="TieptucQuytrinhbtn" style="display:@strtieptuc;" type="button" class="btn btn-warning btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-play"></i>&nbsp;Tiếp tục XL
+				</button>
+				
+				<button id="ChangeQuytrinhbtn" type="button" class="btn btn-metis-4 btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-retweet"></i>&nbsp;Thay đổi Bước XL
+				</button>
+
+				<button id="ViewQuytrinhbtn" type="button" class="btn btn-success btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-retweet"></i>&nbsp;Xem Quy trình
+				</button>
+
+				<button id="PhathanhQuytrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;Dự thảo VB
+				</button>
+
+			}
+			else
+			{
+
+				<button id="VBLQbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-paperclip"></i>&nbsp;VBLQ
+				</button>
+				<button id="AddCanbobtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-user"></i>&nbsp;Thêm cán bộ
+				</button>
+				<button id="Ykienbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-pencil"></i>&nbsp;Ý kiến
+				</button>
+				<button id="Phieutrinhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-file"></i>&nbsp;Phiếu trình&nbsp;
+					<span class="label label-danger" id="intsophieutrinh"></span>
+				</button>
+				<button id="LuuHSbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-book"></i>&nbsp;Lưu hồ sơ
+				</button>
+				<button id="Trinhkybtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-time"></i>&nbsp;Trình ký
+				</button>
+				<button id="Ketquabtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+					<i class="glyphicon glyphicon-ok"></i>&nbsp;Kết quả
+				</button>
+				if (Model.IsXLVB)
+				{
+					<button id="Phathanhbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+						<i class="glyphicon glyphicon-arrow-right"></i>&nbsp;Dự thảo VB
+					</button>
+				}
+			}
+
+
+			<button id="BackBtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại
+			</button>
+		</nav>
+	</header>
+
+
+
+</div>
+@Html.Hidden("IdCurrentUser", Model.IdCurrentUser)
+<script type="text/javascript">
+	var intsophieutrinh = '@Model.intsophieutrinh';
+
+	$(document).ready(function () {
+		var IsDisableToolbar = '@IsDisableToolbar';
+		SetSoPhieutrinh(intsophieutrinh);
+		if (IsDisableToolbar == 1) {
+			DisableToolbar();
+			DisableToolbar_Quytrinh();
+		}
+		var IsXulychinhDongHoso = '@IsXulychinhDongHoso';
+	    var IsXulychinh = '@IsXulychinh';
+	    if (IsXulychinhDongHoso == 1) {
+	        if (IsXulychinh == 0) {
+	            ButtonEnable("LuuHSbtn", false);
+	            ButtonEnable("Ketquabtn", false);
+	        }			
+		}
+		var intDongHoso = '@intDongHoso';
+		if (intDongHoso == 0) {
+		    ButtonEnable("LuuHSbtn", false);
+		    ButtonEnable("Ketquabtn", false);
+		}
+
+		var IsXulyQuytrinh = '@IsXulyQuytrinh';
+		if (IsXulyQuytrinh == 1) {
+			DisableToolbar_Quytrinh();
+		}
+		@if (Model.IsPhoihopXLQuytrinh)
+		{
+			<text>
+				//HideToolbar_Quytrinh();
+				ButtonEnable("YkienQuytrinhbtn", true);
+			</text>			
+		}
+		@if (Model.IsTamngungQuytrinh)
+		{
+			<text>
+				HideToolbar_Quytrinh();
+				ButtonEnable("TieptucQuytrinhbtn", true);
+			</text>			
+		}
+	});
+	function DisableToolbar() {
+		ButtonEnable("VBLQbtn", false);
+		ButtonEnable("AddCanbobtn", false);
+		ButtonEnable("Ykienbtn", false);
+		ButtonEnable("Phieutrinhbtn", false);
+		ButtonEnable("Duthaobtn", false);
+		ButtonEnable("LuuHSbtn", false);
+		ButtonEnable("Ketquabtn", false);
+		ButtonEnable("Phathanhbtn", false);
+		ButtonEnable("Trinhkybtn", false);
+	};
+	function DisableToolbar_Quytrinh() {
+		ButtonEnable("Quytrinhbtn", false);
+		ButtonEnable("ReturnQuytrinhbtn", false);
+		ButtonEnable("YkienQuytrinhbtn", false);
+		ButtonEnable("PhathanhQuytrinhbtn", false);
+		ButtonEnable("AddCanboQuytrinhbtn", false);
+		ButtonEnable("TieptucQuytrinhbtn", false);
+		ButtonEnable("TamngungQuytrinhbtn", false);
+		ButtonEnable("ChangeQuytrinhbtn", false);
+		
+	};
+	function DisplayToolbar_Quytrinh() {
+		$("#Quytrinhbtn").show();
+		$("#ReturnQuytrinhbtn").show();
+		$("#YkienQuytrinhbtn").show();
+		$("#PhathanhQuytrinhbtn").show();
+		$("#AddCanboQuytrinhbtn").show();
+		$("#TieptucQuytrinhbtn").show();
+		$("#TamngungQuytrinhbtn").show();
+		$("#ChangeQuytrinhbtn").show();
+	};
+	function HideToolbar_Quytrinh() {
+		$("#Quytrinhbtn").hide();
+		$("#ReturnQuytrinhbtn").hide();
+		$("#YkienQuytrinhbtn").hide();
+		$("#PhathanhQuytrinhbtn").hide();
+		$("#AddCanboQuytrinhbtn").hide();
+		//$("#TieptucQuytrinhbtn").hide();
+		$("#TamngungQuytrinhbtn").hide();
+		$("#ChangeQuytrinhbtn").hide();
+	};
+	function DisplayTamngungQuytrinh(valid) {
+		if (valid == true) {
+			HideToolbar_Quytrinh();            
+			$('#TieptucQuytrinhbtn').show();                 
+		} else {
+			DisplayToolbar_Quytrinh(); 
+			$('#TieptucQuytrinhbtn').hide(); 
+		}
+	}
+	//==================================================
+	function SetSoPhieutrinh(sophieutrinh) {
+		if (sophieutrinh > 0) {
+			$('#intsophieutrinh').text(sophieutrinh);
+		} else {
+			$('#intsophieutrinh').text("");
+		}
+	}
+	function UpdateSophieutrinh() {
+		intsophieutrinh = intsophieutrinh - 1;
+		SetSoPhieutrinh(intsophieutrinh);
+	}
+	function GetIdHoso() {
+		return $('#idhoso').val();
+	}
+	function GetIdCurrentUser() {
+		return $('#IdCurrentUser').val();
+	}
+	$('#BackBtn').click(function () {
+		var url = '@url';
+		$().redirect(url);
+	});
+	$('#AddCanbobtn').click(function () {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		if (idhoso != 0) {
+			OpenViewPhoihopxuly(idhoso);
+		} else {
+			SetThongbao("  Lỗi!!! ");
+		}
+	});
+	$('#Ykienbtn').click(function () {
+		OpenYkienxuly();
+		setTimeout(function () { $('#strykienxuly').focus(); }, 1000);
+	});
+	$('#YkienQuytrinhbtn').click(function () {
+		OpenYkienxuly();
+		setTimeout(function () { $('#strykienxuly').focus(); }, 1000);
+	});
+	$('#Phieutrinhbtn').click(function () {
+		OpenPhieutrinh(0);
+	});
+	function LuuHoso() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_LuuHoSo", "Hoso")',
+			data: { 'idhoso': idhoso },
+			success: function (data) {
+				if (data == 1) {
+					ReloadThongtinxuly();
+					DisableToolbar();
+				}
+				else {
+					SetThongbao(data);
+				}
+			}
+		});
+	};
+	$('#LuuHSbtn').click(function () {
+		LuuHoso();
+	});
+	function Trinhky() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_Trinhky", "Hoso")',
+			data: { 'idhoso': idhoso },
+			success: function (data) {
+				if (data == 1) {
+					ReloadThongtinxuly();
+					//DisableToolbar();
+				}
+				else {
+					SetThongbao(data);
+				}
+			}
+		});
+	};
+	$('#Trinhkybtn').click(function () {
+		Trinhky();
+	});
+	function Ketqua() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_KetthucHoso", "Hoso")',
+			data: { 'idhoso': idhoso },
+			success: function (data) {
+				if (data == 1) {
+					ReloadThongtinxuly();
+					DisableToolbar();
+				}
+				else {
+					SetThongbao(data);
+				}
+			}
+		});
+	};
+	$('#Ketquabtn').click(function () {
+		Ketqua();
+	});
+	$('#VBLQbtn').click(function () {
+		OpenVBLQ();
+	});
+	$('#Phathanhbtn').click(function () {
+	    PhathanhVB();
+	});
+	function PhathanhVB() {
+	    var listid = "";
+	    $(".clsFile").each(function (idx, elem) {
+	        var $elem = $(elem);	      
+	        var idfile = $elem.attr('id');
+	        if ($('#' + idfile).is(":checked")) {	        
+	            listid += idfile + ";";
+	        }
+	    });
+	    //console.log(listid);
+	    if (listid.length > 0) {	        
+	        OpenDuthaoVB(listid);
+	    } else {
+	        SetThongbao("Bạn phải chọn văn bản đính kèm");
+	    }
+	}
+	//=========================================
+	$('#Quytrinhbtn').click(function () {
+	    ChonBuocXuly();
+	});
+	function KetthucBuocXuly() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_KetthucBuocXuly", "Hoso")',
+			data: { 'idhoso': idhoso },
+			success: function (data) {
+				if (data == 1) {
+					ReloadThongtinxuly();
+					ReloadCanboxuly();
+					DisableToolbar_Quytrinh();
+				}
+				else {
+					//OpenXulyQuytrinh(idhoso);
+					SetThongbao(data);
+				}
+			}
+		});
+	};
+	function ChonBuocXuly() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		var intChonBuocXL = '@IsChonBuocXuly';
+	    if (intChonBuocXL == 1) {
+	        OpenChangeQuytrinh(idhoso, 2);
+	    } else {
+	        KetthucBuocXuly();
+	    }		
+	};
+	$('#ViewQuytrinhbtn').click(function () {
+		var idhoso = 0;
+		idhoso = GetIdHoso();		
+		OpenChangeQuytrinh(idhoso, 0);
+	});
+
+	$('#ReturnQuytrinhbtn').click(function () {
+		ReturnQuytrinh();
+	});
+	function ReturnQuytrinh() {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		$.ajax(
+		{
+			type: "POST",
+			url: '@Url.Action("_ReturnXuly", "Hoso")',
+			data: { 'idhoso': idhoso },
+			success: function (data) {
+				if (data == 1) {
+					ReloadThongtinxuly();
+					ReloadCanboxuly();
+					DisableToolbar_Quytrinh();
+				}
+				else {
+					//OpenXulyQuytrinh(idhoso);
+					SetThongbao(data);
+				}
+			}
+		});
+	}
+	
+	$('#TamngungQuytrinhbtn').click(function () {
+		OpenTamngungQuytrinh();
+	});
+	$('#TieptucQuytrinhbtn').click(function () {
+		OpenTieptucQuytrinh();
+	});
+	$('#AddCanboQuytrinhbtn').click(function () {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		if (idhoso != 0) {
+			OpenViewPhoihopxuly(idhoso);
+		} else {
+			SetThongbao("  Lỗi!!! ");
+		}
+	});
+	$('#ChangeQuytrinhbtn').click(function () {
+		var idhoso = 0;
+		idhoso = GetIdHoso();
+		OpenChangeQuytrinh(idhoso, 1);		
+	});
+</script>

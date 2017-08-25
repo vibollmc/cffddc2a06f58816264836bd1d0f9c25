@@ -1,0 +1,75 @@
+﻿@model QLVB.DTO.Baocao.CategoryBaocaoViewModel
+
+@using Kendo.Mvc.UI.Fluent
+
+@(
+ Html.Kendo().TreeView()
+    .Name("treeview")
+    .Events(events => events.Select("onSelect_treeview"))     
+    .ExpandAll(true)
+    .Items(item =>
+    {       
+        item.Add()
+        .Text("Văn bản đến")            
+        .Id("parentNode")
+        .Items(subItem =>
+        {
+            foreach (var j in Model.Vanbanden)
+            {
+                subItem.Add().Text(j.strten).Id(j.intid.ToString());
+            }
+        });
+        item.Add()
+        .Text("Văn bản đi")
+        .Id("parentNode")
+        .Items(subItem =>
+        {
+            foreach (var j in Model.Vanbandi)
+            {
+                subItem.Add().Text(j.strten).Id(j.intid.ToString());
+            }
+        });   
+        
+    })
+)
+<script type="text/javascript">
+    $(window).resize(function () {
+        SetTreeViewHeight();
+    });
+    $(document).ready(function () {
+        SetTreeViewHeight();
+    })
+    function onSelect_treeview(e) {
+        var treeview = $("#treeview").getKendoTreeView();
+        var text = treeview.dataItem(e.node).text;
+        var id = treeview.dataItem(e.node).id;
+        SetIdLoaiBC(id);
+        LoadDetail(id);
+    }
+    function LoadDetail(value) {
+        var url = "ParentNode";
+        switch (value) {
+            case "1": // so van ban den               
+                url = '@Url.Action("_DetailSovb", "Baocao", new { intloai = 1 })';
+                break;
+            case "2": // so van ban di
+                url = '@Url.Action("_DetailSovb", "Baocao", new { intloai = 2})';
+                break;
+            case "3": // loai van ban den
+                url = '@Url.Action("_DetailLoaivb", "Baocao", new { intloai = 1})';
+                break;
+            case "4":  // loai van ban di
+                url = '@Url.Action("_DetailLoaivb", "Baocao", new { intloai = 2})';
+                break;
+            case "5":  // van ban den dien tu
+                url = '@Url.Action("_Detailvbdt", "Baocao", new { intloai = 1})';
+                break;
+            case "6":  // van ban di dien tu
+                url = '@Url.Action("_Detailvbdt", "Baocao", new { intloai = 2})';
+                break;
+        }
+        if (url != "ParentNode") {
+            $('#listbaocao').load(url);
+        }        
+    }
+</script>

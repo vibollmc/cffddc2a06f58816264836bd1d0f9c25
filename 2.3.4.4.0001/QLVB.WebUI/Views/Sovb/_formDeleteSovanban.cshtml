@@ -1,0 +1,31 @@
+﻿@model QLVB.DTO.Sovb.EditSovanbanViewModel
+
+<div class="modal-body">
+    Bạn có muốn xóa Sổ văn bản : @Model.strten không?
+</div>
+<div class="modal-footer">
+    <button id="SubmitDeleteSovbbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+    <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+</div>
+
+<script type="text/javascript">
+    $("#Backbtn").bind("click", function () {
+        CloseEditSovb();
+    })
+    $('#SubmitDeleteSovbbtn').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Delete", "Sovb")',
+            dataType: "json",
+            data: {id:'@Model.intid', strten:'@Model.strten'},
+            success: function (data) {
+                if (data == 1) {                    
+                    CloseEditSovb();
+                }
+                else {                    
+                    SetThongbao("Lỗi, không xóa được");
+                }
+            },
+        });
+    })
+</script>

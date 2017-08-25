@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@section header{
+    <i class="glyphicon glyphicon-book">&nbsp;</i>Loại văn bản đến    
+}
+
+<div class="row">        
+    <div class="col-sm-5">
+        @Html.Partial("_Listloaivbden")
+    </div>
+    <div class="col-sm-7" id="loaitruongvb">
+    </div>
+    @Html.Hidden("idloaivb")
+</div>
+<script type="text/javascript">
+    $(window).resize(function () {         
+        SetGridHeight();
+    });
+    $(document).ready(function () {        
+        SetGridHeight();
+    })
+    function onChange(arg) {
+        var selected = $.map(this.select(), function (item) {
+            var value = $(item).text();
+            var grid = $("#grid").data("kendoGrid");
+            var row = grid.select();
+            var intid = grid.dataItem(row).intid;
+            SetIdLoaivb(intid);
+            var url = '@Url.Action("_AjaxTruongvb", "Loaivbden", (new { id = "__id__" }) )'.replace('__id__', intid);
+            $('#loaitruongvb').load(url);
+            var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbden", (new { id = "__id__" }))'.replace('__id__', intid);
+            $('#detail-editLoaivb').load(url);
+        });
+    }
+    function SetIdLoaivb(idloaivb) {
+        $('#idloaivb').val(idloaivb);
+    }
+    function GetIdLoaivb() {
+        var id = $('#idloaivb').val();
+        return id;
+    }
+    function SetSpliterHeight() {
+        var contentHeight = $('#content').innerHeight();
+        var headerHeight = $('#head').innerHeight();
+        var spliterHeight = (contentHeight - headerHeight) + "px";
+
+        var splitterElement = $("#SplitterMainContent");
+        var splitterObject = splitterElement.data("kendoSplitter");
+        //console.log(spliterHeight);
+        splitterElement.css({ height: spliterHeight });
+        //splitterObject.resize();
+        //splitterObject.trigger("resize");
+    }
+    function CloseEditLoaivb() {
+        var window = $("#EditLoaivb").data("kendoWindow");
+        window.close();
+    }
+    function OpenEditLoaivb() {
+        var window = $("#EditLoaivb").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+    $("#Addbtn").bind("click", function () {
+        var id = 0;
+        var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbden", (new { id = "__id__" }))'.replace('__id__', id);
+        $('#detail-editLoaivb').load(url);
+        OpenEditLoaivb();
+    });
+    $("#Editbtn").bind("click", function () {
+        var id = GetIdLoaivb();
+        if (id != 0) {
+            var url = '@Url.Action("_AjaxEditLoaivb", "Loaivbden", (new { id = "__id__" }))'.replace('__id__', id);
+            $('#detail-editLoaivb').load(url);
+            OpenEditLoaivb();
+        } else {
+            SetThongbao("Bạn chưa chọn loại văn bản")
+        }
+    });
+    $("#Deletebtn").bind("click", function () {
+        var id = GetIdLoaivb();
+        if (id != 0) {
+            var url = '@Url.Action("_AjaxDeleteLoaivb", "Loaivbden", (new { id = "__id__" }))'.replace('__id__', id);
+            $('#detail-editLoaivb').load(url);
+            OpenEditLoaivb();
+        } else {
+            SetThongbao("Bạn chưa chọn loại văn bản")
+        }
+    });
+</script>
+@(Html.Kendo().Window()
+    .Name("EditLoaivb")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Cập nhật loại văn bản")
+    .Resizable()
+    .Width(500)
+    .HtmlAttributes(new { style = "height:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-editLoaivb">
+        </div>
+    </text>
+    )
+)
+
+
+@*@(Html.Kendo().Splitter()
+    .Name("SplitterMainContent")
+    .Orientation(SplitterOrientation.Horizontal)
+    //.HtmlAttributes(new { style="height:100%"})
+    .Panes(hPanes =>
+    {
+        hPanes.Add()
+            .Size("30%")
+            .HtmlAttributes(new { id = "left-pane" })
+            .Resizable(true)
+            .Scrollable(true)
+            .Collapsible(true)
+            .Content(@<div>
+                        @Html.Partial("_Listloaivbden")
+                    </div>);
+
+        hPanes.Add()            
+            .HtmlAttributes(new { id = "right-pane" })            
+            .Scrollable(true)
+            .Collapsible(false)
+            .Content(@<div id="loaitruongvb">    
+            </div>);
+
+    })
+)*@
+
+          

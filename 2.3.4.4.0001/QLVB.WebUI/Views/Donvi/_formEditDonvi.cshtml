@@ -1,0 +1,54 @@
+﻿@model QLVB.DTO.Donvi.EditDonviViewModel
+
+<div class="box">
+    @*<form class="form-horizontal" id="formEditGroup" action="@Url.Action("SaveDonvi","Donvi")">*@
+    @using (Html.BeginForm("SaveDonvi", "Donvi", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <span id="ketquaSaveDonvi" class="validation-summary-valid"></span>
+        <header>
+            <nav style="padding: 3px;">
+                <button id="SaveDonvibtn" type="submit" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>                
+                <button id="BackDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </nav>
+        </header>
+
+        @Html.HiddenFor(m => m.intid)
+        @Html.HiddenFor(m => m.intType)
+        <div class="form-group form-group-window">
+            @Html.LabelFor(m => m.strtendonvi, new { @class = "control-label col-sm-4" })
+            <div class="col-sm-6">
+                @Html.TextBoxFor(m => m.strtendonvi, new { @class = "form-control form-control-window", placeholder = "Tên đơn vị" })
+            </div>
+        </div>
+    }
+    @*</form>*@
+</div>
+
+<script type="text/javascript">
+    @*$("#SaveDonvibtn").bind("click", function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveDonvi", "Donvi")',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                intid: $('#intid').val(),
+                strtendonvi: $('#strtendonvi').val(),
+                intType:$('#intType').val()
+            }),            
+            success: function (data) {
+                if (data == 1) {
+                    ShowResult("ketquaSaveDonvi", "Cập nhật thành công");
+                    //RefreshTreeview();
+                }
+                else {
+                    ShowResult("ketquaSaveDonvi", "Lỗi !!!");
+                    //RefreshTreeview();
+                }
+            },
+        });
+    });*@
+    $("#BackDonvibtn").bind("click", function () {
+        CloseEditDonvi();
+    })
+</script>

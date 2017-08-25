@@ -1,0 +1,204 @@
+﻿@model QLVB.DTO.Capcoquan.CapnhatDanhmucDonviViewModel
+
+@{
+    ViewBag.Title = "CapnhatDanhmucDonvi";
+}
+
+@section header{
+    <i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Cập nhật các đơn vị theo danh mục ngày @Model.strNgayCapnhatXML
+}
+
+<div class="box">
+    <header>
+        <nav style="padding: 3px;">
+            <button id="CapnhatDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+                <i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Cập nhật
+            </button>
+            <button id="AddDonvibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="">
+                <i class="glyphicon glyphicon-plus"></i>&nbsp;Thêm mới
+            </button>
+            <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>            
+        </nav>
+    </header>
+    <span id="ketquaSendvb" class="validation-summary-valid"></span>
+    <form class="form-horizontal" id="formCapnhatDonvi" method="post" action="@Url.Action("CapnhatDanhmucDonvi","Capcoquan")">
+        @Html.Hidden("listid")
+        @Html.Hidden("listemail")
+        <div class="body collapse in">
+            <table class="table responsive-table">
+                <thead>
+                    <tr>
+                        <td style="width:5%; text-align:center">
+                            <b>@Html.CheckBox("parentcheckbox")</b>
+                        </td>
+                        <td style="width:10%;">
+                            <b>Tên đơn vị</b>
+                        </td>
+                        <td style="width:15%;">
+                            <b>Email</b>
+                        </td>
+                        <td style="width:15%;">
+                            <b>Mã Trục tỉnh</b>
+                        </td>
+                        <td style="width:10%;">
+                            <b>Mã định danh</b>
+                        </td>
+                        <td style="width:10%;">
+                            <b>Tên đơn vị theo Danh mục</b>
+                        </td>
+                        <td style="width:15%;">
+                            <b>Email</b>
+                        </td>
+                        <td style="width:15%;">
+                            <b>Mã Trục tỉnh</b>
+                        </td>
+                        <td style="width:15%;">
+                            <b>Mã định danh</b>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="listdonviDB">
+                    @foreach (var p in Model.listdonviDB)
+                    {
+                        bool isFound = false;
+                        string tenxml = string.Empty;
+                        string emailxml = string.Empty;
+                        string madinhdanhxml = string.Empty;
+                        string matructinhxml = string.Empty;
+                        foreach (var x in Model.listdonvixml)
+                        {
+                            if (p.email == x.email)
+                            {
+                                x.id = p.id;
+                                isFound = true;
+                                tenxml = x.strten;
+                                emailxml = x.email;
+                                madinhdanhxml = x.madinhdanh;
+                                matructinhxml = x.matructinh;
+                                break;
+                            }
+                        }
+                        if (isFound)
+                        {
+                            <tr>
+                                <td style="width:5%; text-align:center">
+                                    @Html.CheckBox(p.id.ToString())
+                                </td>
+                                <td style="width:10%">@p.strten</td>
+                                <td style="width:15%;">@p.email</td>
+                                <td style="width:15%;">@p.matructinh</td>
+                                <td style="width:15%;">@p.madinhdanh</td>
+                                <td style="width:10%">@tenxml</td>
+                                <td style="width:15%;">@emailxml</td>
+                                <td style="width:15%;">@matructinhxml</td>
+                                <td style="width:15%;">@madinhdanhxml</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr style="color:red;">
+                                <td style="width:5%; text-align:center">
+                                    @Html.CheckBox(p.id.ToString())
+                                </td>
+                                <td style="width:10%">@p.strten</td>
+                                <td style="width:15%;">@p.email</td>
+                                <td style="width:15%;">@p.matructinh</td>
+                                <td style="width:15%;">@p.madinhdanh</td>
+                                <td style="width:10%;">___________</td>
+                                <td style="width:15%;">__________</td>
+                                <td style="width:15%;">__________</td>
+                                <td style="width:15%;">__________</td>
+                            </tr>
+                        }
+                    }
+                    <tr>
+                        <td colspan="7" style="color:red;">DỮ LIỆU CÒN LẠI THEO DANH MỤC</td>
+                    </tr>
+
+                    @foreach (var x in Model.listdonvixml)
+                    {
+                        if (x.id == 0)
+                        {
+                            <tr>
+                                <td style="width:5%; text-align:center">
+                                    @Html.CheckBox(x.email)
+                                </td>
+                                <td style="width:10%">@x.strten</td>
+                                <td style="width:15%;">@x.email</td>
+                                <td style="width:15%;">@x.matructinh</td>
+                                <td style="width:15%;">@x.madinhdanh</td>
+                                <td style="width:10%"></td>
+                                <td style="width:15%;"></td>
+                                <td style="width:15%;"></td>
+                                <td style="width:15%;"></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function GetDanhmuc() {
+        var allId = "";
+        var ischeck = true;
+        $("#listdonviDB").find(':checkbox').each(function () {
+            if ($(this).prop('checked')) {
+                allId += $(this).prop('name') + ";";
+            }
+        })
+        $('#listid').val(allId);        
+    }
+    $('#CapnhatDonvibtn').click(function () {
+        GetDanhmuc();
+        $('#formCapnhatDonvi').submit();
+    });
+    $('#Backbtn').click(function () {
+        var url = '@Url.Action("Index", "Capcoquan")';
+        window.location = url;
+    });
+    $('#AddDonvibtn').click(function () {
+        AddDanhmuc();        
+        var url = '@Url.Action("_GetKhoiph", "Capcoquan")';
+        $('#detail-ChonKhoiph').load(url);
+        OpenEditKhoiph();
+    });
+    function AddDanhmuc() {
+        var allEmail = "";
+        var ischeck = true;
+        $("#listdonviDB").find(':checkbox').each(function () {
+            if ($(this).prop('checked')) {
+                allEmail += $(this).prop('name') + ";";
+            }
+        })
+        $('#listemail').val(allEmail);        
+    }
+    function CloseEditKhoiph() {
+        var window = $("#AddNewDonvi").data("kendoWindow");
+        window.close();
+    }
+    function OpenEditKhoiph() {
+        var window = $("#AddNewDonvi").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+</script>
+
+@(Html.Kendo().Window()
+    .Name("AddNewDonvi")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Chọn cấp cơ quan")
+    .Resizable()
+    .Width(500)
+    .HtmlAttributes(new { style = "height:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-ChonKhoiph">
+        </div>
+    </text>
+	)
+)

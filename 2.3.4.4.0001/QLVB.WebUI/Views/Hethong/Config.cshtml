@@ -1,0 +1,376 @@
+﻿@model IEnumerable<QLVB.Domain.Entities.Config>
+@using QLVB.Domain.Entities;
+@{
+	ViewBag.Title = "Config";
+	var IsBool = new[]{
+				new {value = "true", name = "Có"},
+				new {value = "false", name = "Không"}
+			};	
+}
+@section header{
+	<i class="glyphicon glyphicon-cog">&nbsp;</i>Cấu hình hệ thống
+}
+
+<div class="row">
+	
+	<div class="col-sm-6">
+        <!-- HOP THU DIEN TU-->
+		<div class="box">
+			<header>
+				<div class="icons">
+                    <i class="glyphicon glyphicon-pencil"></i>
+				</div>
+				<h5>Hộp thư văn bản điện tử</h5>				
+			</header>
+			<div id="div-1" class="body">
+				<form class="form-horizontal" id="formMail">
+					<div class="form-actions no-margin-bottom">						
+						<button id="saveMail" type="button" class="btn btn-primary btn-flat " data-original-title="" title="" ><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+						<span id="ketquaMail" class="validation-summary-valid"></span>
+					</div>
+					@foreach (var m in Model.Where(p => p.intgroup == 1))
+					{
+						if (m.strthamso != ThamsoHethong.PasswordMail)
+						{
+							<div class="form-group">
+								@Html.Label(m.strmota, new { @class = "control-label col-lg-4" })							
+								<div class="col-lg-8">
+									@Html.TextBox(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })							
+								</div>
+							</div>
+						}
+						if (m.strthamso == ThamsoHethong.PasswordMail)
+						{
+							<div class="form-group">
+								@Html.Label(m.strmota, new { @class = "control-label col-lg-4" })
+								<div class="col-lg-8">
+									@Html.Password(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })									
+								</div>
+							</div>
+						}
+					}
+
+				</form>
+			</div>
+		</div>
+        <!--END HOP THU DIEN TU-->
+        <!-- TRUC LIEN THONG CUA TINH-->
+        <div class="box">
+            <header>
+                <div class="icons">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </div>
+                <h5>Trục liên thông của tỉnh</h5>
+
+            </header>
+            <div id="div-3" class="body">
+                <form class="form-horizontal" id="formTrucLienthongTinh">
+                    <div class="form-actions no-margin-bottom">
+                        <button id="saveTrucTinh" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                        <button id="ConnectTrucTinh" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-send"></i>&nbsp;Kết nối trục liên thông</button>
+
+                        <span id="ketquaTrucTinh" class="validation-summary-valid"></span>
+                    </div>
+                    @foreach (var m in Model.Where(p => p.intgroup == 4))
+                    {
+                        if (m.strthamso != ThamsoHethong.PasswordTrucTinh)
+                        {
+                            if (m.strthamso == ThamsoHethong.TrucLienthongTinh)
+                            {
+                                <div class="form-group">
+                                    @Html.Label(m.strmota, new { @class = "control-label col-md-5" })
+                                    <div class="col-md-7">
+                                        @Html.TextArea(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    @Html.Label(m.strmota, new { @class = "control-label col-md-5" })
+                                    <div class="col-md-7">
+                                        @Html.TextBox(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })
+                                    </div>
+                                </div>
+                            }
+                        }
+                        if (m.strthamso == ThamsoHethong.PasswordTrucTinh)
+                        {
+                            <div class="form-group">
+                                @Html.Label(m.strmota, new { @class = "control-label col-md-5" })
+                                <div class="col-md-7">
+                                    @Html.Password(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })
+                                </div>
+                            </div>
+                        }
+
+                    }
+
+                </form>
+
+            </div>
+        </div>
+        <!-- END TRUC LIEN THONG CUA TINH-->
+	</div>
+	
+	<!-- HE THONG -->
+	<div class="col-sm-6">
+		<div class="box dark">
+			<header>
+				<div class="icons">
+                    <i class="glyphicon glyphicon-pencil"></i>
+				</div>
+				<h5>Cấu hình hệ thống</h5>				
+			</header>
+			<div id="div-2" class="body">
+				<form class="form-horizontal" id="formConfig">
+					<div class="form-actions no-margin-bottom">                        
+						<a id="saveConfig" class="btn btn-primary" data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</a>
+						<span id="ketquaConfig" class="validation-summary-valid"></span>
+					</div>
+					@foreach (var m in Model.Where(p => p.intgroup == 2))
+					{
+						switch (m.strthamso)
+						{
+							case ThamsoHethong.SoNgayHienThi:
+								<div class="form-group">
+									<label class="control-label col-lg-6">@m.strmota</label>
+									<div class="col-lg-6">
+										<input type="text" id="@m.intid" name="@m.intid" placeholder="@m.strmota" class="form-control" value="@m.strgiatri">
+									</div>
+								</div>
+								break;
+							case ThamsoHethong.IsXulychinhKetthucHoso:
+								<div class="form-group">
+									<label class="control-label col-lg-6">@m.strmota</label>
+									<div class="col-lg-6">
+										@Html.DropDownList(m.intid.ToString(), new SelectList(IsBool, "value", "name", m.strgiatri),
+																	 new { @class = "form-control" })                                        
+									</div>
+								</div>
+								break;
+							case ThamsoHethong.IsXulyHoso:
+								 <div class="form-group">
+									<label class="control-label col-lg-6">@m.strmota</label>
+									<div class="col-lg-6">
+										@Html.DropDownList(m.intid.ToString(), new SelectList(IsBool, "value", "name", m.strgiatri),
+																	 new { @class = "form-control" })                                        
+									</div>
+								</div>
+								break;
+							case ThamsoHethong.IsViewVBDenDaXL:
+								 <div class="form-group">
+									<label class="control-label col-lg-6">@m.strmota</label>
+									<div class="col-lg-6">
+										@Html.DropDownList(m.intid.ToString(), new SelectList(IsBool, "value", "name", m.strgiatri),
+																	 new { @class = "form-control" })                                        
+									</div>
+								</div>
+								break;
+							default:
+								<div class="form-group">
+									<label class="control-label col-lg-6">@m.strmota</label>
+									<div class="col-lg-6">
+										<input type="text" id="@m.intid" name="@m.intid"  placeholder="@m.strmota" class="validate[required] form-control" value="@m.strgiatri">
+									</div>
+								</div>
+								break;
+						}
+					}
+
+				</form>
+			</div>
+		</div>
+
+        <!-- Gui du lieu UBT-->
+        <div class="box">
+            <header>
+                <div class="icons">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </div>
+                <h5>Báo cáo số liệu gửi nhận văn bản</h5>
+
+            </header>
+            <div id="div-3" class="body">
+                <form class="form-horizontal" id="formTHVB">
+                    <div class="form-actions no-margin-bottom">
+                        <button id="saveTHVB" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Ghi nhận</button>
+                        <button id="SendTHVB" type="button" class="btn btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-send"></i>&nbsp;Gửi dữ liệu</button>
+                        <span id="ketquaTHVB" class="validation-summary-valid"></span>
+                    </div>
+                    @foreach (var m in Model.Where(p => p.intgroup == 3))
+                    {
+                        if (m.strthamso != ThamsoHethong.IsSendTonghopVB)
+                        {
+                            <div class="form-group">
+                                @Html.Label(m.strmota, new { @class = "control-label col-lg-6" })
+                                <div class="col-lg-6">
+                                    @Html.TextBox(m.intid.ToString(), m.strgiatri, new { @class = "form-control", placeholder = m.strmota })
+                                </div>
+                            </div>
+                        }
+                        if (m.strthamso == ThamsoHethong.IsSendTonghopVB)
+                        {
+                            <div class="form-group">
+                                @Html.Label(m.strmota, new { @class = "control-label col-lg-6" })
+                                <div class="col-lg-6">
+                                    @Html.DropDownList(m.intid.ToString(), new SelectList(IsBool, "value", "name", m.strgiatri),
+                                                                    new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </form>
+            </div>
+        </div>
+	</div>
+	<!--END HE THONG-->
+</div><!-- /.row -->
+
+<script type="text/javascript">
+	$("#saveMail").click(function () {
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("SaveConfig","Hethong")',
+			data: $("#formMail").serialize(),
+			success: function (data) {
+				if (data == 1) {
+					ShowResult("ketquaMail","Cập nhật thành công");
+				}
+				else {
+					ShowResult("ketquaMail", "Lỗi !!!");
+				}
+			},
+			dataType: "Json"
+		});
+	});
+	$("#saveConfig").click(function () {
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("SaveConfig","Hethong")',
+			data: $("#formConfig").serialize(),
+			success: function (data) {
+				if (data == 1) {
+					ShowResult("ketquaConfig", "Cập nhật thành công");
+				}
+				else {
+					ShowResult("ketquaConfig", "Lỗi !!!");
+				}
+			},
+			dataType: "Json"
+		});
+	});
+    $("#saveTrucTinh").click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveConfig","Hethong")',
+            data: $("#formTrucLienthongTinh").serialize(),
+            success: function (data) {
+                if (data == 1) {
+                    ShowResult("ketquaTrucTinh", "Cập nhật thành công");
+                }
+                else {
+                    ShowResult("ketquaTrucTinh", "Lỗi !!!");
+                }
+            },
+            dataType: "Json"
+        });
+    });
+    $('#ConnectTrucTinh').click(function () {
+        $.ajax(
+		{
+		    type: "POST",
+		    url: '@Url.Action("_ConnectToTruclienthongTinh", "Vanbandi")',
+		    success: function (data) {
+		        SetThongbao(data);
+		    }
+		});
+    });
+    $("#saveTHVB").click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveConfig","Hethong")',
+            data: $("#formTHVB").serialize(),
+            success: function (data) {
+                if (data == 1) {
+                    ShowResult("ketquaTHVB", "Cập nhật thành công");
+                }
+                else {
+                    ShowResult("ketquaTHVB", "Lỗi !!!");
+                }
+            },
+            dataType: "Json"
+        });
+    });
+    $('#SendTHVB').click(function () {
+        $.ajax(
+		{
+		    type: "POST",
+		    url: '@Url.Action("_SendVBToUBT", "Vanbandidientu")',
+		    success: function (data) {
+		        if (data.id == 1) {
+		            SetThongbao(data.message);
+		        }
+		        else {
+		            OpenTestSendTonghopVB();
+		        }
+		    }
+		});
+    });
+
+    function CloseTestSendTonghopVB() {
+        var window = $("#TestSendTonghopVanban").data("kendoWindow");
+        window.close();
+    }
+    function OpenTestSendTonghopVB() {
+        var window = $("#TestSendTonghopVanban").data("kendoWindow");
+        window.center();
+        window.open();
+    }
+
+</script>
+
+
+@(Html.Kendo().Window()
+    .Name("TestSendTonghopVanban")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Gửi số liệu gửi nhận văn bản")
+    .Resizable()
+    .Width(500)
+    .HtmlAttributes(new { style = "height:100%;" })
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-TestSendTonghopVB">
+            <div class="modal-body">
+                Ngày hôm nay đã gửi dữ liệu rồi. Bạn có muốn gửi lại không?
+            </div>
+            <div class="modal-footer">
+                <button id="SubmitTestSendVBbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+                <button id="BackbTestSendbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+            </div>
+            <script type="text/javascript">
+                $("#BackbTestSendbtn").bind("click", function () {
+                    CloseTestSendTonghopVB();
+                })
+                $('#SubmitTestSendVBbtn').click(function () {
+                    $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("_ForceSendVBToUBT", "Vanbandidientu")',
+                        success: function (data) {
+                            if (data.id == 1) {
+                                CloseTestSendTonghopVB();
+                                SetThongbao(data.message);
+                            }
+                        }
+                    });
+                })
+            </script>
+        </div>
+    </text>
+    )
+)

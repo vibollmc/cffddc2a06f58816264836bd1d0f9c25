@@ -1,0 +1,34 @@
+﻿@model QLVB.DTO.Capcoquan.EditTochucViewModel
+
+<div class="modal-body">
+    Bạn có muốn xóa @Model.strtentochucdoitac không?
+</div>
+<div class="modal-footer">
+    <button id="SubmitDeleteTochucbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Đồng ý</button>
+    <button id="BackTochucbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Bỏ qua</button>
+</div>
+
+<script type="text/javascript">
+    $("#BackTochucbtn").bind("click", function () {
+        CloseEditTochuc();
+    })
+    $('#SubmitDeleteTochucbtn').click(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteTochuc", "Capcoquan")',
+            dataType: "json",
+            data: { id:'@Model.intid', strten:'@Model.strtentochucdoitac' } ,
+            success: function (data) {
+                if (data == 1) {
+                    RefreshGridNext();
+                    CloseEditTochuc();
+                }
+                else {
+                    CloseEditTochuc();
+                    SetThongbao("Lỗi, không xóa được");
+                }
+            },
+        });
+    })
+</script>
+

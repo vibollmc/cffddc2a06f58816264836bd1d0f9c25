@@ -1,0 +1,11 @@
+﻿@using Microsoft.Reporting.WebForms;
+@using MvcReportViewer;
+@model QLVB.DTO.Baocao.ReportSoVanbandenViewModel
+
+@{
+    ViewBag.Title = "Sovanbanden";
+    Layout = "~/Views/Shared/_Layout_null.cshtml";
+}
+
+@Html.MvcReportViewerFluent("Report/rptSovanbanden.rdlc").ProcessingMode(ProcessingMode.Local).LocalDataSource("DataSetReport", Model.Sovanban).ReportParameters(new { strngaybd = Model.Thamso.strTungay, strngaykt = Model.Thamso.strDenngay, tensovanban = Model.Thamso.strTenso, strtendonvi = Model.Thamso.strTendonvi, strtenphong = Model.Thamso.strtenphong }).Attributes(new { Height = 600, Width = 1000, style = "border: 1px" }).Method(FormMethod.Post)
+

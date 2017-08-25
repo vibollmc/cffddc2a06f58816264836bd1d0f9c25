@@ -1,0 +1,63 @@
+﻿@(Html.Kendo().Window()
+	.Name("ViewDetailVBDi")
+	.Draggable()
+	.AutoFocus(true)
+	.Title("Thông tin văn bản")
+	.Resizable()
+	.Width(650)
+	.Height(490)
+	.Visible(false)
+	.Actions(actions => actions.Minimize().Maximize().Close())
+	.Content(
+	@<text>
+		<div id="detail-VBDi">
+			<div class="box">
+				<header>
+					<nav style="padding: 3px;">
+						<button id="InChitietVBDibtn" type="button" class="btn btn-sm btn-primary btn-flat ">
+							<i class="glyphicon glyphicon-print"></i>&nbsp;In
+						</button>
+						<button id="BackViewDetailVBDibtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+
+					</nav>
+				</header>
+			</div>
+			<div id="chitietvanbandi">
+
+			</div>
+
+		</div>
+	</text>
+	)
+)
+
+<script type="text/javascript">
+	function CloseViewDetailVBDi() {
+		var window = $("#ViewDetailVBDi").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewDetailVBDi(idvanban) {
+		LoadVanbanDi(idvanban);
+		var window = $("#ViewDetailVBDi").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadVanbanDi(id) {
+		$('#chitietvanbandi').html(" ");
+		var url = '@Url.Action("_XemChitietVanban","TracuuVanbandi")';
+		url = url + "?id=" + id;
+		$('#chitietvanbandi').load(url);
+	}
+	$('#BackViewDetailVBDibtn').click(function () {
+		CloseViewDetailVBDi();
+	});
+
+	$('#InChitietVBDibtn').click(function () {
+		PrintElement('#chitietvanbandi');
+	});
+	function OpenTraloiVBDen(idvanbanden) {
+		CloseViewDetailVBDi();
+		OpenViewDetailVBDen(idvanbanden);
+	}
+
+</script>
