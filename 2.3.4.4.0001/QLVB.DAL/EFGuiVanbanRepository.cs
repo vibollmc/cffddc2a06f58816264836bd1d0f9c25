@@ -82,28 +82,67 @@ namespace QLVB.DAL
                 throw ex;
             }
         }
-      
-        public int UpdateTrangthaiNhan(int idvanban, int iddonvi, int intloaivanban, enumGuiVanban.inttrangthaiphanhoi trangthai, DateTime ngaythuchien)
+
+        public int UpdateTrangthaiNhan(int idvanban, string strtendonvi, int intloaivanban,
+            enumGuiVanban.inttrangthaiphanhoi trangthai, DateTime ngaythuchien, enumGuiVanban.intloaigui intloaigui)
         {
             try
             {
+
                 var vb = context.GuiVanbans
-               .Where(p => p.intidvanban == idvanban)
-               .Where(p => p.intiddonvi == iddonvi)
-               .Where(p => p.intloaivanban == intloaivanban)            
-                .FirstOrDefault();
+                    .FirstOrDefault(
+                        p =>
+                            p.intidvanban == idvanban && p.strtendonvi == strtendonvi &&
+                            p.intloaivanban == intloaivanban && p.intloaigui == (int) intloaigui);
                 if (vb != null)
                 {
                     // cap nhat ngay nhận trạng thái phản hồi
-                    if(trangthai == enumGuiVanban.inttrangthaiphanhoi.Datiepnhan)
-                    vb.strngaytiepnhan = ngaythuchien;
+                    if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Datiepnhan)
+                        vb.strngaytiepnhan = ngaythuchien;
                     else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Dangxuly)
-                     vb.strngaydangxuly = ngaythuchien;
+                        vb.strngaydangxuly = ngaythuchien;
                     else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Hoanthanh)
-                     vb.strngayhoanthanh = ngaythuchien;
-                        else
+                        vb.strngayhoanthanh = ngaythuchien;
+                    else
+                        return 0;
+
+                    context.SaveChanges();
+                    return vb.intid;
+                }
+                else
+                {
                     return 0;
-                   
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public int UpdateTrangthaiNhan(int idvanban, int iddonvi, int intloaivanban,
+            enumGuiVanban.inttrangthaiphanhoi trangthai, DateTime ngaythuchien)
+        {
+            try
+            {
+
+                var vb = context.GuiVanbans
+                    .Where(p => p.intidvanban == idvanban)
+                    .Where(p => p.intiddonvi == iddonvi)
+                    .Where(p => p.intloaivanban == intloaivanban)
+                    .FirstOrDefault();
+                if (vb != null)
+                {
+                    // cap nhat ngay nhận trạng thái phản hồi
+                    if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Datiepnhan)
+                        vb.strngaytiepnhan = ngaythuchien;
+                    else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Dangxuly)
+                        vb.strngaydangxuly = ngaythuchien;
+                    else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Hoanthanh)
+                        vb.strngayhoanthanh = ngaythuchien;
+                    else
+                        return 0;
+
                     context.SaveChanges();
                     return vb.intid;
                 }

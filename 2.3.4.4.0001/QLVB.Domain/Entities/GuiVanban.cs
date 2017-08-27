@@ -47,11 +47,13 @@ namespace QLVB.Domain.Entities
         }
         public enum inttrangthaiphanhoi
         { 
+            DaDen=01,
             Guinham=02,
             Datiepnhan = 03,
             Phancong =04,
             Dangxuly = 05,
-            Hoanthanh=06          
+            Hoanthanh=06,
+            XoaVanBan=13
             
         }
         public enum intloaigui

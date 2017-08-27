@@ -32,6 +32,7 @@ using From = INet.EdXml2.Header.From;
 using ResponseFor = INet.EdXml2.Header.ResponseFor;
 
 using System.Text.RegularExpressions;
+using System.Web.Hosting;
 using INet.StatusXml;
 using INet.StatusXml.Util;
 using FromRe = INet.StatusXml.SOAP.SOAPHeader.From;
@@ -675,7 +676,7 @@ namespace QLVB.Core.Implementation
                 if (vanbanden == null) return null;
 
                 var vanbandenMail =
-                    _vbdenMailRepo.Vanbandenmails.FirstOrDefault(x => x.intid == vanbanden.intidvanbandenmail);
+                    _vbdenMailRepo.Vanbandenmails.FirstOrDefault(x => x.intid == vanbanden.intidvanbandenmail && x.intnhanvanbantu == enumVanbandenmail.intnhanvanbantu.TrucLienThongChinhPhu);
 
                 if (vanbandenMail == null) return null;
 
@@ -783,12 +784,12 @@ namespace QLVB.Core.Implementation
         
         #region ReceiveStatus
 
-        public string ReceiveStatus(String statusXmlName)
+        public string ReceiveStatus(string statusXmlFile)
         {
             try
             {
                 StatusXml statusXml = new StatusXml();
-                statusXml.FromFile(AppSettings.Noidung + "/" + AppConts.FileEdxmlInbox + "/" + statusXmlName);
+                statusXml.FromFile(statusXmlFile);
 
                 Status headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
 
@@ -797,34 +798,29 @@ namespace QLVB.Core.Implementation
                 ReponseforRe responseFor = headerStatus.ResponseFor;
                 string sokyhieu = responseFor.Code;
                 string madinhdanhdonvi = from.OrganId;
+                string tendonvi = from.OrganName;
                 var trangthai = headerStatus.StatusCode;
                 DateTime ngayphathanhvanban = headerStatus.TimestampValue.Value;
                 StaffInfo staffInfo = headerStatus.StaffInfo;
-                var tochucdoitac = _tochucRepo.GetActiveTochucdoitacs
-                    .FirstOrDefault(p => p.strmadinhdanh == madinhdanhdonvi);
-                if (tochucdoitac != null)
+
+                var orgs = getalldonvi(0);
+
+                var org = orgs.listdonvi.FirstOrDefault(x => x.Madinhdanh == madinhdanhdonvi);
+
+                if (org == null) return null;
+
+                var vanbandi =
+                    _vanbandiRepo.Vanbandis.OrderByDescending(x => x.strngayky)
+                        .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
+                if (vanbandi != null)
                 {
-                    var vanbandi = _vanbandiRepo.Vanbandis
-                    .Where(p => p.strngayky == ngayphathanhvanban)
-                    .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
-                    if (vanbandi != null)
-                    {
 
-                        var guivanban = _guivbRepo.GuiVanbans
-                            .Where(p => p.intidvanban == vanbandi.intid)
-                            .FirstOrDefault(p => p.intiddonvi == tochucdoitac.intid);
-
-                        if (guivanban != null)
-                        {
-                            var ketqua = _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban.Value,
-                                guivanban.intid,
-                                (int)enumGuiVanban.intloaivanban.Vanbandi,
-                                (enumGuiVanban.inttrangthaiphanhoi)int.Parse(trangthai), ngayphathanhvanban);
-                        }
-                    }
-
+                    var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
+                        org.strtendonvi,
+                        (int) enumGuiVanban.intloaivanban.Vanbandi,
+                        (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngayphathanhvanban,
+                        enumGuiVanban.intloaigui.Chinhphu);
                 }
-
                 statusXml.Dispose();
 
                 return null;

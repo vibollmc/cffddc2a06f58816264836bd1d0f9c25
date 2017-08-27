@@ -207,9 +207,19 @@ namespace QLVB.Core.Implementation
                 _mailFormatManager.UpdateVBDT(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi);
 
                 foreach (var donvi in noiNhan)
-                {   // luu vanban da gui tren truc
-                   _vbdtManager._SaveGuiVanban(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi, null ,
-                                                donvi.name,(int)enumGuiVanban.intloaigui.Tructinh);
+                {
+                    var tochuc = _tochucRepo.GetAllTochucdoitacs.FirstOrDefault(x => x.strmatructinh == donvi.code);
+                    // luu vanban da gui tren truc
+                    if (tochuc == null)
+                    {
+                        _vbdtManager._SaveGuiVanban(vanbandiId, (int) enumGuiVanban.intloaivanban.Vanbandi, null,
+                            donvi.name, (int) enumGuiVanban.intloaigui.Tructinh);
+                    }
+                    else
+                    {
+                        _vbdtManager._SaveGuiVanban(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi, tochuc.intid,
+                            donvi.name, (int)enumGuiVanban.intloaigui.Tructinh);
+                    }
                 }
                 // luu nhat ky gui vbdt
                 _LogVBDiTructinh(vanbandiId, data.ToString());
@@ -433,11 +443,13 @@ namespace QLVB.Core.Implementation
             var loaiVb = "6.1.0.1";
             var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
 
+            var orgs = this.GetAllOrganization();
+
             foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
             {
                 var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
-                var objMessageStatus = Deserialize<MessageStatus>(sRespone);
-                sRespone = Base64Decode(objMessageStatus.Content);
+                var objMessageStatus = Deserialize<QlvbReceivedMessage>(sRespone);
+                sRespone = Base64Decode(objMessageStatus.content);
 
                 var status = Deserialize<Envelope>(sRespone);
 
@@ -449,32 +461,27 @@ namespace QLVB.Core.Implementation
                 var sokyhieu = responseFor.Code;
                 var madinhdanhdonvi = from.OrganId;
                 var trangthai = headerStatus.StatusCode;
-                var ngayphathanhvanban = string.IsNullOrWhiteSpace(headerStatus.Timestamp) ? (DateTime?)null : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
-                
-                //var tochucdoitac = _tochucRepo.GetActiveTochucdoitacs
-                //    .FirstOrDefault(p => p.strmatructinh == madinhdanhdonvi);
-                //if (tochucdoitac != null)
-                //{
-                //    var vanbandi = _vanbandiRepo.Vanbandis
-                //    .Where(p => p.strngayky == ngayphathanhvanban)
-                //    .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
-                //    if (vanbandi != null)
-                //    {
+                var ngaythuchien = string.IsNullOrWhiteSpace(headerStatus.Timestamp) ? DateTime.Now : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
 
-                //        var guivanban = _guivbRepo.GuiVanbans
-                //            .Where(p => p.intidvanban == vanbandi.intid)
-                //            .FirstOrDefault(p => p.intiddonvi == tochucdoitac.intid);
+                var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
+                    .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
+                if (vanbandi != null)
+                {
+                    var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
+                    if (org != null)
+                    {
+                        var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
+                            org.name,
+                            (int) enumGuiVanban.intloaivanban.Vanbandi,
+                            (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngaythuchien,
+                            enumGuiVanban.intloaigui.Tructinh);
 
-                //        if (guivanban != null)
-                //        {
-                //            var ketqua = _guivbRepo.UpdateTrangthaiNhan(guivanban.intidvanban.Value,
-                //                guivanban.intid,
-                //                (int)enumGuiVanban.intloaivanban.Vanbandi,
-                //                (enumGuiVanban.inttrangthaiphanhoi)int.Parse(trangthai), ngayphathanhvanban.Value);
-                //        }
-                //    }
-
-                //}
+                        if (ketqua > 0) //Update finish
+                        {
+                            webService.updateReceiveFinish(messageIdsByDocument);
+                        }
+                    }
+                }
             }
 
             return true;
@@ -488,77 +495,68 @@ namespace QLVB.Core.Implementation
                 if (vanbanden == null) return null;
 
                 var vanbandenMail =
-                    _vanbandenmailRepository.Vanbandenmails.FirstOrDefault(x => x.intid == vanbanden.intidvanbandenmail);
+                    _vanbandenmailRepository.Vanbandenmails.FirstOrDefault(
+                        x =>
+                            x.intid == vanbanden.intidvanbandenmail &&
+                            x.intnhanvanbantu == enumVanbandenmail.intnhanvanbantu.TrucLienThongTinh);
 
                 if (vanbandenMail == null) return null;
 
                 var madonviNhan = vanbandenMail.strmadinhdanh;
                 var tendonviNhan = vanbandenMail.strnoiguivb;
-                var sokyhieuvanban = vanbandenMail.intsoban + vanbandenMail.strkyhieu;
+                var sokyhieuvanban = vanbandenMail.intsoban + "/" + vanbandenMail.strkyhieu;
+                var trichyeu = vanbandenMail.strtrichyeu;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
-
-                //if (madonviNhan.StartsWith(AppSettings.MaEdxmlDiaphuong)) return null;
-
-                //Read from file
-                var statusXml = new StatusXml();
-
-                var headerStatus = statusXml.StatusXmlSoap.Envelope.Header.Status;
-
-                var from = headerStatus.From;
 
                 var madonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
                 var tendonvigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
 
-                from.OrganId = madonviTrucTinh;
-                from.OrganName = tendonvigui;
-                from.OrganAdd = _configRepo.GetConfig(ThamsoHethong.DiachiDonvi);
-                from.Email = _configRepo.GetConfig(ThamsoHethong.UsernameMail);
-                from.Telephone = _configRepo.GetConfig(ThamsoHethong.DienthoaiDonvi);
-                //from.Fax = "From Fax";
-                //from.Website = "From Website";
-
-                var responseFor = headerStatus.ResponseFor;
-                //TODO: truyen ma don vi nhan               
-                responseFor.OrganId = madonviNhan;
-                responseFor.Code = sokyhieuvanban;
-                responseFor.PromulgationDateValue = DateTime.Now;
-
-                headerStatus.StatusCode = status;
-                headerStatus.Description = statusDescription;
-
-                headerStatus.TimestampValue = DateTime.Now;
-
-                var staffInfo = headerStatus.StaffInfo;
-                staffInfo.Department = phongban;
-                staffInfo.Staff = nguoigui;
-
-                var filepathEdxml = _fileManager.SetPathUpload(AppConts.FileStatusEdxmlOutbox);
-                var fileEdxml = filepathEdxml + "\\" + idvanban.ToString() + ".edxml";
-
-                var count = 0;
-                while (System.IO.File.Exists(fileEdxml))
+                var messageStatus = new Envelope
                 {
-                    count++;
-                    fileEdxml = filepathEdxml + "\\" + idvanban.ToString() + "_" + count.ToString() + ".edxml";
-                }
+                    Header = new Header
+                    {
+                        Status = new Status
+                        {
+                            ResponseFor = new ResponseFor
+                            {
+                                Code = madonviNhan,
+                                OrganId = sokyhieuvanban,
+                                PromulgationDate = string.Format("{0:dd/MM/yyyy}", DateTime.Now)
+                            },
+                            From = new From
+                            {
+                                OrganId = madonviTrucTinh,
+                                OrganName = tendonvigui
+                            },
+                            StatusCode = status,
+                            Description = statusDescription,
+                            Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now)
+                        }
+                    }
+                };
 
-                var statusXmlInfo = statusXml.ToFile(fileEdxml);
+                var content = Base64Encode(Serialize(messageStatus));
 
-                statusXml.Dispose();
+                var senddate = DateTime.UtcNow;
+                var jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var senddateLongTime = (long)((senddate - jan1St1970).TotalMilliseconds);
 
-                //Send o day
-
-                if (string.IsNullOrEmpty(fileEdxml))
+                var message = new QlvbReceivedMessage
                 {
-                    return "Error file edxml";
-                }
+                    content = content,
+                    requiredanswer = "0",
+                    senddate = senddateLongTime.ToString(),
+                    sendingsystemid = madonviTrucTinh,
+                    receivingsystemid = madonviNhan,
+                    documenttype = "6.1.0.1",
+                    documentcode = sokyhieuvanban,
+                    description = trichyeu
+                };
 
                 var webService = ConnectGateway();
 
-                var message = File.ReadAllText(fileEdxml);
-
-                return webService.sendMessage(message);
+                return webService.sendMessage(Serialize(message));
 
             }
             catch (Exception e)
@@ -963,48 +961,6 @@ namespace QLVB.Core.Implementation
             [XmlElement("attach-files")]
             public List<AttachFile> attachfiles { get; set; }
         }
-
-        [XmlRoot(ElementName = "message")]
-        public class MessageStatus
-        {
-            [XmlElement(ElementName = "message-id")]
-            public string Messageid { get; set; }
-            [XmlElement(ElementName = "for-message-id")]
-            public string Formessageid { get; set; }
-            [XmlElement(ElementName = "required-answer")]
-            public string Requiredanswer { get; set; }
-            [XmlElement(ElementName = "send-date")]
-            public string Senddate { get; set; }
-            [XmlElement(ElementName = "sending-system-id")]
-            public string Sendingsystemid { get; set; }
-            [XmlElement(ElementName = "receiving-system-id")]
-            public string Receivingsystemid { get; set; }
-            [XmlElement(ElementName = "document-type")]
-            public string Documenttype { get; set; }
-            [XmlElement(ElementName = "document-code")]
-            public string Documentcode { get; set; }
-            [XmlElement(ElementName = "description")]
-            public string Description { get; set; }
-            [XmlElement(ElementName = "content")]
-            public string Content { get; set; }
-            [XmlElement(ElementName = "title")]
-            public string Title { get; set; }
-            [XmlElement(ElementName = "department-id")]
-            public string Departmentid { get; set; }
-            [XmlElement(ElementName = "department-send-id")]
-            public string Departmentsendid { get; set; }
-            [XmlElement(ElementName = "attach-files")]
-            public string Attachfiles { get; set; }
-            [XmlElement(ElementName = "option")]
-            public string Option { get; set; }
-            [XmlElement(ElementName = "stateProcess")]
-            public string StateProcess { get; set; }
-            [XmlElement(ElementName = "signature")]
-            public string Signature { get; set; }
-            [XmlElement(ElementName = "edxml")]
-            public string Edxml { get; set; }
-        }
-
 
         [XmlRoot("attach-file")]
         public class AttachFile
