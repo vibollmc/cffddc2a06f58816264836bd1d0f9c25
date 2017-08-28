@@ -419,7 +419,7 @@ namespace QLVB.Core.Implementation
                         }
                     }
                     //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
-                   //webService.updateReceiveFinish(messageIdsByDocument);
+                    webService.updateReceiveFinish(messageIdsByDocument);
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -439,52 +439,61 @@ namespace QLVB.Core.Implementation
 
         public bool ReceiveStatus()
         {
-            var webService = ConnectGateway();
-            var loaiVb = "6.1.0.1";
-            var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
-
-            var orgs = this.GetAllOrganization();
-
-            foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
+            try
             {
-                var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
-                var objMessageStatus = Deserialize<QlvbReceivedMessage>(sRespone);
-                sRespone = Base64Decode(objMessageStatus.content);
+                var webService = ConnectGateway();
+                var loaiVb = "6.1.0.1";
+                var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
 
-                var status = Deserialize<Envelope>(sRespone);
+                var orgs = this.GetAllOrganization();
 
-                var headerStatus = status.Header.Status;
-
-                var from = headerStatus.From;
-
-                var responseFor = headerStatus.ResponseFor;
-                var sokyhieu = responseFor.Code;
-                var madinhdanhdonvi = from.OrganId;
-                var trangthai = headerStatus.StatusCode;
-                var ngaythuchien = string.IsNullOrWhiteSpace(headerStatus.Timestamp) ? DateTime.Now : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
-
-                var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
-                    .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
-                if (vanbandi != null)
+                foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
                 {
-                    var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
-                    if (org != null)
-                    {
-                        var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
-                            org.name,
-                            (int) enumGuiVanban.intloaivanban.Vanbandi,
-                            (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngaythuchien,
-                            enumGuiVanban.intloaigui.Tructinh);
+                    var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
+                    var objMessageStatus = Deserialize<QlvbReceivedMessage>(sRespone);
+                    sRespone = Base64Decode(objMessageStatus.content);
 
-                        if (ketqua > 0) //Update finish
+                    var status = Deserialize<Envelope>(sRespone);
+
+                    var headerStatus = status.Header.Status;
+
+                    var from = headerStatus.From;
+
+                    var responseFor = headerStatus.ResponseFor;
+                    var sokyhieu = responseFor.Code;
+                    var madinhdanhdonvi = from.OrganId;
+                    var trangthai = headerStatus.StatusCode;
+                    var ngaythuchien = string.IsNullOrWhiteSpace(headerStatus.Timestamp)
+                        ? DateTime.Now
+                        : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
+
+                    var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
+                        .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
+                    if (vanbandi != null)
+                    {
+                        var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
+                        if (org != null)
                         {
-                            webService.updateReceiveFinish(messageIdsByDocument);
+                            var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
+                                org.name,
+                                (int) enumGuiVanban.intloaivanban.Vanbandi,
+                                (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngaythuchien,
+                                enumGuiVanban.intloaigui.Tructinh);
+
+                            if (ketqua > 0) //Update finish
+                            {
+                                webService.updateReceiveFinish(messageIdsByDocument);
+                            }
                         }
                     }
                 }
-            }
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban)

@@ -15,5 +15,8 @@ namespace QLVB.Core.Contract
         List<OrganizationVM> GetAllOrganization();
         bool GuiVanBan(int vanbandiId, IList<OrganizationVM> noiNhan);
         ResultFunction NhanVanBan();
+
+        bool ReceiveStatus();
+        string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban);
     }
 }

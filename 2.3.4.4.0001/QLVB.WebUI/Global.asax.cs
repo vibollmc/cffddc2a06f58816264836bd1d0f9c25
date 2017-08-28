@@ -92,14 +92,14 @@ namespace QLVB.WebUI
 
                isProcessing = true;
 
-               var truclienthongManager = NinjectWebCommon.Resolve<TrucLienthongTinhManager>();
+               var truclienthongManager = NinjectWebCommon.Resolve<ITrucLienthongTinhManager>();
 
                if (truclienthongManager != null)
                {
                    truclienthongManager.ReceiveStatus();
                }
 
-               //var edxmlManager = NinjectWebCommon.Resolve<TrucLienthongTinhManager>();
+               //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
 
                //if (edxmlManager != null)
                //{

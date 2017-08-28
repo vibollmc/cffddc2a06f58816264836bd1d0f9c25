@@ -24,13 +24,14 @@ namespace QLVB.WebUI.Controllers
         private ILogger _logger;
         private ISessionServices _session;      
         private IEdxmlManager _edxmlManager;
-        public HosoController(IHosoManager hoso, ILogger logger, ISessionServices session, IEdxmlManager edxmlManager)
+        private ITrucLienthongTinhManager _trucLienthongTinhManager;
+        public HosoController(IHosoManager hoso, ILogger logger, ISessionServices session, IEdxmlManager edxmlManager, ITrucLienthongTinhManager trucLienthongTinhManager)
         {
             _hoso = hoso;
             _logger = logger;
             _session = session;
             _edxmlManager = edxmlManager;
-          
+            _trucLienthongTinhManager = trucLienthongTinhManager;
         }
 
         #endregion Constructor
@@ -596,6 +597,8 @@ namespace QLVB.WebUI.Controllers
                 if (idvanbanden != null)
                 {
                     _edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
+
+                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
                 }
 
                 
@@ -618,6 +621,8 @@ namespace QLVB.WebUI.Controllers
                 if (idvanbanden != null)
                 {
                     _edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
+
+                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
                 }
 
                 return Json(kq.id);

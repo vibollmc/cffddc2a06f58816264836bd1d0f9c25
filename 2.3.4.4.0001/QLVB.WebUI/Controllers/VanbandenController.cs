@@ -26,12 +26,14 @@ namespace QLVB.WebUI.Controllers
         private ISessionServices _session;
         private IMailManager _mail;
         private IEdxmlManager _edxmlManager;
-        public VanbandenController(IVanbandenManager vanban, ISessionServices session, IMailManager mail, IEdxmlManager edxmlManager)
+        private ITrucLienthongTinhManager _truclienthongtinhManager;
+        public VanbandenController(IVanbandenManager vanban, ISessionServices session, IMailManager mail, IEdxmlManager edxmlManager, ITrucLienthongTinhManager truclienthongtinhManager)
         {
             _vanban = vanban;
             _session = session;
             _mail = mail;
             _edxmlManager = edxmlManager;
+            _truclienthongtinhManager = truclienthongtinhManager;
         }
         #endregion Constructor
 
@@ -523,6 +525,8 @@ namespace QLVB.WebUI.Controllers
                     if (vanban.Vanbanden.intidvanbandenmail != null && intidvanban != 0)
                     {
                         _edxmlManager.SendStatus(intidvanban, "03", "Đã tiếp nhận", null, null);
+
+                        _truclienthongtinhManager.SendStatus(intidvanban, "03", "Đã Tiếp Nhận", null, null);
                     }
                 
                 }
