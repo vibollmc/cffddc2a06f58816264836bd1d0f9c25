@@ -524,7 +524,7 @@ namespace QLVB.WebUI.Controllers
 
                     if (vanban.Vanbanden.intidvanbandenmail != null && intidvanban != 0)
                     {
-                        _edxmlManager.SendStatus(intidvanban, "03", "Đã tiếp nhận", null, null);
+                        //_edxmlManager.SendStatus(intidvanban, "03", "Đã tiếp nhận", null, null);
 
                         _truclienthongtinhManager.SendStatus(intidvanban, "03", "Đã Tiếp Nhận", null, null);
                     }

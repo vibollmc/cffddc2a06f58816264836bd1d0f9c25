@@ -596,7 +596,7 @@ namespace QLVB.WebUI.Controllers
 
                 if (idvanbanden != null)
                 {
-                    _edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
+                    //_edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
 
                     _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
                 }
@@ -620,7 +620,7 @@ namespace QLVB.WebUI.Controllers
 
                 if (idvanbanden != null)
                 {
-                    _edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
+                    //_edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
 
                     _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
                 }

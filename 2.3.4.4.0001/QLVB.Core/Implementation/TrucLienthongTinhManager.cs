@@ -51,6 +51,7 @@ namespace QLVB.Core.Implementation
         private readonly IVanbandenRepository _vbdenRepo;
         private readonly ITochucdoitacRepository _tochucRepo;
         private readonly IVanbandiRepository _vanbandiRepo;
+        private ITrucLienthongTinhManager _trucLienthongTinhManager;
        
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, 
@@ -58,7 +59,8 @@ namespace QLVB.Core.Implementation
                ITinhchatvanbanRepository tinhchatvanbanRepository, IAttachVanbanRepository attachVanbanRepository, 
                IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager,
                IMailInboxRepository mailInboxRepo, IMailOutboxRepository mailOutboxRepo, IGuiVanbanRepository guivbRepo,
-               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo)
+               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo,
+               ITrucLienthongTinhManager trucLienthongTinhManager)
         {
             _logger = logger;
             _configRepo = configRepo;
@@ -77,6 +79,7 @@ namespace QLVB.Core.Implementation
             _tochucRepo = tochucRepo;
             _vanbandiRepo = vanbandiRepo;
             _guivbRepo = guivbRepo;
+            _trucLienthongTinhManager = trucLienthongTinhManager;
         }
 
         #endregion Constructor
@@ -144,8 +147,12 @@ namespace QLVB.Core.Implementation
                 var webService = ConnectGateway();
                 var urlUploadFile = webService.getUploadFileURL(GetIPAddress()); //IP may client
 
+                var orgs = this.GetAllOrganization();
+
                 var data = new StringBuilder();
                 var receivingsystemid = "";
+
+
                 foreach (var obj in noiNhan)
                 {
                     receivingsystemid += obj.code + ";";
@@ -209,16 +216,18 @@ namespace QLVB.Core.Implementation
                 foreach (var donvi in noiNhan)
                 {
                     var tochuc = _tochucRepo.GetAllTochucdoitacs.FirstOrDefault(x => x.strmatructinh == donvi.code);
+
+                    var org = orgs.FirstOrDefault(x => x.code == donvi.code);
                     // luu vanban da gui tren truc
                     if (tochuc == null)
                     {
                         _vbdtManager._SaveGuiVanban(vanbandiId, (int) enumGuiVanban.intloaivanban.Vanbandi, null,
-                            donvi.name, (int) enumGuiVanban.intloaigui.Tructinh);
+                            org != null ? org.name : donvi.name, (int) enumGuiVanban.intloaigui.Tructinh);
                     }
                     else
                     {
                         _vbdtManager._SaveGuiVanban(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi, tochuc.intid,
-                            donvi.name, (int)enumGuiVanban.intloaigui.Tructinh);
+                            org != null ? org.name : donvi.name, (int)enumGuiVanban.intloaigui.Tructinh);
                     }
                 }
                 // luu nhat ky gui vbdt
@@ -420,6 +429,7 @@ namespace QLVB.Core.Implementation
                     }
                     //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                     webService.updateReceiveFinish(messageIdsByDocument);
+                   _trucLienthongTinhManager.SendStatus(idmail, "01", "Đã đến", null, null);
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -445,46 +455,61 @@ namespace QLVB.Core.Implementation
                 var loaiVb = "6.1.0.1";
                 var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
 
+                if (receivedMessageIdsByDocument == null || receivedMessageIdsByDocument.Count() == 0) return false;
+
                 var orgs = this.GetAllOrganization();
 
                 foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
                 {
-                    var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
-                    var objMessageStatus = Deserialize<QlvbReceivedMessage>(sRespone);
-                    sRespone = Base64Decode(objMessageStatus.content);
-
-                    var status = Deserialize<Envelope>(sRespone);
-
-                    var headerStatus = status.Header.Status;
-
-                    var from = headerStatus.From;
-
-                    var responseFor = headerStatus.ResponseFor;
-                    var sokyhieu = responseFor.Code;
-                    var madinhdanhdonvi = from.OrganId;
-                    var trangthai = headerStatus.StatusCode;
-                    var ngaythuchien = string.IsNullOrWhiteSpace(headerStatus.Timestamp)
-                        ? DateTime.Now
-                        : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
-
-                    var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
-                        .FirstOrDefault(p => p.intid + p.strkyhieu == sokyhieu);
-                    if (vanbandi != null)
+                    try
                     {
-                        var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
-                        if (org != null)
-                        {
-                            var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
-                                org.name,
-                                (int) enumGuiVanban.intloaivanban.Vanbandi,
-                                (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngaythuchien,
-                                enumGuiVanban.intloaigui.Tructinh);
+                        var sRespone = webService.getMessageByMessageId(messageIdsByDocument);
+                        var objMessageStatus = Deserialize<QlvbReceivedMessage>(sRespone);
+                        sRespone = Base64Decode(objMessageStatus.content);
 
-                            if (ketqua > 0) //Update finish
+                        var status = Deserialize<Envelope>(sRespone);
+
+                        var headerStatus = status.Header.Status;
+
+                        var from = headerStatus.From;
+
+                        var responseFor = headerStatus.ResponseFor;
+                        var sokyhieu = responseFor.Code.Trim('/');
+                        var madinhdanhdonvi = responseFor.OrganId;
+                        var trangthai = headerStatus.StatusCode;
+                        var ngaythuchien = string.IsNullOrWhiteSpace(headerStatus.Timestamp)
+                            ? DateTime.Now
+                            : DateTime.ParseExact(headerStatus.Timestamp, "dd/MM/yyyy HH:mm:ss", null);
+
+                        var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
+                            .FirstOrDefault(p => p.intso + "/" + p.strkyhieu == sokyhieu || p.strkyhieu == sokyhieu);
+                       
+                            if (vanbandi != null)
                             {
-                                webService.updateReceiveFinish(messageIdsByDocument);
+                                var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
+                                if (org != null)
+                                {
+                                    var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
+                                        org.name,
+                                        (int)enumGuiVanban.intloaivanban.Vanbandi,
+                                        (enumGuiVanban.inttrangthaiphanhoi)int.Parse(trangthai), ngaythuchien,
+                                        enumGuiVanban.intloaigui.Tructinh);
+
+                                    if (ketqua > 0) //Update finish
+                                    {
+                                        webService.updateReceiveFinish(messageIdsByDocument);
+                                    }
+                                }
                             }
-                        }
+                        else
+                            {
+                                webService.updateErrorMessage(messageIdsByDocument, "Can't find document");
+                            }
+                       
+                    }
+                    catch (Exception ex)
+                    {
+                         webService.updateErrorMessage(messageIdsByDocument, ex.Message);
                     }
                 }
 
@@ -513,7 +538,8 @@ namespace QLVB.Core.Implementation
 
                 var madonviNhan = vanbandenMail.strmadinhdanh;
                 var tendonviNhan = vanbandenMail.strnoiguivb;
-                var sokyhieuvanban = vanbandenMail.intsoban + "/" + vanbandenMail.strkyhieu;
+                var sokyhieuvanban = vanbandenMail.intso + "/" + vanbandenMail.strkyhieu;
+                if (vanbandenMail.intso == null) sokyhieuvanban = vanbandenMail.strkyhieu;
                 var trichyeu = vanbandenMail.strtrichyeu;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
@@ -529,8 +555,8 @@ namespace QLVB.Core.Implementation
                         {
                             ResponseFor = new ResponseFor
                             {
-                                Code = madonviNhan,
-                                OrganId = sokyhieuvanban,
+                                Code = sokyhieuvanban,
+                                OrganId = madonviNhan,
                                 PromulgationDate = string.Format("{0:dd/MM/yyyy}", DateTime.Now)
                             },
                             From = new From
@@ -541,6 +567,11 @@ namespace QLVB.Core.Implementation
                             StatusCode = status,
                             Description = statusDescription,
                             Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now)
+                            //StaffInfo = new StaffInfo
+                            //{
+
+                            //}
+                         
                         }
                     }
                 };
@@ -1063,6 +1094,14 @@ namespace QLVB.Core.Implementation
             [XmlElement(ElementName = "PromulgationDate", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
             public string PromulgationDate { get; set; }
         }
+        public class StaffInfo
+        {
+            [XmlElement(ElementName = "Department", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
+            public string Department { get; set; }
+            [XmlElement(ElementName = "Staff", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
+            public string Staff { get; set; }
+         
+        }
 
         [XmlRoot(ElementName = "From", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
         public class From
@@ -1087,6 +1126,9 @@ namespace QLVB.Core.Implementation
             [XmlElement(ElementName = "Timestamp", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
             public string Timestamp { get; set; }
             [XmlAttribute(AttributeName = "edXML", Namespace = "http://www.w3.org/2000/xmlns/")]
+
+            //[XmlElement(ElementName = "StaffInfo", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
+            //public ResponseFor StaffInfo { get; set; }
             public string EdXML { get; set; }
         }
 

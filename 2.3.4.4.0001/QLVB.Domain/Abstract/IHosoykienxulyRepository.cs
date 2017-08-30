@@ -17,5 +17,6 @@ namespace QLVB.Domain.Abstract
         void Sua(int intid, Hosoykienxuly hs);
 
         void Xoa(int intid);
+        IQueryable<Hosoykienxuly> GetDangXulys { get; }
     }
 }
