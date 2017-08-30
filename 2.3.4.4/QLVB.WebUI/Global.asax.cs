@@ -83,7 +83,7 @@ namespace QLVB.WebUI
             _autoResetEvent = new AutoResetEvent(false);
 
             var isProcessing = false;
-
+            var timeInterval = int.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["TimeAutoReceiveStatus"]) * 60000;
             _timer = new Timer((o) =>
             {
                 if (!NinjectWebCommon.Started) return;
@@ -101,7 +101,9 @@ namespace QLVB.WebUI
 
                 isProcessing = false;
 
-            }, _autoResetEvent, 1000, 200000);
+            }, 
+          
+            _autoResetEvent, 1000,timeInterval);
         }
 
         //protected void Application_BeginRequest()

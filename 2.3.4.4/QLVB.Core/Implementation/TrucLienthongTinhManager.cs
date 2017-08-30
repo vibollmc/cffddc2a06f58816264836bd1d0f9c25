@@ -146,7 +146,7 @@ namespace QLVB.Core.Implementation
                 data.Append("<receiving-system-id><![CDATA[" + receivingsystemid + "]]></receiving-system-id>");
                 data.Append("<document-type><![CDATA[1.1.0.1]]></document-type>");
                 data.Append("<document-code><![CDATA[" + vanbandi.intso + "/" + vanbandi.strkyhieu + "]]></document-code>");
-                data.Append("<description><![CDATA[" + vanbandi.strtrichyeu + "]]></description>");
+                data.Append("<description><![CDATA[" + vanbandi.strtrichyeu + "]]></description>");      
                 data.Append("<content><![CDATA[" + content + "]]></content>");
 
                 var attachments = GetFileAttachments(vanbandiId);
@@ -197,6 +197,7 @@ namespace QLVB.Core.Implementation
                 var webService = ConnectGateway();
                 var loaiVb = _configRepo.GetConfig(ThamsoHethong.LoaiVanbanTrucTinh);
                 var receivedMessageIdsByDocument = webService.getReceivedMessageIdsByDocumentType(loaiVb);
+                var result = 0;
                 
                 foreach (var messageIdsByDocument in receivedMessageIdsByDocument)
                 {
@@ -204,7 +205,19 @@ namespace QLVB.Core.Implementation
                     var objReceivedMessage = Deserialize<QlvbReceivedMessage>(sRespone);
                     objReceivedMessage.attachfiles = getAttachFile(sRespone);
                     sRespone = Base64Decode(objReceivedMessage.content);
-                    var objDocument = Deserialize<QlvbDocument>(sRespone);
+                    QlvbDocument objDocument = null;
+                    try
+                    {
+                        objDocument = Deserialize<QlvbDocument>(sRespone);
+                    }
+                    catch (Exception ex)
+                    {
+                        webService.updateErrorMessage(messageIdsByDocument, ex.Message);
+                        continue;
+                    }
+
+                    if (objDocument == null) continue;
+
                     objDocument.attachfiles = objReceivedMessage.attachfiles;
                     //xử lý văn bản
 
@@ -257,6 +270,10 @@ namespace QLVB.Core.Implementation
                     if (double.TryParse(objDocument.ngayphathanh, out outd))
                     {
                         vbdenMail.strngayky = jan1St1970.AddMilliseconds(outd);
+                        if (vbdenMail.strngayky.Value.Hour != 0)
+                        {
+                            vbdenMail.strngayky = jan1St1970.AddMilliseconds(outd).ToLocalTime();
+                        }
                     }
                     else if (DateTime.TryParseExact(objDocument.ngayphathanh, "dd/MM/yyyy", null, DateTimeStyles.None, out outDateTime))
                     {
@@ -306,11 +323,13 @@ namespace QLVB.Core.Implementation
                         }
                     }
                     //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
-                    webService.updateReceiveFinish(messageIdsByDocument);
+                  //  webService.updateReceiveFinish(messageIdsByDocument);
+
+                    result++;
                 }
 
                 kq.id = (int) ResultViewModels.Success;
-                kq.message = receivedMessageIdsByDocument.Count().ToString();
+                kq.message = result.ToString();
                 
             }
             catch (Exception ex)

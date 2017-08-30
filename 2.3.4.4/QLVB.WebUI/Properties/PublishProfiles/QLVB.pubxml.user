@@ -10,7 +10,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="appSettings.config">
-      <publishTime>07/06/2017 09:34:42</publishTime>
+      <publishTime>08/15/2017 10:15:40</publishTime>
     </File>
     <File Include="App_Readme/Elmah.SqlServer.sql">
       <publishTime>12/31/2013 11:01:17</publishTime>
@@ -199,28 +199,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2013 16:01:28</publishTime>
     </File>
     <File Include="bin/QLVB.Common.dll">
-      <publishTime>07/07/2017 14:20:19</publishTime>
+      <publishTime>07/10/2017 15:18:39</publishTime>
     </File>
     <File Include="bin/QLVB.Core.dll">
-      <publishTime>07/07/2017 14:20:34</publishTime>
+      <publishTime>08/30/2017 15:14:52</publishTime>
     </File>
     <File Include="bin/QLVB.Core.XmlSerializers.dll">
-      <publishTime>07/07/2017 14:20:41</publishTime>
+      <publishTime>08/30/2017 15:14:59</publishTime>
     </File>
     <File Include="bin/QLVB.DAL.dll">
-      <publishTime>07/07/2017 14:20:31</publishTime>
+      <publishTime>07/10/2017 15:19:16</publishTime>
     </File>
     <File Include="bin/QLVB.Domain.dll">
-      <publishTime>07/07/2017 14:20:24</publishTime>
+      <publishTime>07/10/2017 15:19:00</publishTime>
     </File>
     <File Include="bin/QLVB.Donvi.dll">
-      <publishTime>07/07/2017 14:20:25</publishTime>
+      <publishTime>08/30/2017 15:14:46</publishTime>
     </File>
     <File Include="bin/QLVB.DTO.dll">
-      <publishTime>07/07/2017 14:20:26</publishTime>
+      <publishTime>07/10/2017 15:19:08</publishTime>
     </File>
     <File Include="bin/QLVB.WebUI.dll">
-      <publishTime>07/07/2017 14:21:13</publishTime>
+      <publishTime>08/30/2017 15:15:20</publishTime>
     </File>
     <File Include="bin/Report/rptSovanbanden.xlsx">
       <publishTime>09/16/2016 21:30:44</publishTime>
@@ -241,10 +241,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/13/2015 09:41:09</publishTime>
     </File>
     <File Include="bin/Store.Core.dll">
-      <publishTime>07/07/2017 14:20:47</publishTime>
+      <publishTime>08/30/2017 15:15:01</publishTime>
     </File>
     <File Include="bin/Store.DAL.dll">
-      <publishTime>07/07/2017 14:20:30</publishTime>
+      <publishTime>07/10/2017 15:19:14</publishTime>
     </File>
     <File Include="bin/System.IO.Packaging.dll">
       <publishTime>04/17/2016 11:21:19</publishTime>
@@ -22009,10 +22009,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/29/2015 16:51:12</publishTime>
     </File>
     <File Include="Views/Vanbandi/Email.cshtml">
-      <publishTime>07/06/2017 09:34:43</publishTime>
+      <publishTime>08/07/2017 10:52:36</publishTime>
     </File>
     <File Include="Views/Vanbandi/Index.cshtml">
-      <publishTime>05/25/2017 16:02:34</publishTime>
+      <publishTime>07/21/2017 14:42:45</publishTime>
     </File>
     <File Include="Views/Vanbandi/ListVBDiLienquan.cshtml">
       <publishTime>05/26/2015 08:17:49</publishTime>
@@ -22033,7 +22033,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/30/2015 08:20:20</publishTime>
     </File>
     <File Include="Views/Vanbandi/_GetDonviTrucTinh.cshtml">
-      <publishTime>04/24/2017 08:47:42</publishTime>
+      <publishTime>07/07/2017 15:41:08</publishTime>
     </File>
     <File Include="Views/Vanbandi/_ListUserCapquyenxem.cshtml">
       <publishTime>11/19/2014 15:52:23</publishTime>
