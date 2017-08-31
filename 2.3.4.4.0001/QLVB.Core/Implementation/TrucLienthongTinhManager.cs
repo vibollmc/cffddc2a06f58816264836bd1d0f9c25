@@ -51,7 +51,6 @@ namespace QLVB.Core.Implementation
         private readonly IVanbandenRepository _vbdenRepo;
         private readonly ITochucdoitacRepository _tochucRepo;
         private readonly IVanbandiRepository _vanbandiRepo;
-        private ITrucLienthongTinhManager _trucLienthongTinhManager;
        
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, 
@@ -59,8 +58,7 @@ namespace QLVB.Core.Implementation
                ITinhchatvanbanRepository tinhchatvanbanRepository, IAttachVanbanRepository attachVanbanRepository, 
                IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager,
                IMailInboxRepository mailInboxRepo, IMailOutboxRepository mailOutboxRepo, IGuiVanbanRepository guivbRepo,
-               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo,
-               ITrucLienthongTinhManager trucLienthongTinhManager)
+               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo)
         {
             _logger = logger;
             _configRepo = configRepo;
@@ -79,7 +77,6 @@ namespace QLVB.Core.Implementation
             _tochucRepo = tochucRepo;
             _vanbandiRepo = vanbandiRepo;
             _guivbRepo = guivbRepo;
-            _trucLienthongTinhManager = trucLienthongTinhManager;
         }
 
         #endregion Constructor
@@ -429,7 +426,6 @@ namespace QLVB.Core.Implementation
                     }
                     //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                     webService.updateReceiveFinish(messageIdsByDocument);
-                   _trucLienthongTinhManager.SendStatus(idmail, "01", "Đã đến", null, null);
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -567,11 +563,6 @@ namespace QLVB.Core.Implementation
                             StatusCode = status,
                             Description = statusDescription,
                             Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now)
-                            //StaffInfo = new StaffInfo
-                            //{
-
-                            //}
-                         
                         }
                     }
                 };
@@ -1094,14 +1085,6 @@ namespace QLVB.Core.Implementation
             [XmlElement(ElementName = "PromulgationDate", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
             public string PromulgationDate { get; set; }
         }
-        public class StaffInfo
-        {
-            [XmlElement(ElementName = "Department", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-            public string Department { get; set; }
-            [XmlElement(ElementName = "Staff", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-            public string Staff { get; set; }
-         
-        }
 
         [XmlRoot(ElementName = "From", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
         public class From
@@ -1126,9 +1109,6 @@ namespace QLVB.Core.Implementation
             [XmlElement(ElementName = "Timestamp", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
             public string Timestamp { get; set; }
             [XmlAttribute(AttributeName = "edXML", Namespace = "http://www.w3.org/2000/xmlns/")]
-
-            //[XmlElement(ElementName = "StaffInfo", Namespace = "http://schemas.xmlsoap.org/soap/envelope/")]
-            //public ResponseFor StaffInfo { get; set; }
             public string EdXML { get; set; }
         }
 

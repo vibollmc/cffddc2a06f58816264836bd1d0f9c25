@@ -51,9 +51,8 @@ namespace QLVB.Core.Implementation
         private IVanbandiRepository _vanbandiRepo;
         private IRuleFileNameManager _ruleFileName;
         private ISoVanbanRepository _sovbRepo;
-        private IAttachVanbanRepository _fileVBRepo;     
+        private IAttachVanbanRepository _fileVBRepo;
 
-        private ITrucLienthongTinhManager _trucLienthongTinhManager;
         private IFileManager _fileManager;
 
         public HosoManager(ILogger logger, IHosocongviecRepository hosocvRepo,
@@ -71,8 +70,7 @@ namespace QLVB.Core.Implementation
             IFileManager fileManager, IQuytrinhVersionRepository qtVersionRepo,
             IHosoQuytrinhRepository hosoquytrinhRepo, IPhanloaiVanbanRepository plvanbanRepo,
             IVanbandiRepository vbdiRepo, IRuleFileNameManager ruleFileName,
-            ISoVanbanRepository sovbRepo, IAttachVanbanRepository fileVBRepo,
-            ITrucLienthongTinhManager trucLienthongTinhManager)
+            ISoVanbanRepository sovbRepo, IAttachVanbanRepository fileVBRepo)
         {
             _logger = logger;
             _hosocongviecRepo = hosocvRepo;
@@ -106,7 +104,6 @@ namespace QLVB.Core.Implementation
             _ruleFileName = ruleFileName;
             _sovbRepo = sovbRepo;
             _fileVBRepo = fileVBRepo;
-            _trucLienthongTinhManager = trucLienthongTinhManager;        
         }
 
         #endregion Constructor
@@ -1138,7 +1135,6 @@ namespace QLVB.Core.Implementation
             {
                 //  duyet van ban dang phan xl
                 _vanbandenRepo.Duyet(idvanban, (int)enumVanbanden.inttrangthai.Daduyet);
-               // _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công", null, null);
             }
             catch //(Exception ex)
             {
@@ -2488,17 +2484,7 @@ namespace QLVB.Core.Implementation
                     };
                     try
                     {
-                        //var hosodacoykien = _hosoykienRepo.GetDangXulys
-                        //    .Where(p=>p.intiddoituongxuly== )
-                        //    .Where(p=>p.inttrangthai==(int)enumHosoykienxuly.inttrangthai.Dachoykien)
-                        //    .Select(p => p.intid);
-                        //if (hosodacoykien.Count()==0)              
-                        //{
-                          
-                        //    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "05", "Đang xử lý", null, null);
-                        //}
                         kq.id = _hosoykienRepo.Them(yk);
-                        
                     }
                     catch (Exception ex)
                     {

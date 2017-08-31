@@ -539,14 +539,21 @@ namespace QLVB.Core.Implementation
                 vb.intso = Convert.ToInt32(_GetTruong(strbody, "intMat"));
                 vb.strkyhieu = _GetTruong(strbody, "strKyhieu");
                 string strngay = _GetTruong(strbody, "strNgayky");
-                if (Utils.IsDate(strngay))
+                DateTime ngayky;
+
+                if (DateTime.TryParseExact(strngay, "MM/dd/yyyy", null, System.Globalization.DateTimeStyles.None, out ngayky))
                 {
-                    vb.strngayky = Convert.ToDateTime(strngay);
+                    vb.strngayky = ngayky;
                 }
-                else
-                {
-                    vb.strngayky = null; //DateServices.FormatDateEn(strngay);
-                }
+                else vb.strngayky = null;
+                //if (Utils.IsDate(strngay))
+                //{
+                //    vb.strngayky = Convert.ToDateTime(strngay);
+                //}
+                //else
+                //{
+                //    vb.strngayky = null; //DateServices.FormatDateEn(strngay);
+                //}
                 vb.strnguoiky = _GetTruong(strbody, "strNguoiky");
                 vb.strnoigui = _GetTruong(strbody, "strNoigui");
                 vb.strnoiguivb = _GetTruong(strbody, "strNoiguiVB");
