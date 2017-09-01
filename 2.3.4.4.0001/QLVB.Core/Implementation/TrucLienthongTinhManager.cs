@@ -51,7 +51,7 @@ namespace QLVB.Core.Implementation
         private readonly IVanbandenRepository _vbdenRepo;
         private readonly ITochucdoitacRepository _tochucRepo;
         private readonly IVanbandiRepository _vanbandiRepo;
-       
+      
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, 
                IVanbandiRepository vanbandiRepository, IPhanloaiVanbanRepository phanloaiVanbanRepository, 
@@ -77,6 +77,7 @@ namespace QLVB.Core.Implementation
             _tochucRepo = tochucRepo;
             _vanbandiRepo = vanbandiRepo;
             _guivbRepo = guivbRepo;
+            
         }
 
         #endregion Constructor
@@ -426,6 +427,7 @@ namespace QLVB.Core.Implementation
                     }
                     //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                     webService.updateReceiveFinish(messageIdsByDocument);
+                    SendStatus(idmail, "01", "Đã đến", null, null);
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -533,6 +535,7 @@ namespace QLVB.Core.Implementation
                 if (vanbandenMail == null) return null;
 
                 var madonviNhan = vanbandenMail.strmadinhdanh;
+                //var orgs = this.GetAllOrganization();
                 var tendonviNhan = vanbandenMail.strnoiguivb;
                 var sokyhieuvanban = vanbandenMail.intso + "/" + vanbandenMail.strkyhieu;
                 if (vanbandenMail.intso == null) sokyhieuvanban = vanbandenMail.strkyhieu;
@@ -541,6 +544,7 @@ namespace QLVB.Core.Implementation
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
 
                 var madonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
+                var madinhdanh = _configRepo.GetConfig(ThamsoHethong.MaDinhDanh);
                 var tendonvigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
 
                 var messageStatus = new Envelope
@@ -557,7 +561,7 @@ namespace QLVB.Core.Implementation
                             },
                             From = new From
                             {
-                                OrganId = madonviTrucTinh,
+                                OrganId = madinhdanh,
                                 OrganName = tendonvigui
                             },
                             StatusCode = status,
@@ -582,7 +586,8 @@ namespace QLVB.Core.Implementation
                     receivingsystemid = madonviNhan,
                     documenttype = "6.1.0.1",
                     documentcode = sokyhieuvanban,
-                    description = trichyeu
+                    description = trichyeu,
+                    idvanbangoc=idvanban.ToString()
                 };
 
                 var webService = ConnectGateway();
@@ -991,6 +996,9 @@ namespace QLVB.Core.Implementation
             public string edxml { get; set; }
             [XmlElement("attach-files")]
             public List<AttachFile> attachfiles { get; set; }
+            [XmlElement("id-van-ban-goc")]
+            public string idvanbangoc { get; set; }
+            
         }
 
         [XmlRoot("attach-file")]
@@ -1072,6 +1080,8 @@ namespace QLVB.Core.Implementation
             public string ngaybanhanhchidao { get; set; }
             [XmlElement("attach-files")]
             public List<AttachFile> attachfiles { get; set; }
+            [XmlElement("id-van-ban-goc")]
+             public string idvanbangoc { get; set; }
         }
 
 
