@@ -99,12 +99,12 @@ namespace QLVB.WebUI
                    truclienthongManager.ReceiveStatus();
                }
 
-               //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
+                       //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
 
-               //if (edxmlManager != null)
-               //{
-               //    edxmlManager.ReceiveStatusFile();
-               //}
+                       //if (edxmlManager != null)
+                       //{
+                       //    edxmlManager.ReceiveStatusFile();
+                       //}
 
                isProcessing = false;
 
