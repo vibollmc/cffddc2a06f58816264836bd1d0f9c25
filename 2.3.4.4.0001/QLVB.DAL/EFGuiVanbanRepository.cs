@@ -105,6 +105,8 @@ namespace QLVB.DAL
                         vb.strngayhoanthanh = ngaythuchien;
                     else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.DaDen)
                         vb.strngaynhan = ngaythuchien;
+                    else if (trangthai == enumGuiVanban.inttrangthaiphanhoi.Phancong)
+                        vb.strngayphancong = ngaythuchien;
                     else
                         return 0;
 

@@ -52,6 +52,7 @@ namespace QLVB.Core.Implementation
         private IRuleFileNameManager _ruleFileName;
         private ISoVanbanRepository _sovbRepo;
         private IAttachVanbanRepository _fileVBRepo;
+        private ITrucLienthongTinhManager _trucLienthongTinhManager;
 
         private IFileManager _fileManager;
 
@@ -70,7 +71,7 @@ namespace QLVB.Core.Implementation
             IFileManager fileManager, IQuytrinhVersionRepository qtVersionRepo,
             IHosoQuytrinhRepository hosoquytrinhRepo, IPhanloaiVanbanRepository plvanbanRepo,
             IVanbandiRepository vbdiRepo, IRuleFileNameManager ruleFileName,
-            ISoVanbanRepository sovbRepo, IAttachVanbanRepository fileVBRepo)
+            ISoVanbanRepository sovbRepo, IAttachVanbanRepository fileVBRepo, ITrucLienthongTinhManager trucLienthongTinhManager)
         {
             _logger = logger;
             _hosocongviecRepo = hosocvRepo;
@@ -104,6 +105,7 @@ namespace QLVB.Core.Implementation
             _ruleFileName = ruleFileName;
             _sovbRepo = sovbRepo;
             _fileVBRepo = fileVBRepo;
+            _trucLienthongTinhManager = trucLienthongTinhManager;
         }
 
         #endregion Constructor
@@ -1135,6 +1137,7 @@ namespace QLVB.Core.Implementation
             {
                 //  duyet van ban dang phan xl
                 _vanbandenRepo.Duyet(idvanban, (int)enumVanbanden.inttrangthai.Daduyet);
+                _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công", null, null);
             }
             catch //(Exception ex)
             {
@@ -1262,6 +1265,7 @@ namespace QLVB.Core.Implementation
                     if (IsNew)
                     {
                         _vanbandenRepo.CapnhatNguoixulychinh(idvanban, strhoten);
+                        
                     }
                     else
                     {
@@ -2485,6 +2489,36 @@ namespace QLVB.Core.Implementation
                     try
                     {
                         kq.id = _hosoykienRepo.Them(yk);
+
+                        //Trang thái đang xử lý 
+
+                        var doituongxl = _doituongRepo.Doituongxulys.FirstOrDefault(x => x.intid == dtxl.FirstOrDefault());
+
+                        var hosovb = _hosovanbanRepo.Hosovanbans
+                            .FirstOrDefault(
+                                x => x.intidhosocongviec == doituongxl.intidhosocongviec
+                                    && x.intloai == (int)enumHosovanban.intloai.Vanbanden
+                            );
+
+                        if (hosovb != null)
+                        {
+
+                            var ykien = _hosoykienRepo.Hosoykienxulys
+                                .Where(x =>
+                                    _doituongRepo.Doituongxulys
+                                        .Where(y => _hosovanbanRepo.Hosovanbans
+                                            .Where(p => p.intidvanban == hosovb.intidvanban)
+                                            .Select(z => z.intidhosocongviec).Contains(y.intidhosocongviec.Value)
+                                        )
+                                        .Select(y => y.intid).Contains(x.intid)
+                                );
+
+                            if (ykien.Count() == 1)
+                            { //Chỉ gửi khi lần đầu cho ý kiến
+
+                                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Xử Lý", null, null);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

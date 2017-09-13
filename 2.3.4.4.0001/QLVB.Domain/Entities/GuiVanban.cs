@@ -22,6 +22,7 @@ namespace QLVB.Domain.Entities
         public DateTime? strngaytiepnhan { get; set; }
         public DateTime? strngayhoanthanh { get; set; }
         public DateTime? strngaydangxuly { get; set; }
+        public DateTime? strngayphancong { get; set; }
 
         public int? intloaigui { get; set; }
         public string strtendonvi { get; set; }
