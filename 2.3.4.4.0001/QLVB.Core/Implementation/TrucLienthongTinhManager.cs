@@ -215,7 +215,7 @@ namespace QLVB.Core.Implementation
                 {
                     var tochuc = _tochucRepo.GetAllTochucdoitacs.FirstOrDefault(x => x.strmatructinh == donvi.code);
 
-                    var org = orgs.FirstOrDefault(x => x.code == donvi.code);
+                    var org = orgs.FirstOrDefault(x => x.code.Trim() == donvi.code.Trim());
                     // luu vanban da gui tren truc
                     if (tochuc == null)
                     {
@@ -489,9 +489,10 @@ namespace QLVB.Core.Implementation
                         {
                             var vanbandi = _vanbandiRepo.Vanbandis.OrderBy(x => x.strngayky)
                                 .FirstOrDefault(p=>p.intid.ToString()==vanbangocid);
+
                             if (vanbandi!=null)
                             {
-                                var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);
+                                var org = orgs.FirstOrDefault(x => x.code == madinhdanhdonvi);                                
                                 if (org != null)
                                 {
                                     var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,

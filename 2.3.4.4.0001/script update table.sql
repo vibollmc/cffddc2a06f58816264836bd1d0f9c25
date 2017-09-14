@@ -1,5 +1,6 @@
 ﻿--========== cập nhật: 05/09/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
 alter table Vanbandenmail add strvanbangocid nvarchar(200) null
+alter table GuiVanban add strngayphancong datetime null
 
 --========== cập nhật: 25/7/2017 -- lưu thông tin gửi vbdt theo dạng nào: email, trục tỉnh, chính phủ ==========
 alter table GuiVanban add intloaigui int null

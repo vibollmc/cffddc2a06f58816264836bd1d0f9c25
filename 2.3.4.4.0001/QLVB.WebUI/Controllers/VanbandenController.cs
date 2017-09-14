@@ -443,6 +443,7 @@ namespace QLVB.WebUI.Controllers
             //vanban.Vanbanden = vb.Vanbanden;
 
             string strgiatri = "";
+            string strnoinhan = "";
             foreach (string p in collection)
             {   // lay cac gia tri tu form dien vao control 
                 strgiatri = collection[p];
@@ -456,7 +457,10 @@ namespace QLVB.WebUI.Controllers
                     if (p == "strnoiphathanh-auto") { vanban.Vanbanden.strnoiphathanh = collection[p]; }
                     if (p == "strkyhieu") { vanban.Vanbanden.strkyhieu = collection[p]; }
 
-                    if (p == "strnoinhan") { vanban.Vanbanden.strnoinhan = collection[p]; }
+                    if (p == "strnoinhan") { 
+                        vanban.Vanbanden.strnoinhan = collection[p]; 
+                        strnoinhan = vanban.Vanbanden.strnoinhan; 
+                    }
 
                     if (p == "idsovanban") { vanban.Vanbanden.intidsovanban = Convert.ToInt32(strgiatri); }
                     if (p == "idloaivanban") { vanban.Vanbanden.intidphanloaivanbanden = Convert.ToInt32(strgiatri); }
@@ -527,6 +531,11 @@ namespace QLVB.WebUI.Controllers
                         //_edxmlManager.SendStatus(intidvanban, "03", "Đã tiếp nhận", null, null);
 
                         _truclienthongtinhManager.SendStatus(intidvanban, "03", "Đã Tiếp Nhận", null, null);
+                       
+                        if ( !string.IsNullOrEmpty(strnoinhan))
+                         {
+                             _truclienthongtinhManager.SendStatus(intidvanban, "04", "Đã Phân công", null, null);
+                         }
                     }
                 
                 }

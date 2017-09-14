@@ -808,6 +808,9 @@ namespace QLVB.Core.Implementation
                     strtendonvi = p.t.strtentochucdoitac,
                     dtengaygui = p.v.strngaygui,
                     dtengaynhan = p.v.strngaynhan,
+                    dtengayxuly = p.v.strngaydangxuly,
+                    dtengayhoanthanh = p.v.strngayhoanthanh,
+                    dtengayphancong = p.v.strngayphancong,
                     intloaigui = p.v.intloaigui,
                     strloaigui = "Email" 
 
@@ -832,6 +835,9 @@ namespace QLVB.Core.Implementation
                     strtendonvi = p.strtendonvi,
                     dtengaygui = p.strngaygui,
                     dtengaynhan = p.strngaynhan,
+                    dtengayxuly = p.strngaydangxuly,
+                    dtengayhoanthanh = p.strngayhoanthanh,
+                    dtengayphancong=p.strngayphancong,
                     intloaigui = p.intloaigui,
                     strloaigui = "Trục tỉnh"
                 });

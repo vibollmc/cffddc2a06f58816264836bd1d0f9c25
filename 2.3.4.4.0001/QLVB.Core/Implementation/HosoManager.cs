@@ -2510,7 +2510,7 @@ namespace QLVB.Core.Implementation
                                             .Where(p => p.intidvanban == hosovb.intidvanban)
                                             .Select(z => z.intidhosocongviec).Contains(y.intidhosocongviec.Value)
                                         )
-                                        .Select(y => y.intid).Contains(x.intid)
+                                        .Select(y => y.intid).Contains(x.intiddoituongxuly.Value)
                                 );
 
                             if (ykien.Count() == 1)

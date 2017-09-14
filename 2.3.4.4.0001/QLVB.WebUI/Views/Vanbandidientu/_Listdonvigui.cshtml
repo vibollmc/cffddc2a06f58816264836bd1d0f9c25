@@ -9,9 +9,12 @@
     .Columns(columns =>
     {
         columns.Bound(c => c.intid).Hidden();
-        columns.Bound(o => o.strtendonvi).Title("Đơn vị gửi").Width("40%");
+        columns.Bound(o => o.strtendonvi).Title("Đơn vị gửi").Width(100);
         columns.Bound(o => o.dtengaygui).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày gửi").Width(80);
         columns.Bound(o => o.dtengaynhan).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày nhận").Width(85);
+        columns.Bound(o => o.dtengayphancong).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày phân công").Width(85);
+        columns.Bound(o => o.dtengayxuly).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày xử lý").Width(85);
+        columns.Bound(o => o.dtengayhoanthanh).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày hoàn thành").Width(85);
         columns.Bound(o => o.strloaigui).Title("Gửi từ").Width(80);
     })
     .HtmlAttributes(new { style = "white-space: normal" })
