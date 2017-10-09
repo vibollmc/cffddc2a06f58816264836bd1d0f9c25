@@ -17,7 +17,7 @@ namespace QLVB.Domain.Abstract
         int UpdateTrangthaiGui(int idvanban, int iddonvi, int intloaivanban);
         int UpdateTrangthaiNhan(int idvanban, int iddonvi, int intloaivanban, enumGuiVanban.inttrangthaiphanhoi trangthai, DateTime ngaythuchien);
 
-        int UpdateTrangthaiNhan(int idvanban, string strtendonvi, int intloaivanban,
+        int UpdateTrangthaiNhan(int idvanban, string strmatructinh, string strtendonvi, int intloaivanban,
             enumGuiVanban.inttrangthaiphanhoi trangthai, DateTime ngaythuchien, enumGuiVanban.intloaigui intloaigui);
     }
 }

@@ -10,7 +10,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="appSettings.config">
-      <publishTime>08/25/2017 14:54:41</publishTime>
+      <publishTime>09/22/2017 10:33:30</publishTime>
     </File>
     <File Include="App_Readme/Elmah.SqlServer.sql">
       <publishTime>12/31/2013 11:01:17</publishTime>
@@ -202,25 +202,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/16/2017 16:08:19</publishTime>
     </File>
     <File Include="bin/QLVB.Core.dll">
-      <publishTime>08/28/2017 09:44:39</publishTime>
+      <publishTime>10/06/2017 15:09:44</publishTime>
     </File>
     <File Include="bin/QLVB.Core.XmlSerializers.dll">
-      <publishTime>08/28/2017 09:44:45</publishTime>
+      <publishTime>10/06/2017 15:09:52</publishTime>
     </File>
     <File Include="bin/QLVB.DAL.dll">
-      <publishTime>08/28/2017 09:44:35</publishTime>
+      <publishTime>10/06/2017 15:09:38</publishTime>
     </File>
     <File Include="bin/QLVB.Domain.dll">
-      <publishTime>08/28/2017 09:44:33</publishTime>
+      <publishTime>10/06/2017 15:09:34</publishTime>
     </File>
     <File Include="bin/QLVB.Donvi.dll">
-      <publishTime>08/16/2017 16:08:20</publishTime>
+      <publishTime>09/15/2017 08:54:25</publishTime>
     </File>
     <File Include="bin/QLVB.DTO.dll">
-      <publishTime>08/28/2017 09:44:33</publishTime>
+      <publishTime>10/06/2017 15:09:36</publishTime>
     </File>
     <File Include="bin/QLVB.WebUI.dll">
-      <publishTime>08/28/2017 09:45:00</publishTime>
+      <publishTime>10/06/2017 15:10:13</publishTime>
     </File>
     <File Include="bin/Report/rptSovanbanden.xlsx">
       <publishTime>09/16/2016 21:30:44</publishTime>
@@ -241,10 +241,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/13/2015 09:41:09</publishTime>
     </File>
     <File Include="bin/Store.Core.dll">
-      <publishTime>08/28/2017 09:44:46</publishTime>
+      <publishTime>10/06/2017 15:09:53</publishTime>
     </File>
     <File Include="bin/Store.DAL.dll">
-      <publishTime>08/28/2017 09:44:34</publishTime>
+      <publishTime>10/06/2017 15:09:39</publishTime>
     </File>
     <File Include="bin/System.IO.Packaging.dll">
       <publishTime>04/17/2016 11:21:19</publishTime>
@@ -322,7 +322,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/30/2015 08:01:48</publishTime>
     </File>
     <File Include="ConnectionString.config">
-      <publishTime>04/24/2017 09:35:43</publishTime>
+      <publishTime>10/03/2017 10:47:40</publishTime>
     </File>
     <File Include="Content/assets/css/bootstrap-fileupload.min.css">
       <publishTime>07/11/2014 14:30:09</publishTime>
@@ -22015,13 +22015,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/25/2017 10:54:21</publishTime>
     </File>
     <File Include="Views/Vanbandi/Index.cshtml">
-      <publishTime>07/16/2017 09:00:29</publishTime>
+      <publishTime>09/20/2017 22:57:21</publishTime>
     </File>
     <File Include="Views/Vanbandi/ListVBDiLienquan.cshtml">
       <publishTime>05/26/2015 08:17:49</publishTime>
     </File>
     <File Include="Views/Vanbandi/Themvanban.cshtml">
-      <publishTime>12/04/2016 16:35:48</publishTime>
+      <publishTime>09/25/2017 14:07:24</publishTime>
     </File>
     <File Include="Views/Vanbandi/_Capquyenxem.cshtml">
       <publishTime>04/19/2014 22:42:34</publishTime>
@@ -22078,7 +22078,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/18/2015 16:14:32</publishTime>
     </File>
     <File Include="Views/Vanbandidientu/_Listdonvigui.cshtml">
-      <publishTime>07/25/2017 23:20:40</publishTime>
+      <publishTime>09/14/2017 14:37:46</publishTime>
     </File>
     <File Include="Views/Vanbandidientu/_ListVanbandidientu.cshtml">
       <publishTime>07/25/2017 23:08:47</publishTime>

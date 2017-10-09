@@ -816,6 +816,7 @@ namespace QLVB.Core.Implementation
                 {
 
                     var ketqua = _guivbRepo.UpdateTrangthaiNhan(vanbandi.intid,
+                        madinhdanhdonvi,
                         org.strtendonvi,
                         (int) enumGuiVanban.intloaivanban.Vanbandi,
                         (enumGuiVanban.inttrangthaiphanhoi) int.Parse(trangthai), ngayphathanhvanban,

@@ -8,7 +8,7 @@ namespace QLVB.Domain.Abstract
         IQueryable<Vanbandenmail> Vanbandenmails { get; }
 
         int Them(Vanbandenmail vb);
-
+        void UpdateIntAttach(int id, enumVanbandenmail.intattach attach);
         void Xoa(int intid);
         void UpdateTrangthai(int intid);
     }

@@ -545,15 +545,18 @@ namespace QLVB.Core.Implementation
                 {
                     vb.strngayky = ngayky;
                 }
-                else vb.strngayky = null;
-                //if (Utils.IsDate(strngay))
-                //{
-                //    vb.strngayky = Convert.ToDateTime(strngay);
-                //}
-                //else
-                //{
-                //    vb.strngayky = null; //DateServices.FormatDateEn(strngay);
-                //}
+                else
+                {
+                    if (Utils.IsDate(strngay))
+                    {
+                        vb.strngayky = Convert.ToDateTime(strngay);
+                    }
+                    else
+                    {
+                        vb.strngayky = DateTime.Today;
+                    }
+                }                 
+                
                 vb.strnguoiky = _GetTruong(strbody, "strNguoiky");
                 vb.strnoigui = _GetTruong(strbody, "strNoigui");
                 vb.strnoiguivb = _GetTruong(strbody, "strNoiguiVB");

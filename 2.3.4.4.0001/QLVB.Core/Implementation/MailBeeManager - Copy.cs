@@ -799,12 +799,22 @@ namespace QLVB.Core.Implementation
             ResultFunction kq = new ResultFunction();
             var account = _mailFormat.GetAccountSetting();
             //int intloai = (int)enumAttachVanban.intloai.Vanbanden;
-
+            
             Smtp.LicenseKey = AppConts.MailBeeLicenseKey;
             Smtp mailer = new Smtp();
-            mailer.SmtpServers.Add
-                (account.outgoingServer, account.accountName, account.password)
-                .Port = account.portOutgoingServer;
+            //mailer.SmtpServers.Add
+            //    (account.outgoingServer, account.accountName, account.password)
+            //    .Port = account.portOutgoingServer;
+
+            SmtpServer server = new SmtpServer();
+            server.SmtpOptions = ExtendedSmtpOptions.NoChunking;
+            server.AccountName = account.accountName;
+            server.Password = account.password;
+            server.Name = account.outgoingServer;
+            server.Port = account.portOutgoingServer;
+            server.Timeout = 90000;  // 90 sec
+            mailer.SmtpServers.Add(server);
+         
 
             mailer.From.Email = account.emailAddress;
             mailer.Message.Charset = account.charset;
@@ -916,9 +926,19 @@ namespace QLVB.Core.Implementation
 
             Smtp.LicenseKey = AppConts.MailBeeLicenseKey;
             Smtp mailer = new Smtp();
-            mailer.SmtpServers.Add
-                (account.outgoingServer, account.accountName, account.password)
-                .Port = account.portOutgoingServer;
+            //mailer.SmtpServers.Add
+            //    (account.outgoingServer, account.accountName, account.password)
+            //    .Port = account.portOutgoingServer;
+
+            SmtpServer server = new SmtpServer();
+            server.SmtpOptions = ExtendedSmtpOptions.NoChunking;
+            server.AccountName = account.accountName;
+            server.Password = account.password;
+            server.Name = account.outgoingServer;
+            server.Port = account.portOutgoingServer;
+            server.Timeout = 90000;  // 90 sec
+            mailer.SmtpServers.Add(server);
+
 
             mailer.From.Email = account.emailAddress;
             mailer.Message.Charset = account.charset;
@@ -1238,9 +1258,18 @@ namespace QLVB.Core.Implementation
 
             Smtp.LicenseKey = AppConts.MailBeeLicenseKey;
             Smtp mailer = new Smtp();
-            mailer.SmtpServers.Add
-                (account.outgoingServer, account.accountName, account.password)
-                .Port = account.portOutgoingServer;
+            //mailer.SmtpServers.Add
+            //    (account.outgoingServer, account.accountName, account.password)
+            //    .Port = account.portOutgoingServer;
+
+            SmtpServer server = new SmtpServer();
+            server.SmtpOptions = ExtendedSmtpOptions.NoChunking;
+            server.AccountName = account.accountName;
+            server.Password = account.password;
+            server.Name = account.outgoingServer;
+            server.Port = account.portOutgoingServer;
+            server.Timeout = 90000;  // 90 sec
+            mailer.SmtpServers.Add(server);
 
             mailer.From.Email = account.emailAddress;
             mailer.Message.Charset = account.charset;
@@ -1342,9 +1371,19 @@ namespace QLVB.Core.Implementation
 
             Smtp.LicenseKey = AppConts.MailBeeLicenseKey;
             Smtp mailer = new Smtp();
-            mailer.SmtpServers.Add
-                (account.outgoingServer, account.accountName, account.password)
-                .Port = account.portOutgoingServer;
+            //mailer.SmtpServers.Add
+            //    (account.outgoingServer, account.accountName, account.password)
+            //    .Port = account.portOutgoingServer;
+
+            SmtpServer server = new SmtpServer();
+            server.SmtpOptions = ExtendedSmtpOptions.NoChunking;
+            server.AccountName = account.accountName;
+            server.Password = account.password;
+            server.Name = account.outgoingServer;
+            server.Port = account.portOutgoingServer;
+            server.Timeout = 90000;  // 90 sec
+            
+            mailer.SmtpServers.Add(server);
 
             mailer.From.Email = account.emailAddress;
             mailer.Message.Charset = account.charset;

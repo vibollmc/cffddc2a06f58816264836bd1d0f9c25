@@ -10,10 +10,10 @@ alter table GuiVanban add strtendonvi nvarchar(200) null
 --==========cập nhật: 10/07/2017 -- trục liên thông của tỉnh ================================
 
 insert into Config values('TrucLienthongTinh', 'http://123.30.75.134:8079/gw-portlet/api/secure/axis/Plugin_NSSGateway_NSSGatewayService?wsdl', N'Đường dẫn trục liên thông tỉnh', 1,4,1)
-insert into Config values('UsernameTrucTinh', 'qlvb.vpubnd', N'Tài khoản Trục liên thông tỉnh', 2,4,1)
-insert into Config values('PasswordTrucTinh', '12345qwe', N'Password tài khoản trục liên thông tỉnh', 3,4,1)
-insert into Config values('MaDonviTrucTinh', '1:30:0:0:0:0:1', N'Mã đơn vị trên Trục liên thông tỉnh', 4,4,1)
-insert into Config values('TenDonviTrucTinh', N'Ủy ban nhân dân Tỉnh Đồng Nai', N'Tên đơn vị trên Trục liên thông tỉnh', 5,4,1)
+insert into Config values('UsernameTrucTinh', 'aaaaaaaaaa', N'Tài khoản Trục liên thông tỉnh', 2,4,1)
+insert into Config values('PasswordTrucTinh', 'bbbbbbbb', N'Password tài khoản trục liên thông tỉnh', 3,4,1)
+insert into Config values('MaDonviTrucTinh', 'cccccccccc', N'Mã đơn vị trên Trục liên thông tỉnh', 4,4,1)
+insert into Config values('TenDonviTrucTinh', N'dddddddddddd', N'Tên đơn vị trên Trục liên thông tỉnh', 5,4,1)
 insert into Config values('LoaiVanbanTrucTinh', '1.1.0.1', N'Phiên bản văn bản Trục liên thông tỉnh', 6,4,1)
 alter table Tochucdoitac add strmatructinh nvarchar(100) null
 alter table Vanbandenmail add intnhanvanbantu int null

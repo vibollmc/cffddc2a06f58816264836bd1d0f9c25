@@ -22,6 +22,8 @@
 			<button id="PrintListVBbtn" type="button" class="btn btn-sm btn-primary btn-flat">
 				<i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
 			</button>
+            <button id="Capquyenxembtn" disabled type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-paperclip"></i>&nbsp;Cấp quyền xem </button>
+
 
             <button id="Backbtn" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title="Quay lại(Ctrl-Q)"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
 		</nav>
@@ -381,6 +383,7 @@
 		</div>
 	</div>
 </div>
+@Html.Action("_Capquyenxem", "Vanbandi")
 <style type="text/css">
     .k-state-focused {border-color:#428bca; background-color: #428bca;color:#fff }
 </style>
@@ -395,6 +398,7 @@
             GetAjaxSovbdi();
         } else {
             ButtonEnable("Attachbtn", true);
+            ButtonEnable("Capquyenxembtn", true);
             CheckLienketVanban();
         };
         $('#formAddvanban').keypress(function (e) {
@@ -719,6 +723,16 @@
 
     $('#Attachbtn').click(function () {
         OpenUploadVBDi();
+    })
+
+    $('#Capquyenxembtn').click(function () {
+        var idvanban = 0;
+        idvanban = '@Model.Vanbandi.intid';
+        if (idvanban != 0) {
+            OpenViewCapquyenxemVBDi(idvanban);
+        } else {
+            SetThongbao("Văn bản không tồn tại");
+        }
     })
     //====================================
     function CheckLienketVanban() {

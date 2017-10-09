@@ -39,6 +39,17 @@ namespace QLVB.DAL
 
         }
 
+        public void UpdateIntAttach(int id, enumVanbandenmail.intattach attach)
+        {
+            var vb = context.Vanbandenmails.FirstOrDefault(x => x.intid == id);
+            if (vb != null)
+            {
+                vb.intattach = (int)attach;
+                context.SaveChanges();
+            }
+        }
+
+
         public void Xoa(int intid)
         {
             try
