@@ -245,13 +245,7 @@
     <Email>vbbhxh@dongnai.gov.vn</Email>
     <Madinhdanh>00.41.H19.e-doc.vn</Madinhdanh>
 	<MaTructinh></MaTructinh>
-  </Donvi>
-  <Donvi>
-    <Ten>Viện Kiểm Sát tỉnh</Ten>
-    <Email>khongco@</Email>
-    <Madinhdanh>00.42.H19.e-doc.vn</Madinhdanh>
-	<MaTructinh>0:30:0:0:52:0:1</MaTructinh>
-  </Donvi>
+  </Donvi> 
   <Donvi>
     <Ten>Tòa Án Nhân Dân tỉnh</Ten>
     <Email>vbtoaan@dongnai.gov.vn</Email>
@@ -371,5 +365,197 @@
     <Email>vbubmttq@dongnai.gov.vn</Email>
     <Madinhdanh></Madinhdanh>
 	<MaTructinh>0:30:0:0:65:0:1</MaTructinh>
+  </Donvi>  
+  <Donvi>
+    <Ten>Phòng Kinh tế Biên Hòa</Ten>
+    <Email>pkt-bh@dongnai.gov.vn</Email>
+    <Madinhdanh>000.11.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:40:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>Đài Truyền thanh Biên Hòa</Ten>
+    <Email>dtt-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.18.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:47:0:0:1</MaTructinh>
+  </Donvi> 
+  <Donvi>
+    <Ten>UBND Phường An Bình Biên Hòa</Ten>
+    <Email>ubndpab-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.20.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:20:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Bình Đa Biên Hòa</Ten>
+    <Email>ubndpbd-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.21.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:19:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Bửu Hòa Biên Hòa</Ten>
+    <Email>ubndpbh-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.22.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:21:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Bửu Long Biên Hòa</Ten>
+    <Email>ubndpbl-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.23.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:7:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Hố Nai Biên Hòa</Ten>
+    <Email>ubndphn-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.24.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:4:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Hòa Bình Biên Hòa</Ten>
+    <Email>ubndphb-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.25.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:16:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Long Bình Biên Hòa</Ten>
+    <Email>ubndplb-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.26.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:10:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Long Bình Tân Biên Hòa</Ten>
+    <Email>ubndplbt-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.27.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:22:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Quang Vinh Biên Hòa</Ten>
+    <Email>ubndpqv-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.28.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:11:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Quyết Thắng Biên Hòa</Ten>
+    <Email>ubndpqt-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.29.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:17:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Tam Hiệp Biên Hòa</Ten>
+    <Email>ubndpth-bh@dongnai.gov.vn</Email>
+    <Madinhdanh>000.30.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:6:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Tam Hòa Biên Hòa</Ten>
+    <Email>ubndptamhoa-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.31.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:15:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Tân Biên Biên Hòa</Ten>
+    <Email>ubndptb-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.32.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:3:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Tân Hiệp Biên Hòa</Ten>
+    <Email>ubndpth3-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.33.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:9:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Tân Hòa Biên Hòa</Ten>
+    <Email>ubndpth5-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.34.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:5:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Tân Mai Biên Hòa</Ten>
+    <Email>ubndptm-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.35.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:12:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Tân Phong Biên Hòa</Ten>
+    <Email>ubndptp-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.36.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:2:0:0:1</MaTructinh>
+  </Donvi>
+     <Donvi>
+    <Ten>UBND Phường Tân Tiến Biên Hòa</Ten>
+    <Email>ubndptt-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.37.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:8:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Tân Vạn Biên Hòa</Ten>
+    <Email>ubndptv-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.38.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:23:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Phường Thanh Bình Biên Hòa</Ten>
+    <Email>ubndptb1-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.39.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:18:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Thống Nhất Biên Hòa</Ten>
+    <Email>ubndptn-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.40.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:13:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Trảng Dài Biên Hòa</Ten>
+    <Email>ubndptd-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.41.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:1:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Phường Trung Dũng Biên Hòa</Ten>
+    <Email>ubndptd1-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.42.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:14:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Xã An Hòa Biên Hòa</Ten>
+    <Email>ubnd-xah@dongnai.gov.vn </Email>
+    <Madinhdanh>000.43.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:27:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Xã Hiệp Hòa Biên Hòa</Ten>
+    <Email>ubndxhh-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.44.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:25:0:0:1</MaTructinh>
+  </Donvi>
+  <Donvi>
+    <Ten>UBND Xã Hóa An Biên Hòa</Ten>
+    <Email>ubndxha-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.45.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:26:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Xã Long Hưng Biên Hòa</Ten>
+    <Email>ubnd-xlh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.46.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:28:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Xã Phước Tân Biên Hòa</Ten>
+    <Email>ubnd-xpt@dongnai.gov.vn </Email>
+    <Madinhdanh>000.47.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:29:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Xã Tam Phước Biên Hòa</Ten>
+    <Email>ubnd-xtp@dongnai.gov.vn </Email>
+    <Madinhdanh>000.48.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:30:0:0:1</MaTructinh>
+  </Donvi>
+   <Donvi>
+    <Ten>UBND Xã Tân Hạnh Biên Hòa</Ten>
+    <Email>ubndxth-bh@dongnai.gov.vn </Email>
+    <Madinhdanh>000.49.22.H19</Madinhdanh>
+	<MaTructinh>1:30:10:24:0:0:1</MaTructinh>
   </Donvi>
 </ListDonvi>

@@ -500,6 +500,9 @@ namespace QLVB.WebUI.Controllers
                 // reset cac truong
                 vanban.Vanbanden.intid = 0;
                 vanban.Vanbanden.strngayden = DateTime.Now;
+
+                idmail = null;
+
                 vanban.idmail = idmail;
                 vanban.Vanbanden.intidvanbandenmail = idmail;
                 ModelState.Clear();

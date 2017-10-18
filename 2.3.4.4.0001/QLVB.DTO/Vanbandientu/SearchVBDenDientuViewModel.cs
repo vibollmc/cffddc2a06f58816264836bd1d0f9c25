@@ -14,7 +14,7 @@ namespace QLVB.DTO.Vanbandientu
         public bool isSearch { get; set; }
         public bool isBack { get; set; }
 
-        public int intPage { get; set; }
+        public int intPage { get; set; }       
         //===============================================
         // category
         //===============================================

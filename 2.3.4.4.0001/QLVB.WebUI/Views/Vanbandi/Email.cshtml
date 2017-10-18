@@ -438,11 +438,15 @@
     });
 
     $('#SendDonviTinhbtn').click(function () {
+        if (isProcessing) return;
+        isProcessing = true;
+
         $.ajax(
 		{
 		    type: "POST",
 		    url: '@Url.Action("_SendVBTruclienthongTinh", "Vanbandi")',
 		    data: $("#formSendTrucTinh").serialize(),
+		    dataType: "Json",
 		    beforeSend: function () {
 		        ShowLoading();
 		    },
@@ -455,7 +459,9 @@
 		            ShowResult("ketquaSendTinhvb", "Lỗi !!! " + data);
 		        }
 		    },
-		    dataType: "Json"
+		    complete: function () {
+		        isProcessing = false;
+		    }
 		});
     });
     $(function () {

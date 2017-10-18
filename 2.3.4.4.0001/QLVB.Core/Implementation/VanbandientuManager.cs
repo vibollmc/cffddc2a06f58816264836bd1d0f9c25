@@ -85,7 +85,7 @@ namespace QLVB.Core.Implementation
              strngaykybd, strngaykykt, strngayguibd, strngayguikt,
              strkyhieu, strnoigui, strtrichyeu,
              truclienthong, strmadinhdanh);
-
+            
             var listvb = vanban
                 .Select(p => new ListVanbandendientuViewModel
                 {
