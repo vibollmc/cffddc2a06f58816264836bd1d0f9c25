@@ -1017,17 +1017,10 @@ namespace QLVB.WebUI.Controllers
                     {
                         if ((p != "parentcheckboxTrucTinh") && (p != "autosend"))
                         {
-                            string[] split = collection[p].Split(',');
-                            foreach (var s in split)
-                            {
-                                if ((!s.ToLower().Contains("true")) && (!s.ToLower().Contains("false")))
-                                {
-                                    OrganizationVM senddonvi = new OrganizationVM();
-                                    senddonvi.code = p;
-                                    senddonvi.name = s;
-                                    listdonvi.Add(senddonvi);
-                                }
-                            }
+                            OrganizationVM senddonvi = new OrganizationVM();
+                            senddonvi.code = p;
+                            senddonvi.name = collection[p + "Name"];
+                            listdonvi.Add(senddonvi);
                         }
                     }
                 }

@@ -153,7 +153,8 @@ namespace QLVB.Core.Implementation
 
                 foreach (var obj in noiNhan)
                 {
-                    receivingsystemid += obj.code + ";";
+                    if (!receivingsystemid.Contains(obj.code + ";"))
+                        receivingsystemid += obj.code + ";";
                 }
                 receivingsystemid = receivingsystemid.TrimEnd(";".ToCharArray());
 
@@ -206,7 +207,7 @@ namespace QLVB.Core.Implementation
                     data.Append("</attach-files>");
                 }
                 data.Append("</message>");
-                webService.sendMessage(data.ToString());
+               //------- webService.sendMessage(data.ToString());
 
                 // cap nhat trang thai van ban da gui dien tu VBDt
                 _mailFormatManager.UpdateVBDT(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi);

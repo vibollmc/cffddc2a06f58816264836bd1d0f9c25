@@ -221,7 +221,7 @@
                                 <td style="width: 5%; text-align: center;">@count</td>
                                 <td style="width: 5%; text-align: center">
                                     @Html.CheckBox(p.strmatructinh)
-                                    @Html.Hidden(p.strmatructinh, p.strtendonvi)
+                                    @Html.Hidden(p.strmatructinh + "Name", p.strtendonvi)
                                 </td>
                                 <td style="width: 40%;">@p.strtendonvi</td>
                                 <td style="width: 20%; text-align: center;">@p.strmatructinh</td>
@@ -438,15 +438,11 @@
     });
 
     $('#SendDonviTinhbtn').click(function () {
-        if (isProcessing) return;
-        isProcessing = true;
-
         $.ajax(
 		{
 		    type: "POST",
 		    url: '@Url.Action("_SendVBTruclienthongTinh", "Vanbandi")',
 		    data: $("#formSendTrucTinh").serialize(),
-		    dataType: "Json",
 		    beforeSend: function () {
 		        ShowLoading();
 		    },
@@ -459,9 +455,7 @@
 		            ShowResult("ketquaSendTinhvb", "Lỗi !!! " + data);
 		        }
 		    },
-		    complete: function () {
-		        isProcessing = false;
-		    }
+		    dataType: "Json"
 		});
     });
     $(function () {
