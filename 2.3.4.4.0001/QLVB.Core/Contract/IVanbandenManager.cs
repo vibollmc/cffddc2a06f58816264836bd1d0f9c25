@@ -159,7 +159,7 @@ namespace QLVB.Core.Contract
         /// <param name="strcoquan"></param>
         /// <returns>
         /// </returns>
-        CheckVBTrungViewModel KiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int idmail);
+        CheckVBTrungViewModel KiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int? idmail);
 
         /// <summary>
         /// cap nhat thoi han xu ly vb, tiep nhan vb giay

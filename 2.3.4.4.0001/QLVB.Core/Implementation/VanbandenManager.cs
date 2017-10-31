@@ -3168,7 +3168,7 @@ namespace QLVB.Core.Implementation
         /// <param name="strcoquan"></param>
         /// <returns>        
         /// </returns>
-        public CheckVBTrungViewModel KiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int idmail)
+        public CheckVBTrungViewModel KiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int? idmail)
         {
             CheckVBTrungViewModel kq = new CheckVBTrungViewModel
             {

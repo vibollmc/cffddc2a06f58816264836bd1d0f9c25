@@ -568,7 +568,7 @@ namespace QLVB.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult _AjaxKiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int idmail)
+        public ActionResult _AjaxKiemtraVBtrung(string strsokyhieu, string strngayky, string strcoquan, int? idmail)
         {
             CheckVBTrungViewModel kq = _vanban.KiemtraVBtrung(strsokyhieu, strngayky, strcoquan, idmail);
             return Json(kq);
