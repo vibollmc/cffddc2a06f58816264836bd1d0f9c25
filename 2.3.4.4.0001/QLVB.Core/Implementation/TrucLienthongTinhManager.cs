@@ -207,7 +207,7 @@ namespace QLVB.Core.Implementation
                     data.Append("</attach-files>");
                 }
                 data.Append("</message>");
-               //------- webService.sendMessage(data.ToString());
+               webService.sendMessage(data.ToString());
 
                 // cap nhat trang thai van ban da gui dien tu VBDt
                 _mailFormatManager.UpdateVBDT(vanbandiId, (int)enumGuiVanban.intloaivanban.Vanbandi);
@@ -617,6 +617,72 @@ namespace QLVB.Core.Implementation
             }
         }
 
+        private string BuildXmlQlvbObject(QlvbReceivedMessage message)
+        {
+            var stringBuilder = new StringBuilder();
+
+            //stringBuilder.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            stringBuilder.Append("<message>");
+            stringBuilder.Append("<required-answer><![CDATA[0]]></required-answer>");
+            stringBuilder.AppendFormat("<send-date><![CDATA[{0}]]></send-date>", message.senddate);
+            stringBuilder.AppendFormat("<sending-system-id><![CDATA[{0}]]></sending-system-id>", message.sendingsystemid);
+            stringBuilder.AppendFormat("<receiving-system-id><![CDATA[{0}]]></receiving-system-id>", message.receivingsystemid);
+            stringBuilder.AppendFormat("<document-type><![CDATA[{0}]]></document-type>", message.documenttype);
+            stringBuilder.AppendFormat("<document-code><![CDATA[{0}]]></document-code>", message.documentcode);
+            stringBuilder.AppendFormat("<description>{0}</description>", message.description);
+            stringBuilder.AppendFormat("<content><![CDATA[{0}]]></content>", message.content);
+            //stringBuilder.Append("<title />");
+            //stringBuilder.Append("<department-id />");
+            //stringBuilder.Append("<department-send-id />");
+            //stringBuilder.Append("<attach-files />");
+            //stringBuilder.Append("<option><![CDATA[]]></option>");
+            //stringBuilder.Append("<stateProcess><![CDATA[]]></stateProcess>");
+            //stringBuilder.AppendFormat("<signature><![CDATA[{0}]]></signature>", message.signature);
+            //stringBuilder.Append("<edxml><![CDATA[0]]></edxml>");
+            stringBuilder.Append("</message>");
+
+            return stringBuilder.ToString();
+        }
+
+        private string BuildXmlContentStatus(Envelope status)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+            stringBuilder.Append("<SOAP-ENV:Header>");
+            stringBuilder.Append("<edXML:Status xmlns:edXML=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+            stringBuilder.Append("<edXML:ResponseFor>");
+            stringBuilder.AppendFormat("<edXML:OrganId>{0}</edXML:OrganId>", status.Header.Status.ResponseFor.OrganId);
+            stringBuilder.AppendFormat("<edXML:Code>{0}</edXML:Code>", status.Header.Status.ResponseFor.Code);
+            stringBuilder.AppendFormat("<edXML:PromulgationDate>{0}</edXML:PromulgationDate>", status.Header.Status.ResponseFor.PromulgationDate);
+            stringBuilder.AppendFormat("<edXML:DocumentId>{0}</edXML:DocumentId>", status.Header.Status.ResponseFor.DocumentId);
+            stringBuilder.Append("</edXML:ResponseFor>");
+            stringBuilder.Append("<edXML:From>");
+            stringBuilder.AppendFormat("<edXML:OrganId>{0}</edXML:OrganId>", status.Header.Status.From.OrganId);
+            stringBuilder.AppendFormat("<edXML:OrganName>{0}</edXML:OrganName>", status.Header.Status.From.OrganName);
+            stringBuilder.Append("<edXML:OrganizationInCharge />");
+            stringBuilder.Append("<edXML:OrganAdd />");
+            stringBuilder.Append("<edXML:Email />");
+            stringBuilder.Append("<edXML:Telephone />");
+            stringBuilder.Append("<edXML:Fax />");
+            stringBuilder.Append("<edXML:Website />");
+            stringBuilder.Append("</edXML:From>");
+            stringBuilder.AppendFormat("<edXML:StatusCode>{0}</edXML:StatusCode>", status.Header.Status.StatusCode);
+            stringBuilder.AppendFormat("<edXML:Description>{0}</edXML:Description>", status.Header.Status.Description);
+            stringBuilder.AppendFormat("<edXML:Timestamp>{0}</edXML:Timestamp>", status.Header.Status.Timestamp);
+            stringBuilder.Append("<edXML:StaffInfo>");
+            stringBuilder.AppendFormat("<edXML:Department>{0}</edXML:Department>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Department);
+            stringBuilder.AppendFormat("<edXML:Staff>{0}</edXML:Staff>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Staff);
+            stringBuilder.Append("</edXML:StaffInfo>");
+            stringBuilder.Append("</edXML:Status>");
+            stringBuilder.Append("</SOAP-ENV:Header>");
+            stringBuilder.Append("<SOAP-ENV:Body />");
+            stringBuilder.Append("</SOAP-ENV:Envelope>");
+
+            var xml = Base64Encode(stringBuilder.ToString());
+
+            return xml;
+        }
+
         private string SendStatusByIdVanbanDenMail(int? idvanbandenmail, string status, string statusDescription, string nguoigui, string phongban)
         {
             try
@@ -646,7 +712,6 @@ namespace QLVB.Core.Implementation
                 var madonviguichinhphu = _configRepo.GetConfig(ThamsoHethong.MaDinhDanh);
                 var tendonvigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
 
-
                 var messageStatus = new Envelope
                 {
                     Header = new Header
@@ -667,12 +732,20 @@ namespace QLVB.Core.Implementation
                             },
                             StatusCode = status,
                             Description = statusDescription,
-                            Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now)
+                            Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now),
+                            StaffInfo = new StaffInfo
+                            {
+                                Staff = "Tran Thi Thuy Nga",
+                                Department = "Trung Tam Tin Hoc"
+                            }
+
                         }
                     }
                 };
 
-                var content = Base64Encode(Serialize(messageStatus));
+
+
+                var content = BuildXmlContentStatus(messageStatus);
 
                 var senddate = DateTime.UtcNow;
                 var jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -681,7 +754,6 @@ namespace QLVB.Core.Implementation
                 var message = new QlvbReceivedMessage
                 {
                     content = content,
-                    requiredanswer = "0",
                     senddate = senddateLongTime.ToString(),
                     sendingsystemid = madonviTrucTinh,
                     receivingsystemid = madonviNhan,
@@ -692,7 +764,9 @@ namespace QLVB.Core.Implementation
 
                 var webService = ConnectGateway();
 
-                return webService.sendMessage(Serialize(message));
+                var contentSending = BuildXmlQlvbObject(message);
+
+                return webService.sendMessage(contentSending);
 
             }
             catch (Exception e)

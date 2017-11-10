@@ -44,7 +44,7 @@
                             <td style="width: 5%; text-align: center;">@count</td>
                             <td style="width: 5%; text-align: center">
                                 <b>@Html.CheckBox(p.code)</b>
-                                @Html.Hidden(p.code, p.name)
+                                @Html.Hidden(p.code + "Name", p.name)
                             </td>
                             <td style="width: 40%;">@p.name</td>
                             <td style="width: 20%; text-align: center;">@p.code</td>
