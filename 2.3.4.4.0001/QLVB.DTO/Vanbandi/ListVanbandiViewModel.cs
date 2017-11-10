@@ -20,5 +20,7 @@ namespace QLVB.DTO.Vanbandi
         public int? inttrangthai { get; set; }
 
         public bool IsAttach { get; set; }
+
+        public string strDomat { get; set; }
     }
 }

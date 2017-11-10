@@ -15,7 +15,7 @@ namespace QLVB.Common.Utilities
         // ================================================
 
         public const string GlobalName = "HỆ THỐNG QUẢN LÝ VĂN BẢN";
-        public const string Version = "2.3.5.3";
+        public const string Version = "2.3.5.4";
         public const int NullId = -1;
         public const int DefaultId = 0;
         public const string NullIpAddress = "0.0.0.0";

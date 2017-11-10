@@ -2396,11 +2396,44 @@ namespace QLVB.Core.Implementation
                     break;
             }
 
-            var vanban = _GetViewVanban(vb);
+            var vanban = _GetViewVanban_VBDT(vb);
             return vanban;
         }
 
+        private IEnumerable<ListVanbandiViewModel> _GetViewVanban_VBDT(IQueryable<Vanbandi> vanban)
+        {
+            IEnumerable<ListVanbandiViewModel> listvb = vanban
+                    .GroupJoin(
+                        _fileRepo.AttachVanbans
+                            .Where(p => p.inttrangthai == (int)enumAttachVanban.inttrangthai.IsActive)
+                            .Where(p => p.intloai == (int)enumAttachVanban.intloai.Vanbandi),
+                        v => 1,
+                        f => 1,
+                        (v, f) => new { v, f }
+                    )
+                    .GroupJoin(
+                        _tinhchatvbRepo.GetAllTinhchatvanbans,
+                        v => 1,
+                        t => 1,
+                        (v,t)=> new {v,t}
+                    )
+                    .Select(p => new ListVanbandiViewModel
+                    {
+                        intid = p.v.v.intid,
+                        intso = p.v.v.intso,
+                        strsophu = !string.IsNullOrEmpty(p.v.v.strmorong) ? p.v.v.strmorong : "",
+                        dtengayky = p.v.v.strngayky,
+                        strkyhieu = p.v.v.strkyhieu,
+                        strnoinhan = p.v.v.strnoinhan,
+                        strtrichyeu = p.v.v.strtrichyeu,
+                        inttrangthai = p.v.v.inttrangthai,
+                        dtehanxuly = p.v.v.strhanxuly,
+                        IsAttach = p.v.f.Any(a => a.intidvanban == p.v.v.intid),
 
+                        strDomat = p.t.FirstOrDefault(a=>a.intid == p.v.v.intidmat).strtentinhchatvb // them truong do mat de xem vbdt
+                    });
+            return listvb;
+        }
 
         #endregion ListVBDientu
 
