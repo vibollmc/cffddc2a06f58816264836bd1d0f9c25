@@ -1137,7 +1137,7 @@ namespace QLVB.Core.Implementation
             {
                 //  duyet van ban dang phan xl
                 _vanbandenRepo.Duyet(idvanban, (int)enumVanbanden.inttrangthai.Daduyet);
-                _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công", null, null);
+                _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công");
             }
             catch //(Exception ex)
             {
@@ -2516,7 +2516,7 @@ namespace QLVB.Core.Implementation
                             if (ykien.Count() == 1)
                             { //Chỉ gửi khi lần đầu cho ý kiến
 
-                                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Xử Lý", null, null);
+                                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Xử Lý");
                             }
                         }
                     }

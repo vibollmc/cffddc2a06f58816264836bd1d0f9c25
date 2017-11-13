@@ -533,11 +533,11 @@ namespace QLVB.WebUI.Controllers
                     {
                         //_edxmlManager.SendStatus(intidvanban, "03", "Đã tiếp nhận", null, null);
 
-                        _truclienthongtinhManager.SendStatus(intidvanban, "03", "Đã Tiếp Nhận", null, null);
+                        _truclienthongtinhManager.SendStatus(intidvanban, "03", "Đã Tiếp Nhận");
                        
                         if ( !string.IsNullOrEmpty(strnoinhan))
                          {
-                             _truclienthongtinhManager.SendStatus(intidvanban, "04", "Đã Phân công", null, null);
+                             _truclienthongtinhManager.SendStatus(intidvanban, "04", "Đã Phân công");
                          }
                     }
                 

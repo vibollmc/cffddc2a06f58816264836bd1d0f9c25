@@ -401,9 +401,9 @@
 		</text>
 		};
 		GetTenDonvi();
-			   
+
 	});
-	
+
 	$(window).resize(function () {
 		SetClientHeight();
 	});
@@ -417,7 +417,7 @@
 			if (contentHeight > 800) { contentHeight = 800; }
 			$('#vanban').height(contentHeight - headerHeight - tbar - 280);
 		};
-	}	
+	}
 	//=======================================
 	$(window).bind('keydown', function(event) {
 		if (event.ctrlKey || event.metaKey) {
@@ -433,7 +433,7 @@
 				case 'g':
 					event.preventDefault();
 					Save();
-					break;	           
+					break;
 				case 'q':
 					event.preventDefault();
 					Back();
@@ -447,12 +447,12 @@
 					}
 					if (intDongy == 2) {
 						UpdateVBDTDinhkem();
-					}	                
+					}
 					break;
 			}
 		}
-	});	
-	
+	});
+
 	$('#Backbtn').click(function () {
 		Back();
 	});
@@ -634,10 +634,11 @@
 		var dataItem = this.dataItem(e.item.index());
 		var strten = dataItem.strten;
 		$("#strnoiphathanh-auto").val(strten);
+        $("#strnoiphathanh-khac").val(strten);
 	}
 	$('#strnoiphathanh').focusout(function () {
 		var strten_auto = $("#strnoiphathanh-auto").val();
-		var strten_khac = $("#strnoiphathanh-khac").val();        
+		var strten_khac = $("#strnoiphathanh-khac").val();
 		if (strten_khac.toLowerCase().indexOf("||") >= 0){
 			$("#strnoiphathanh").val(strten_auto);
 		}else{
@@ -657,18 +658,18 @@
 		if(inhoa==true){
 			var strkyhieu = $('#strkyhieu').val();
 			var item = strkyhieu.toUpperCase();
-			$('#strkyhieu').val(item);  
-		}              
+			$('#strkyhieu').val(item);
+		}
 	})
 	$('#strngayky').keyup(function () {
-		var ngay = $('#strngayky').val(); 
-		var _ngay = editdate(ngay);        
+		var ngay = $('#strngayky').val();
+		var _ngay = editdate(ngay);
 		$('#strngayky').val(_ngay);
 	})
 	//====================================
-	
+
 	$('#idloaivanban').change(function () {
-		setTimeout(function () { changeLoaivb(); }, 1000);		
+		setTimeout(function () { changeLoaivb(); }, 1000);
 	})
 	function changeLoaivb() {
 		var idloaivb = $('#idloaivanban').val();
@@ -717,9 +718,9 @@
 							$('#idvbdt').val(data.idvanban);
 							break;
 						case 2: // vb giay_dt
-							SetThongbao(data.message);				            
+							SetThongbao(data.message);
 							break;
-						default:					        
+						default:
 							break;
 					}
 				}
@@ -740,17 +741,17 @@
 		}
 		$this.mouseup(mouseUpHandler);
 	});
-	
+
 	$('#Attachbtn').click(function () {
 		OpenUploadVBDen();
 	})
 	$('#PrintListVBbtn').click(function () {
 		var id = $('#Vanbanden_intid').val();
 		var url = '@Url.Action("InPhieuNhanVBDen", "Baocao")';
-		url = url + '?id=' + id;	   
+		url = url + '?id=' + id;
 		open(url, "_blank");
 	})
-	
+
 	//=============================================
 	function SetintDongy(id) {
 		$('#intDongy').val(id);

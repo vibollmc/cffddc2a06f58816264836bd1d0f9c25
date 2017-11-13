@@ -36,6 +36,8 @@ namespace QLVB.Core.Implementation
         #region Constructor & private variables
         private readonly ILogger _logger;
         private readonly ISessionServices _session;
+        private readonly ICanboRepository _canboRepository;
+        private readonly IDonviManager _donviManager;
         private readonly IConfigRepository _configRepo;
         private readonly IVanbandiRepository _vanbandiRepository;
         private readonly IPhanloaiVanbanRepository _phanloaiVanbanRepository;
@@ -58,7 +60,8 @@ namespace QLVB.Core.Implementation
                ITinhchatvanbanRepository tinhchatvanbanRepository, IAttachVanbanRepository attachVanbanRepository, 
                IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager,
                IMailInboxRepository mailInboxRepo, IMailOutboxRepository mailOutboxRepo, IGuiVanbanRepository guivbRepo,
-               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo)
+               IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo,
+               ICanboRepository canboRepository, IDonviManager donviManager)
         {
             _logger = logger;
             _configRepo = configRepo;
@@ -77,7 +80,8 @@ namespace QLVB.Core.Implementation
             _tochucRepo = tochucRepo;
             _vanbandiRepo = vanbandiRepo;
             _guivbRepo = guivbRepo;
-            
+            _canboRepository = canboRepository;
+            _donviManager = donviManager;
         }
 
         #endregion Constructor
@@ -344,7 +348,7 @@ namespace QLVB.Core.Implementation
                         double dbdate;
                         if (double.TryParse(objReceivedMessage.senddate, out dbdate))
                         {
-                            vbdenMail.strngayguivb = jan1St1970.AddMilliseconds(dbdate);
+                            vbdenMail.strngayguivb = jan1St1970.AddMilliseconds(dbdate).ToLocalTime();
                         }
                         else
                         {
@@ -456,7 +460,7 @@ namespace QLVB.Core.Implementation
                         //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                         webService.updateReceiveFinish(messageIdsByDocument);
                     }
-                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến", null, null);
+                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến");
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -620,7 +624,7 @@ namespace QLVB.Core.Implementation
         private string BuildXmlQlvbObject(QlvbReceivedMessage message)
         {
             var stringBuilder = new StringBuilder();
-
+            
             //stringBuilder.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             stringBuilder.Append("<message>");
             stringBuilder.Append("<required-answer><![CDATA[0]]></required-answer>");
@@ -631,14 +635,14 @@ namespace QLVB.Core.Implementation
             stringBuilder.AppendFormat("<document-code><![CDATA[{0}]]></document-code>", message.documentcode);
             stringBuilder.AppendFormat("<description>{0}</description>", message.description);
             stringBuilder.AppendFormat("<content><![CDATA[{0}]]></content>", message.content);
-            //stringBuilder.Append("<title />");
-            //stringBuilder.Append("<department-id />");
-            //stringBuilder.Append("<department-send-id />");
-            //stringBuilder.Append("<attach-files />");
-            //stringBuilder.Append("<option><![CDATA[]]></option>");
-            //stringBuilder.Append("<stateProcess><![CDATA[]]></stateProcess>");
-            //stringBuilder.AppendFormat("<signature><![CDATA[{0}]]></signature>", message.signature);
-            //stringBuilder.Append("<edxml><![CDATA[0]]></edxml>");
+            stringBuilder.Append("<title />");
+            stringBuilder.Append("<department-id />");
+            stringBuilder.Append("<department-send-id />");
+            stringBuilder.Append("<attach-files />");
+            stringBuilder.Append("<option><![CDATA[0]]></option>");
+            stringBuilder.Append("<stateProcess><![CDATA[]]></stateProcess>");
+            stringBuilder.AppendFormat("<signature><![CDATA[{0}]]></signature>", message.signature);
+            stringBuilder.Append("<edxml><![CDATA[0]]></edxml>");
             stringBuilder.Append("</message>");
 
             return stringBuilder.ToString();
@@ -647,6 +651,7 @@ namespace QLVB.Core.Implementation
         private string BuildXmlContentStatus(Envelope status)
         {
             var stringBuilder = new StringBuilder();
+
             stringBuilder.Append("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">");
             stringBuilder.Append("<SOAP-ENV:Header>");
             stringBuilder.Append("<edXML:Status xmlns:edXML=\"http://schemas.xmlsoap.org/soap/envelope/\">");
@@ -683,7 +688,7 @@ namespace QLVB.Core.Implementation
             return xml;
         }
 
-        private string SendStatusByIdVanbanDenMail(int? idvanbandenmail, string status, string statusDescription, string nguoigui, string phongban)
+        private string SendStatusByIdVanbanDenMail(int? idvanbandenmail, string status, string statusDescription)
         {
             try
             {
@@ -704,14 +709,33 @@ namespace QLVB.Core.Implementation
                 if (vanbandenMail.intso == null) sokyhieuvanban = vanbandenMail.strkyhieu;
                 var trichyeu = vanbandenMail.strtrichyeu;
                 var documentid = vanbandenMail.strvanbangocid;
-                var ngayky =string.Format("{0:dd/MM/yyyy HH:mm:ss}",vanbandenMail.strngayky) ;
+                var ngayky =string.Format("{0:dd/MM/yyyy}",vanbandenMail.strngayky) ;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
 
                 var madonviTrucTinh = _configRepo.GetConfig(ThamsoHethong.MaDonviTrucTinh);
-                var madonviguichinhphu = _configRepo.GetConfig(ThamsoHethong.MaDinhDanh);
+                var donviGui = orgs.FirstOrDefault(x => x.code == madonviTrucTinh);
+                var madonviguichinhphu = donviGui.edxmlCode;
                 var tendonvigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
 
+                var nguoigui = string.Empty;
+                var phongban = string.Empty;
+
+                var userid = _session.GetUserId();
+
+                var canbo = _canboRepository.GetAllCanboByID(userid);
+
+                if (canbo != null)
+                {
+                    nguoigui = canbo.strhoten;
+
+                    if (canbo.intdonvi != null)
+                    {
+                        var donvi = _donviManager.GetDonvi(canbo.intdonvi.Value);
+
+                        if (donvi != null) phongban = donvi.strtendonvi;
+                    }
+                }
                 var messageStatus = new Envelope
                 {
                     Header = new Header
@@ -735,8 +759,8 @@ namespace QLVB.Core.Implementation
                             Timestamp = string.Format("{0:dd/MM/yyyy HH:mm:ss}", DateTime.Now),
                             StaffInfo = new StaffInfo
                             {
-                                Staff = "Tran Thi Thuy Nga",
-                                Department = "Trung Tam Tin Hoc"
+                                Staff = nguoigui,
+                                Department = phongban
                             }
 
                         }
@@ -766,8 +790,9 @@ namespace QLVB.Core.Implementation
 
                 var contentSending = BuildXmlQlvbObject(message);
 
-                return webService.sendMessage(contentSending);
+                var results = webService.sendMessage(contentSending);
 
+                return results;
             }
             catch (Exception e)
             {
@@ -776,12 +801,12 @@ namespace QLVB.Core.Implementation
             }
         }
 
-        public string SendStatus(int idvanban, string status, string statusDescription, string nguoigui, string phongban)
+        public string SendStatus(int idvanban, string status, string statusDescription)
         {
             var vanbanden = _vbdenRepo.GetVanbandenById(idvanban);
             if (vanbanden == null) return null;
 
-            return this.SendStatusByIdVanbanDenMail(vanbanden.intidvanbandenmail, status, statusDescription, nguoigui, phongban);
+            return this.SendStatusByIdVanbanDenMail(vanbanden.intidvanbandenmail, status, statusDescription);
         }
 
 
