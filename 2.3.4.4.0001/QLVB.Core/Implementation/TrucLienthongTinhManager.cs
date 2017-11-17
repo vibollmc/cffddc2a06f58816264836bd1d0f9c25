@@ -596,14 +596,14 @@ namespace QLVB.Core.Implementation
                                 }
                                 else
                                 {
-                                  webService.updateErrorMessage(messageIdsByDocument, "Can't find Organization");
+                                   webService.updateErrorMessage(messageIdsByDocument, "Can't find Organization");
                                 }
 
                             }
                         }
                         else
                         {
-                            webService.updateErrorMessage(messageIdsByDocument, "Can't find document");
+                           webService.updateErrorMessage(messageIdsByDocument, "Can't find document");
                         }
                     }
                     
@@ -709,7 +709,7 @@ namespace QLVB.Core.Implementation
                 if (vanbandenMail.intso == null) sokyhieuvanban = vanbandenMail.strkyhieu;
                 var trichyeu = vanbandenMail.strtrichyeu;
                 var documentid = vanbandenMail.strvanbangocid;
-                var ngayky =string.Format("{0:dd/MM/yyyy}",vanbandenMail.strngayky) ;
+                var ngayky =string.Format("{0:dd/MM/yyyy HH:mm:ss}", vanbandenMail.strngayky) ;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
 

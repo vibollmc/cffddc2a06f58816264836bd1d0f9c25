@@ -141,6 +141,7 @@
     <Compile Include="Contract\ISovanbanManager.cs" />
     <Compile Include="Contract\ITinhchatvanbanManager.cs" />
     <Compile Include="Contract\ITinhhinhxulyManager.cs" />
+    <Compile Include="Contract\ITinhhinhXulyVanbanDiManager.cs" />
     <Compile Include="Contract\ITonghopManager.cs" />
     <Compile Include="Contract\ITrucLienthongTinhManager.cs" />
     <Compile Include="Contract\IVanbandenManager.cs" />

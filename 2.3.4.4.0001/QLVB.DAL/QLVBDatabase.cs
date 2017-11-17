@@ -83,7 +83,8 @@ namespace QLVB.DAL
         public DbSet<LuutruVanban> LuutruVanbans { get; set; }
 
         public DbSet<LogGuiTonghopVB> LogGuiTonghopVBs { get; set; }
-        public DbSet<TonghopVanban> TonghopVanbans { get; set; }
+        public DbSet<TonghopVanban> TonghopVanbans { get; set; }  
+        public DbSet<TinhhinhXulyVanBanDi> TinhhinhXulyVanBanDis { get; set; }
 
         //========view========================================
         public DbSet<Tinhtrangxuly> Tinhtrangxulys { get; set; }
@@ -186,11 +187,11 @@ namespace QLVB.DAL
             modelBuilder.Entity<LuutruVanban>().ToTable("LuutruVanban").HasKey(m => m.intid);
             modelBuilder.Entity<LogGuiTonghopVB>().ToTable("LogGuiTonghopVB").HasKey(m => m.intid);
             modelBuilder.Entity<TonghopVanban>().ToTable("TonghopVanban").HasKey(m => m.intid);
-
+            modelBuilder.Entity<TinhhinhXulyVanBanDi>().ToTable("TinhhinhXulyVanBanDi").HasKey(m => m.intid);
             // =============  view  ==============================
             modelBuilder.Entity<Tinhtrangxuly>().ToTable("vTinhtrangxuly").HasKey(m => m.intidvanban);
             modelBuilder.Entity<TinhTrangQuytrinh>().ToTable("vTinhtrangQuytrinh").HasKey(m => m.intidvanban);
-
+           
 
         }
 

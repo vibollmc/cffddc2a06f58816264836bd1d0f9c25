@@ -103,7 +103,7 @@ namespace QLVB.WebUI
 
                        //if (edxmlManager != null)
                        //{
-                       //    edxmlManager.ReceiveStatusFile();
+                       //  edxmlManager.ReceiveStatusFile();
                        //}
 
                isProcessing = false;

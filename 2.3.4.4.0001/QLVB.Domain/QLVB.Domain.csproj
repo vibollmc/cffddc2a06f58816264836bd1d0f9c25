@@ -103,6 +103,7 @@
     <Compile Include="Abstract\ISqlQuery.cs" />
     <Compile Include="Abstract\ISystems.cs" />
     <Compile Include="Abstract\ITinhchatvanbanRepository.cs" />
+    <Compile Include="Abstract\ITinhhinhXulyVanBanDiReponsitory.cs" />
     <Compile Include="Abstract\ITinhtrangQuytrinhRepository.cs" />
     <Compile Include="Abstract\ITinhtrangxulyRepository.cs" />
     <Compile Include="Abstract\ITochucdoitacRepository.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Entities\SovbKhoiph.cs" />
     <Compile Include="Entities\Systems.cs" />
     <Compile Include="Entities\Tinhchatvanban.cs" />
+    <Compile Include="Entities\TinhhinhXulyVanBanDi.cs" />
     <Compile Include="Entities\TinhTrangQuytrinh.cs" />
     <Compile Include="Entities\Tinhtrangxuly.cs" />
     <Compile Include="Entities\Tochucdoitac.cs" />

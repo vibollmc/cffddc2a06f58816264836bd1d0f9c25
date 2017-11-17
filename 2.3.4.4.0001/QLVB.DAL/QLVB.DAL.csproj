@@ -101,6 +101,7 @@
     <Compile Include="EFSqlQuery.cs" />
     <Compile Include="EFSystemsRepository.cs" />
     <Compile Include="EFTinhchatvanbanRepository.cs" />
+    <Compile Include="EFTinhhinhXulyVanBanDiRepository.cs" />
     <Compile Include="EFTinhtrangQuytrinhRepository.cs" />
     <Compile Include="EFTinhtrangxulyRepository.cs" />
     <Compile Include="EFTochucdoitacRepository.cs" />
