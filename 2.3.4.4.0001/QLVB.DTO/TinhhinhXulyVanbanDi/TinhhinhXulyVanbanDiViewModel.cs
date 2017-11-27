@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QLVB.Domain.Entities
+namespace QLVB.DTO.TinhhinhXulyVanbanDi
 {
-    public class TinhhinhXulyVanBanDi
+    public class TinhhinhXulyVanbanDiViewModel
     {
         public int intid { get; set; }
 

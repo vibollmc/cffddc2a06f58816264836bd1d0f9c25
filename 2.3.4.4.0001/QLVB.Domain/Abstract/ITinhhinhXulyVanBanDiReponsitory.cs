@@ -11,5 +11,6 @@ namespace QLVB.Domain.Abstract
         IQueryable<TinhhinhXulyVanBanDi> TinhhinhXulyVanBanDis { get; }
 
         int Them(TinhhinhXulyVanBanDi xuly);
+        int getIdGuiVanban(int idvanban, string strmadinhdanh, string strtendonvi, int intloaivanban, enumGuiVanban.intloaigui intloaigui);
     }
 }

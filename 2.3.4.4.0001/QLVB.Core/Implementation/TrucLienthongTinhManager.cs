@@ -53,7 +53,8 @@ namespace QLVB.Core.Implementation
         private readonly IVanbandenRepository _vbdenRepo;
         private readonly ITochucdoitacRepository _tochucRepo;
         private readonly IVanbandiRepository _vanbandiRepo;
-      
+        private readonly ITinhhinhXulyVanBanDiReponsitory _tinhhinhxulyvanbandiRepo;
+
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, 
                IVanbandiRepository vanbandiRepository, IPhanloaiVanbanRepository phanloaiVanbanRepository, 
@@ -61,7 +62,7 @@ namespace QLVB.Core.Implementation
                IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager,
                IMailInboxRepository mailInboxRepo, IMailOutboxRepository mailOutboxRepo, IGuiVanbanRepository guivbRepo,
                IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo,
-               ICanboRepository canboRepository, IDonviManager donviManager)
+               ICanboRepository canboRepository, IDonviManager donviManager, ITinhhinhXulyVanBanDiReponsitory tinhhinhxulyvanbandiRepo)
         {
             _logger = logger;
             _configRepo = configRepo;
@@ -82,6 +83,7 @@ namespace QLVB.Core.Implementation
             _guivbRepo = guivbRepo;
             _canboRepository = canboRepository;
             _donviManager = donviManager;
+            _tinhhinhxulyvanbandiRepo = tinhhinhxulyvanbandiRepo;
         }
 
         #endregion Constructor
@@ -523,7 +525,10 @@ namespace QLVB.Core.Implementation
                         var sokyhieu = responseFor.Code.Trim('/');
                         var madinhdanhdonvi = objMessageStatus.sendingsystemid;
                         var trangthai = headerStatus.StatusCode;
-                        var vanbangocid = headerStatus.ResponseFor.DocumentId;                       
+                        var vanbangocid = headerStatus.ResponseFor.DocumentId;
+                        var nguoixuly = headerStatus.StaffInfo.Staff;
+                        var phongxuly = headerStatus.StaffInfo.Department;
+                        var diengiai = headerStatus.Description;
                         if (vanbangocid == null) vanbangocid = string.Empty;
 
                         var ngaythuchien = DateTime.Now;
@@ -589,8 +594,17 @@ namespace QLVB.Core.Implementation
                                     (int)enumGuiVanban.intloaivanban.Vanbandi,
                                     (enumGuiVanban.inttrangthaiphanhoi)int.Parse(trangthai), ngaythuchien,
                                     enumGuiVanban.intloaigui.Tructinh);
+                                var xuly = new TinhhinhXulyVanBanDi();                                
+                                xuly.strmaxuly = trangthai;
+                                xuly.strnguoixuly = nguoixuly;
+                                xuly.strphongban = phongxuly;
+                                xuly.strdiengiai= diengiai;
+                                xuly.intidguivanban = _tinhhinhxulyvanbandiRepo.getIdGuiVanban(vanbandi.intid,
+                                    madinhdanhdonvi, org.name,(int)enumGuiVanban.intloaivanban.Vanbandi, enumGuiVanban.intloaigui.Tructinh);
 
-                                if (ketqua > 0) //Update finish
+                                var ketqua1 = _tinhhinhxulyvanbandiRepo.Them(xuly);
+
+                                if( (ketqua > 0) && (ketqua1 > 0)) //Update finish
                                 {
                                     webService.updateReceiveFinish(messageIdsByDocument);
                                 }
@@ -709,7 +723,7 @@ namespace QLVB.Core.Implementation
                 if (vanbandenMail.intso == null) sokyhieuvanban = vanbandenMail.strkyhieu;
                 var trichyeu = vanbandenMail.strtrichyeu;
                 var documentid = vanbandenMail.strvanbangocid;
-                var ngayky =string.Format("{0:dd/MM/yyyy HH:mm:ss}", vanbandenMail.strngayky) ;
+                var ngayky =string.Format("{0:dd/MM/yyyy}", vanbandenMail.strngayky) ;
 
                 if (string.IsNullOrEmpty(madonviNhan)) return null;
 

@@ -162,12 +162,16 @@ namespace QLVB.WebUI.App_Start
             kernel.Bind<ITinhtrangxulyRepository>().To<EFTinhtrangxulyRepository>();
             kernel.Bind<ITinhtrangQuytrinhRepository>().To<EFTinhtrangQuytrinhRepository>();
 
+            kernel.Bind<ITinhhinhXulyVanBanDiReponsitory>().To<EFTinhhinhXulyVanBanDiRepository>();
+
+
             //===============================================
             // Core
             //===============================================
 
             kernel.Bind<QLVB.Common.Logging.ILogger>().To<QLVB.WebUI.Common.NLog.NLogLogger>();
 
+            kernel.Bind<ITinhhinhXulyVanbanDiManager>().To<TinhhinhXulyVanbanDiManager>();
             kernel.Bind<IRoleManager>().To<RoleManager>();
             kernel.Bind<IMenuManager>().To<MenuManager>();
             kernel.Bind<IAccountManager>().To<AccountManager>();

@@ -26,6 +26,36 @@ namespace QLVB.DAL
             context.SaveChanges();
             return xuly.intid;
         }
+        public int getIdGuiVanban(int idvanban, string strmadinhdanh, string strtendonvi, int intloaivanban, enumGuiVanban.intloaigui intloaigui)
 
+        {
+
+            var tochuc = context.Tochucdoitacs.FirstOrDefault(
+                       x => (intloaigui == enumGuiVanban.intloaigui.Tructinh && x.strmatructinh.Trim() == strmadinhdanh.Trim())
+                           || (intloaigui == enumGuiVanban.intloaigui.Chinhphu && x.strmadinhdanh.Trim() == strmadinhdanh.Trim()));
+
+            GuiVanban vb = null;
+
+            if (tochuc != null)
+            {
+                vb = context.GuiVanbans
+                    .FirstOrDefault(
+                        p =>
+                            p.intidvanban == idvanban &&
+                            (p.strtendonvi == strtendonvi || p.intiddonvi == tochuc.intid) &&
+                            p.intloaivanban == intloaivanban && p.intloaigui == (int)intloaigui);
+            }
+            else
+            {
+                vb = context.GuiVanbans
+                    .FirstOrDefault(
+                        p =>
+                            p.intidvanban == idvanban && p.strtendonvi == strtendonvi &&
+                            p.intloaivanban == intloaivanban && p.intloaigui == (int)intloaigui);
+            }
+            if (vb != null) return vb.intid;
+            else return 0;
+          
+        }
     }
 }

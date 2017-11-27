@@ -2720,7 +2720,11 @@ namespace QLVB.Core.Implementation
                 SaveYkienxuly(idhosocongviec, "Đang trình ký");
                 // dang trinh ky
                 _hosocongviecRepo.Trinhky(idhosocongviec, idcanbo);
-
+                var hosovb = new Hosovanban();
+                  hosovb =  _hosovanbanRepo.Hosovanbans.
+                    FirstOrDefault(p => p.intidhosocongviec == idhosocongviec);      
+                if(hosovb!=null)                          
+                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Trình Ký");
 
                 kq.id = (int)ResultViewModels.Success;
             }

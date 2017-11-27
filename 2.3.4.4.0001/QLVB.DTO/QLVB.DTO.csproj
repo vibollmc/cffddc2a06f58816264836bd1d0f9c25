@@ -140,6 +140,7 @@
     <Compile Include="Sovb\ListSovanbanViewModel.cs" />
     <Compile Include="Tinhchatvb\EditTinhchatViewModel.cs" />
     <Compile Include="CanboViewModel.cs" />
+    <Compile Include="TinhhinhXulyVanbanDi\TinhhinhXulyVanbanDiViewModel.cs" />
     <Compile Include="Tinhhinhxuly\ChartCommonViewModel.cs" />
     <Compile Include="Tinhhinhxuly\D3DashboardXLVBDenViewModel.cs" />
     <Compile Include="Tinhhinhxuly\FlowchartTonghopViewModel.cs" />

@@ -13,7 +13,7 @@ namespace QLVB.Core.Contract
     public interface ITonghopManager
     {
         IEnumerable<ListTonghopVBDenViewModel> GetTonghopVanbanden();
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
         ResultFunction UpdateStatusVanbanden(int idtailieu);
 
         IEnumerable<ListTonghopVBDenViewModel> GetTonghopHosoXLVBDen();

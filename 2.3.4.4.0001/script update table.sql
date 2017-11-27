@@ -1,4 +1,20 @@
-﻿--========== cập nhật: 05/09/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
+﻿--========== cập nhật: 15/11/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
+CREATE TABLE [dbo].[TinhhinhXulyVanBanDi](
+	[intid] [int] IDENTITY(1,1) NOT NULL,
+	[intidguivanban] [int] NULL,
+	[strngayxuly] [smalldatetime] NULL,
+	[strnguoixuly] [nvarchar](100) NULL,
+	[strphongban] [nvarchar](100) NULL,
+	[strmaxuly] [nvarchar](100) NULL,
+	[strdiengiai] [nvarchar](100) NULL,
+	
+ CONSTRAINT [PK_TinhhinhXulyVanBanDi] PRIMARY KEY CLUSTERED 
+(
+	[intid] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+--========== cập nhật: 05/09/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
 alter table Vanbandenmail add strvanbangocid nvarchar(200) null
 alter table GuiVanban add strngayphancong datetime null
 

@@ -172,6 +172,7 @@
     <Compile Include="Implementation\SovanbanManager.cs" />
     <Compile Include="Implementation\TinhchatvanbanManager.cs" />
     <Compile Include="Implementation\TinhhinhxulyManager.cs" />
+    <Compile Include="Implementation\TinhhinhXulyVanbanDiManager.cs" />
     <Compile Include="Implementation\TonghopManager.cs" />
     <Compile Include="Implementation\TrucLienthongTinhManager.cs" />
     <Compile Include="Implementation\VanbandenManager.cs" />
