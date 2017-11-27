@@ -27,6 +27,7 @@ namespace QLVB.Core.Implementation
         private IVanbandenRepository _vanbandenRepo;
         private ILinhvucRepository _linhvucRepo;
         private ICanboRepository _canboRepo;
+        private readonly IDonviManager _donviManager;
         private IChucdanhRepository _chucdanhRepo;
         private IDoituongxulyRepository _doituongRepo;
 
@@ -59,7 +60,7 @@ namespace QLVB.Core.Implementation
         public HosoManager(ILogger logger, IHosocongviecRepository hosocvRepo,
             IHosovanbanRepository hosovbRepo, IHosoykienxulyRepository hosoykienRepo,
             IVanbandenRepository vanbandenRepo, ILinhvucRepository linhvucRepo,
-            ICanboRepository canboRepo, IChucdanhRepository chucdanhRepo,
+            ICanboRepository canboRepo, IDonviManager donviManager, IChucdanhRepository chucdanhRepo,
             IDoituongxulyRepository doituongRepo, IDonvitructhuocRepository donviRepo,
             IConfigRepository configRepo, IChitietHosoRepository chitietHosoRepo,
             IRoleManager role, IPhieutrinhRepository phieutrinhRepo,
@@ -80,6 +81,7 @@ namespace QLVB.Core.Implementation
             _vanbandenRepo = vanbandenRepo;
             _linhvucRepo = linhvucRepo;
             _canboRepo = canboRepo;
+            _donviManager = donviManager;
             _chucdanhRepo = chucdanhRepo;
             _doituongRepo = doituongRepo;
             _donviRepo = donviRepo;
@@ -1128,7 +1130,22 @@ namespace QLVB.Core.Implementation
 
             Hosocongviec hscv = new Hosocongviec();
             hscv = model.HosocongviecModel;
+            string nguoixulychinh = string.Empty;
+            string phongban = string.Empty;
+            var canbo = _canboRepo.GetAllCanboByID(idxulychinh);
+          
+                if (canbo != null)
+                {
+                    nguoixulychinh = canbo.strhoten;
 
+                    if (canbo.intdonvi != null)
+                    {
+                        var donvi = _donviManager.GetDonvi(canbo.intdonvi.Value);
+
+                        if (donvi != null) phongban = donvi.strtendonvi;
+                    }
+                }
+           
 
             //=======================================================
             // cap nhat du lieu
@@ -1137,7 +1154,17 @@ namespace QLVB.Core.Implementation
             {
                 //  duyet van ban dang phan xl
                 _vanbandenRepo.Duyet(idvanban, (int)enumVanbanden.inttrangthai.Daduyet);
-                _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công");
+                if (idhosocongviec == 0)
+                {
+                    _trucLienthongTinhManager.SendStatus(idvanban, "04", "Phân công xử lý", "", "");
+                    
+                }
+                else
+                {
+                    _trucLienthongTinhManager.SendStatus(idvanban, "04", "Chuyển xử lý chính", "", "");
+                    
+                }
+                _trucLienthongTinhManager.SendStatus(idvanban, "05", "Đang xử lý", nguoixulychinh, phongban);
             }
             catch //(Exception ex)
             {
@@ -2516,7 +2543,7 @@ namespace QLVB.Core.Implementation
                             if (ykien.Count() == 1)
                             { //Chỉ gửi khi lần đầu cho ý kiến
 
-                                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Xử Lý");
+                                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đã cho ý kiến xử lý","","");
                             }
                         }
                     }
@@ -2724,7 +2751,7 @@ namespace QLVB.Core.Implementation
                   hosovb =  _hosovanbanRepo.Hosovanbans.
                     FirstOrDefault(p => p.intidhosocongviec == idhosocongviec);      
                 if(hosovb!=null)                          
-                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Trình Ký");
+                _trucLienthongTinhManager.SendStatus(hosovb.intidvanban, "05", "Đang Trình Ký","","");
 
                 kq.id = (int)ResultViewModels.Success;
             }

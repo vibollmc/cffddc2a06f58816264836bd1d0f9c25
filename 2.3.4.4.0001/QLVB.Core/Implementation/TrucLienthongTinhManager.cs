@@ -462,7 +462,7 @@ namespace QLVB.Core.Implementation
                         //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                         webService.updateReceiveFinish(messageIdsByDocument);
                     }
-                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến");
+                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến","", "");
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -702,7 +702,7 @@ namespace QLVB.Core.Implementation
             return xml;
         }
 
-        private string SendStatusByIdVanbanDenMail(int? idvanbandenmail, string status, string statusDescription)
+        private string SendStatusByIdVanbanDenMail(int? idvanbandenmail, string status, string statusDescription, string nguoi, string phong)
         {
             try
             {
@@ -732,24 +732,30 @@ namespace QLVB.Core.Implementation
                 var madonviguichinhphu = donviGui.edxmlCode;
                 var tendonvigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
 
-                var nguoigui = string.Empty;
-                var phongban = string.Empty;
-
+                //var nguoigui = string.Empty;
+                //var phongban = string.Empty;
+                var nguoigui = nguoi;
+                var phongban = phong;
                 var userid = _session.GetUserId();
 
                 var canbo = _canboRepository.GetAllCanboByID(userid);
 
-                if (canbo != null)
+                if(nguoigui==string.Empty || phong == string.Empty)
+
                 {
-                    nguoigui = canbo.strhoten;
-
-                    if (canbo.intdonvi != null)
+                    if (canbo != null)
                     {
-                        var donvi = _donviManager.GetDonvi(canbo.intdonvi.Value);
+                        nguoigui = canbo.strhoten;
 
-                        if (donvi != null) phongban = donvi.strtendonvi;
+                        if (canbo.intdonvi != null)
+                        {
+                            var donvi = _donviManager.GetDonvi(canbo.intdonvi.Value);
+
+                            if (donvi != null) phongban = donvi.strtendonvi;
+                        }
                     }
                 }
+               
                 var messageStatus = new Envelope
                 {
                     Header = new Header
@@ -815,12 +821,12 @@ namespace QLVB.Core.Implementation
             }
         }
 
-        public string SendStatus(int idvanban, string status, string statusDescription)
+        public string SendStatus(int idvanban, string status, string statusDescription, string nguoi, string phong)
         {
             var vanbanden = _vbdenRepo.GetVanbandenById(idvanban);
             if (vanbanden == null) return null;
 
-            return this.SendStatusByIdVanbanDenMail(vanbanden.intidvanbandenmail, status, statusDescription);
+            return this.SendStatusByIdVanbanDenMail(vanbanden.intidvanbandenmail, status, statusDescription, nguoi, phong);
         }
 
 

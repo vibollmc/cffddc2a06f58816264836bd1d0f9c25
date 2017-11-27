@@ -17,6 +17,6 @@ namespace QLVB.Core.Contract
         ResultFunction NhanVanBan();
 
         bool ReceiveStatus();
-        string SendStatus(int idvanban, string status, string statusDescription);
+        string SendStatus(int idvanban, string status, string statusDescription, string nguoi, string phong);
     }
 }

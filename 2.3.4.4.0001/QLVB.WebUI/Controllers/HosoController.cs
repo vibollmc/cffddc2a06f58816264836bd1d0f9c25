@@ -598,7 +598,7 @@ namespace QLVB.WebUI.Controllers
                 {
                     //_edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
 
-                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành");
+                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành","","");
                 }
 
                 
@@ -622,7 +622,7 @@ namespace QLVB.WebUI.Controllers
                 {
                     //_edxmlManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành", null, null);
 
-                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành");
+                    _trucLienthongTinhManager.SendStatus(idvanbanden.Value, "06", "Hoàn thành","","");
                 }
 
                 return Json(kq.id);
