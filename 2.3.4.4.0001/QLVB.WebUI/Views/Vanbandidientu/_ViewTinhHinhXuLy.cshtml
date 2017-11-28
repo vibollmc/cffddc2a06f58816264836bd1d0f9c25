@@ -38,7 +38,7 @@
 		window.open();
 	}
 	function LoadVanbanDen(id) {
-		$('#chitietvanbanden').html("");
+	    $('#chitiettinhhinhxuly').html("");
 		var url = '@Url.Action("_TinhHinhXuLy","Vanbandidientu")';
 	    url = url + "?idguivb=" + id;
 	    $('#chitiettinhhinhxuly').load(url);
