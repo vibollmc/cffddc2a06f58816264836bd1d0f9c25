@@ -27,10 +27,12 @@ namespace QLVB.WebUI.Controllers
 
         private IVanbandientuManager _vanban;
         private ISessionServices _session;
-        public VanbandidientuController(IVanbandientuManager vanban, ISessionServices session)
+        private ITinhhinhXulyVanbanDiManager _tinhhinhXulyVanbanDiManager;
+        public VanbandidientuController(IVanbandientuManager vanban, ISessionServices session, ITinhhinhXulyVanbanDiManager tinhhinhXulyVanbanDiManager)
         {
             _vanban = vanban;
             _session = session;
+            _tinhhinhXulyVanbanDiManager = tinhhinhXulyVanbanDiManager;
         }
 
         #endregion Constructor
@@ -177,6 +179,20 @@ namespace QLVB.WebUI.Controllers
             return Json(_vanban.GetListDonvigui(idvanban)
                 .OrderBy(p => p.strtendonvi)
                 .ThenBy(p => p.dtengaygui)
+                .ToDataSourceResult(request)
+                );
+        }
+
+        public ActionResult _TinhHinhXuLy(int? idguivb)
+        {
+            ViewBag.IdGuiVanBan = idguivb;
+            return PartialView();
+        }
+
+        public ActionResult TinhHinhXuLy_Read([DataSourceRequest]DataSourceRequest request, int id)
+        {
+            return Json(_tinhhinhXulyVanbanDiManager.GetTinhhinhXulyVanbanDi(id)
+                .OrderBy(p => p.strngayxuly)
                 .ToDataSourceResult(request)
                 );
         }

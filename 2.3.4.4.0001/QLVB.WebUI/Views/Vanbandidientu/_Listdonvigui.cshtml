@@ -8,7 +8,15 @@
     .Name("gridDonvi")
     .Columns(columns =>
     {
-        columns.Bound(c => c.intid).Hidden();
+        columns.Bound(o => o.intid).Hidden();
+        columns.Bound(o => o.strloaigui).Title(" ")
+            .ClientTemplate(
+                "#if (strloaigui != 'Email') { #" +
+                    "<a href='javascript:void(0);' onclick='OpenViewTinhHinhXuLy(" + "#= intid #" + ")'>Chi tiết</a>" +
+                "# } else { #" +
+                "# } #"
+            )
+            .Width(25);
         columns.Bound(o => o.strtendonvi).Title("Đơn vị gửi").Width(100);
         columns.Bound(o => o.dtengaygui).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày gửi").Width(80);
         columns.Bound(o => o.dtengaynhan).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày nhận").Width(85);

@@ -1,0 +1,66 @@
+﻿@using QLVB.DTO.TinhhinhXulyVanbanDi
+
+@{
+    int? idGuiVB = ViewBag.IdGuiVanBan;
+}
+
+@(Html.Kendo().Grid<TinhhinhXulyVanbanDiViewModel>()
+    .Name("TinhHinhXuLyVanBan")
+    .Columns(x =>
+    {
+        x.Bound(o => o.strdiengiai).Title("Trạng thái").Width(100);
+        x.Bound(o => o.strngayxuly).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày xử lý").Width(80);
+        x.Bound(o => o.strnguoixuly).Title("Người xử lý").Width(100);
+        x.Bound(o => o.strphongban).Title("Phòng ban").Width(100);
+    })
+    .HtmlAttributes(new { style = "white-space: normal" })
+    .Scrollable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        .ButtonCount(5)
+        .Messages(ms => ms.Display(KendoGridDisplay.PageDisplay).Empty(KendoGridDisplay.PageEmpty)
+            .First(KendoGridDisplay.PageFirst).Previous(KendoGridDisplay.PagePrevious)
+            .Next(KendoGridDisplay.PageNext).Last(KendoGridDisplay.PageLast))
+        )
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(QLVB.Common.Utilities.AppSettings.DisplayItemsPerPage)
+            .Read(read => read.Action("TinhHinhXuLy_Read", "Vanbandidientu", new { id = idGuiVB })
+            )
+        )
+)
+
+<script type="text/javascript">
+
+    $(window).resize(function () {
+        SetGridHeightTinhHinhXuLyVanBan();
+    });
+    $(document).ready(function() {
+        SetGridHeightTinhHinhXuLyVanBan();
+    });
+
+    function SetGridHeightTinhHinhXuLyVanBan() {
+
+        var gridElement = $("#TinhHinhXuLyVanBan"),
+            newHeight = gridElement.innerHeight(),
+            otherElements = gridElement.children().not(".k-grid-content"),
+            otherElementsHeight = 0;
+
+        otherElements.each(function () {
+            otherElementsHeight += $(this).outerHeight();
+        });
+        var contentHeight = $('#content').innerHeight(),
+            headerHeight = $('#head').innerHeight(),
+            contentWidth = $('#content').innerWidth(),
+            $windowHeight = $(window).height();
+
+        if (contentWidth > 700) {
+            contentHeight = $windowHeight - 100;
+            gridElement.children(".k-grid-content").height(contentHeight - otherElementsHeight - headerHeight - 65);
+        } else {
+            gridElement.children(".k-grid-content").height(200);
+        }
+    }
+</script>

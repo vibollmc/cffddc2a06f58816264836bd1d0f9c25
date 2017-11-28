@@ -5573,6 +5573,8 @@
     <Content Include="Views\Vanbandidientu\_TonghopSolieuVanban.cshtml" />
     <Content Include="Views\Vanbandidientu\_TonghopVBDT_chuyenvien.cshtml" />
     <Content Include="Views\Vanbandi\_GetDonviTrucTinh.cshtml" />
+    <Content Include="Views\Vanbandidientu\_TinhHinhXuLy.cshtml" />
+    <Content Include="Views\Vanbandidientu\_ViewTinhHinhXuLy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

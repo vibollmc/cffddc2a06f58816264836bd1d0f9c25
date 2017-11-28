@@ -1,0 +1,52 @@
+﻿@(Html.Kendo().Window()
+    .Name("ViewTinhHinhXuLy")
+    .Draggable()
+    .AutoFocus(true)
+    .Title("Tình hình xử lý")
+    .Resizable()
+    .Width(650)
+    .Height(490)
+    .Visible(false)
+    .Actions(actions => actions.Minimize().Maximize().Close())
+    .Content(
+    @<text>
+        <div id="detail-TinhHinhXuLy">
+            <div class="box">
+                <header>
+                    <nav style="padding: 3px;">
+                        <button id="BackViewDetailVBDiDienTu" type="button" class="btn btn-sm btn-primary btn-flat " data-original-title="" title=""><i class="glyphicon glyphicon-arrow-left"></i>&nbsp;Quay lại</button>
+                    </nav>
+                </header>
+            </div>
+            <div id="chitiettinhhinhxuly">
+
+            </div>
+        </div>
+    </text>
+    )
+)
+
+<script type="text/javascript">
+	function CloseViewTinhHinhXuLy() {
+	    var window = $("#ViewTinhHinhXuLy").data("kendoWindow");
+		window.close();
+	}
+	function OpenViewTinhHinhXuLy(idguivb) {
+		LoadVanbanDen(idguivb);
+		var window = $("#ViewTinhHinhXuLy").data("kendoWindow");
+		window.center();
+		window.open();
+	}
+	function LoadVanbanDen(id) {
+		$('#chitietvanbanden').html("");
+		var url = '@Url.Action("_TinhHinhXuLy","Vanbandidientu")';
+	    url = url + "?idguivb=" + id;
+	    $('#chitiettinhhinhxuly').load(url);
+	}
+
+    $('#BackViewDetailVBDiDienTu').click(function () {
+	    CloseViewTinhHinhXuLy();
+	});
+
+</script>
+
