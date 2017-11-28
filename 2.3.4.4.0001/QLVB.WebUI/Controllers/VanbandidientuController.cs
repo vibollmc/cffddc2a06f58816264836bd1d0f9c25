@@ -183,6 +183,11 @@ namespace QLVB.WebUI.Controllers
                 );
         }
 
+        public ActionResult _ViewTinhHinhXuLy()
+        {
+            return PartialView();
+        }
+
         public ActionResult _TinhHinhXuLy(int? idguivb)
         {
             ViewBag.IdGuiVanBan = idguivb;
