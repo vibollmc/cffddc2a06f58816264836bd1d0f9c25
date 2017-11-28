@@ -599,6 +599,7 @@ namespace QLVB.Core.Implementation
                                 xuly.strnguoixuly = nguoixuly;
                                 xuly.strphongban = phongxuly;
                                 xuly.strdiengiai= diengiai;
+                                xuly.strngayxuly = ngaythuchien;
                                 xuly.intidguivanban = _tinhhinhxulyvanbandiRepo.getIdGuiVanban(vanbandi.intid,
                                     madinhdanhdonvi, org.name,(int)enumGuiVanban.intloaivanban.Vanbandi, enumGuiVanban.intloaigui.Tructinh);
 
