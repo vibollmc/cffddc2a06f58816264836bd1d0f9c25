@@ -9,28 +9,37 @@ namespace QLVB.DAL
 {
    public class EFTinhhinhXulyVanBanDiRepository:ITinhhinhXulyVanBanDiReponsitory
     {
-        private QLVBDatabase context;
+        private QLVBDatabase _context;
 
-        public EFTinhhinhXulyVanBanDiRepository(QLVBDatabase _context)
+        public EFTinhhinhXulyVanBanDiRepository(QLVBDatabase context)
         {
-            context = _context;
+            _context = context;
         }
         public IQueryable<TinhhinhXulyVanBanDi> TinhhinhXulyVanBanDis
         {
-            get { return context.TinhhinhXulyVanBanDis; }
+            get { return _context.TinhhinhXulyVanBanDis; }
         }
         public int Them(TinhhinhXulyVanBanDi xuly)
         {
 
-            context.TinhhinhXulyVanBanDis.Add(xuly);
-            context.SaveChanges();
+            var xl = _context.TinhhinhXulyVanBanDis.FirstOrDefault(
+                x => x.intidguivanban == xuly.intidguivanban
+                && x.strmaxuly == xuly.strmaxuly
+                && x.strngayxuly == xuly.strngayxuly
+                && x.strnguoixuly == xuly.strnguoixuly
+                && x.strphongban == xuly.strphongban
+                );
+            if (xl != null) return xl.intid;
+            
+            _context.TinhhinhXulyVanBanDis.Add(xuly);
+            _context.SaveChanges();
             return xuly.intid;
         }
         public int getIdGuiVanban(int idvanban, string strmadinhdanh, string strtendonvi, int intloaivanban, enumGuiVanban.intloaigui intloaigui)
 
         {
 
-            var tochuc = context.Tochucdoitacs.FirstOrDefault(
+            var tochuc = _context.Tochucdoitacs.FirstOrDefault(
                        x => (intloaigui == enumGuiVanban.intloaigui.Tructinh && x.strmatructinh.Trim() == strmadinhdanh.Trim())
                            || (intloaigui == enumGuiVanban.intloaigui.Chinhphu && x.strmadinhdanh.Trim() == strmadinhdanh.Trim()));
 
@@ -38,7 +47,7 @@ namespace QLVB.DAL
 
             if (tochuc != null)
             {
-                vb = context.GuiVanbans
+                vb = _context.GuiVanbans
                     .FirstOrDefault(
                         p =>
                             p.intidvanban == idvanban &&
@@ -47,7 +56,7 @@ namespace QLVB.DAL
             }
             else
             {
-                vb = context.GuiVanbans
+                vb = _context.GuiVanbans
                     .FirstOrDefault(
                         p =>
                             p.intidvanban == idvanban && p.strtendonvi == strtendonvi &&
