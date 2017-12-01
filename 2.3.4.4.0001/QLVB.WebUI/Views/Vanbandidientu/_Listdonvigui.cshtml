@@ -12,7 +12,7 @@
         columns.Bound(o => o.strloaigui).Title(" ")
             .ClientTemplate(
                 "#if (strloaigui != 'Email') { #" +
-                    "<a href='javascript:void(0);' onclick='OpenViewTinhHinhXuLy(" + "#= intid #" + ")'>Chi tiết</a>" +
+                    "<a title='Chi tiết tình hình xử lý' style='color:rgb(188, 35, 40)' href='javascript:void(0);' onclick='OpenViewTinhHinhXuLy(" + "#= intid #" + ")'><span class='glyphicon glyphicon-tree-conifer'></span></a>" +
                 "# } else { #" +
                 "# } #"
             )

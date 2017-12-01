@@ -526,8 +526,8 @@ namespace QLVB.Core.Implementation
                         var madinhdanhdonvi = objMessageStatus.sendingsystemid;
                         var trangthai = headerStatus.StatusCode;
                         var vanbangocid = headerStatus.ResponseFor.DocumentId;
-                        var nguoixuly = headerStatus.StaffInfo.Staff;
-                        var phongxuly = headerStatus.StaffInfo.Department;
+                        var nguoixuly = headerStatus.StaffInfo != null ? headerStatus.StaffInfo.Staff : string.Empty;
+                        var phongxuly = headerStatus.StaffInfo != null ? headerStatus.StaffInfo.Department : string.Empty;
                         var diengiai = headerStatus.Description;
                         if (vanbangocid == null) vanbangocid = string.Empty;
 

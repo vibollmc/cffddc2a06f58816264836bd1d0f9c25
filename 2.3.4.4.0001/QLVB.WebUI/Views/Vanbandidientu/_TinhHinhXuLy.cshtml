@@ -8,10 +8,10 @@
     .Name("TinhHinhXuLyVanBan")
     .Columns(x =>
     {
-        x.Bound(o => o.strdiengiai).Title("Trạng thái").Width(100);
-        x.Bound(o => o.strngayxuly).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày xử lý").Width(80);
-        x.Bound(o => o.strnguoixuly).Title("Người xử lý").Width(100);
-        x.Bound(o => o.strphongban).Title("Phòng ban").Width(100);
+        x.Bound(o => o.strdiengiai).Title("Trạng thái").Width(100).HeaderHtmlAttributes(new {style= "font-weight: bold;" });
+        x.Bound(o => o.strngayxuly).Format("{0:dd/MM/yyyy HH:mm:ss}").Title("Ngày xử lý").Width(80).HeaderHtmlAttributes(new { style = "font-weight: bold;" });
+        x.Bound(o => o.strnguoixuly).Title("Người xử lý").Width(100).HeaderHtmlAttributes(new { style = "font-weight: bold;" });
+        x.Bound(o => o.strphongban).Title("Phòng ban").Width(100).HeaderHtmlAttributes(new { style = "font-weight: bold;" });
     })
     .HtmlAttributes(new { style = "white-space: normal" })
     .Scrollable()
