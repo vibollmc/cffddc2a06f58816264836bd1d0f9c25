@@ -438,6 +438,9 @@
     });
 
     $('#SendDonviTinhbtn').click(function () {
+        if (isProcessing) return;
+        isProcessing = true;
+
         $.ajax(
 		{
 		    type: "POST",
@@ -454,19 +457,20 @@
 		        else {
 		            ShowResult("ketquaSendTinhvb", "Lỗi !!! " + data);
 		        }
+		        isProcessing = false;
 		    },
 		    dataType: "Json"
 		});
     });
-    $(function () {
-        $('#tableTructinh').searchable({
-            searchField: '#searchTructinh',
-            striped: true,
-            oddRow: { 'background-color': '#f5f5f5' },
-            evenRow: { 'background-color': '#fff' },
-            searchType: 'fuzzy'
-        })
-    })
+	$(function() {
+	    $('#tableTructinh').searchable({
+	        searchField: '#searchTructinh',
+	        striped: true,
+	        oddRow: { 'background-color': '#f5f5f5' },
+	        evenRow: { 'background-color': '#fff' },
+	        searchType: 'fuzzy'
+	    });
+	});
     
 
 </script>
