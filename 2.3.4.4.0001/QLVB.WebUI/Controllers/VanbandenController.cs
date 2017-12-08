@@ -27,6 +27,7 @@ namespace QLVB.WebUI.Controllers
         private IMailManager _mail;
         private IEdxmlManager _edxmlManager;
         private ITrucLienthongTinhManager _truclienthongtinhManager;
+       
         public VanbandenController(IVanbandenManager vanban, ISessionServices session, IMailManager mail, IEdxmlManager edxmlManager, ITrucLienthongTinhManager truclienthongtinhManager)
         {
             _vanban = vanban;
@@ -459,7 +460,7 @@ namespace QLVB.WebUI.Controllers
 
                     if (p == "strnoinhan") { 
                         vanban.Vanbanden.strnoinhan = collection[p]; 
-                        strnoinhan = vanban.Vanbanden.strnoinhan; 
+                        strnoinhan = vanban.Vanbanden.strnoinhan;                       
                     }
 
                     if (p == "idsovanban") { vanban.Vanbanden.intidsovanban = Convert.ToInt32(strgiatri); }
@@ -537,7 +538,8 @@ namespace QLVB.WebUI.Controllers
                        
                         if ( !string.IsNullOrEmpty(strnoinhan))
                          {
-                             _truclienthongtinhManager.SendStatus(intidvanban, "04", "Đã Phân công","","");
+                            _truclienthongtinhManager.SendStatus(intidvanban, "04", "Đã phân công", "", "");
+                            _truclienthongtinhManager.SendStatus(intidvanban, "05", "Đang xử lý",strnoinhan,"Phòng chuyên môn");
                          }
                     }
                 
