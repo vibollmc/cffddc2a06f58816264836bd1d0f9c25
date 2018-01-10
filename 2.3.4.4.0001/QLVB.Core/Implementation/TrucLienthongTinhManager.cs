@@ -54,6 +54,7 @@ namespace QLVB.Core.Implementation
         private readonly ITochucdoitacRepository _tochucRepo;
         private readonly IVanbandiRepository _vanbandiRepo;
         private readonly ITinhhinhXulyVanBanDiReponsitory _tinhhinhxulyvanbandiRepo;
+        private IHoibaovanbanRepository _hoibaovanbanRepo;
 
         public TrucLienthongTinhManager(
                ILogger logger, IConfigRepository configRepo, ISessionServices session, 
@@ -62,7 +63,7 @@ namespace QLVB.Core.Implementation
                IFileManager fileManager, IVanbandenmailRepository vanbandenmailRepository, IMailFormatManager mailFormatManager,
                IMailInboxRepository mailInboxRepo, IMailOutboxRepository mailOutboxRepo, IGuiVanbanRepository guivbRepo,
                IVanbandientuManager vbdtManager, IVanbandenRepository vbdenRepo, ITochucdoitacRepository tochucRepo, IVanbandiRepository vanbandiRepo,
-               ICanboRepository canboRepository, IDonviManager donviManager, ITinhhinhXulyVanBanDiReponsitory tinhhinhxulyvanbandiRepo)
+               ICanboRepository canboRepository, IDonviManager donviManager, ITinhhinhXulyVanBanDiReponsitory tinhhinhxulyvanbandiRepo, IHoibaovanbanRepository hoibaovanbanRepo)
         {
             _logger = logger;
             _configRepo = configRepo;
@@ -84,6 +85,7 @@ namespace QLVB.Core.Implementation
             _canboRepository = canboRepository;
             _donviManager = donviManager;
             _tinhhinhxulyvanbandiRepo = tinhhinhxulyvanbandiRepo;
+            _hoibaovanbanRepo = hoibaovanbanRepo;
         }
 
         #endregion Constructor
@@ -400,8 +402,7 @@ namespace QLVB.Core.Implementation
                     else if (DateTime.TryParseExact(objDocument.ngayphathanh, "dd/MM/yyyy", null, DateTimeStyles.None, out outDateTime))
                     {
                         vbdenMail.strngayky = outDateTime;
-                    }
-
+                    }                    
                     vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
                     vbdenMail.strnoiguivb = objDocument.tennoiphathanh;
 
@@ -462,7 +463,7 @@ namespace QLVB.Core.Implementation
                         //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                         webService.updateReceiveFinish(messageIdsByDocument);
                     }
-                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến","", "");
+                    SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến","Phần mềm QLVB", "Phần mềm QLVB");
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -672,13 +673,13 @@ namespace QLVB.Core.Implementation
             stringBuilder.Append("<edXML:Status xmlns:edXML=\"http://schemas.xmlsoap.org/soap/envelope/\">");
             stringBuilder.Append("<edXML:ResponseFor>");
             stringBuilder.AppendFormat("<edXML:OrganId>{0}</edXML:OrganId>", status.Header.Status.ResponseFor.OrganId);
-            stringBuilder.AppendFormat("<edXML:Code>{0}</edXML:Code>", status.Header.Status.ResponseFor.Code);
+            stringBuilder.AppendFormat("<edXML:Code><![CDATA[{0}]]></edXML:Code>", status.Header.Status.ResponseFor.Code);
             stringBuilder.AppendFormat("<edXML:PromulgationDate>{0}</edXML:PromulgationDate>", status.Header.Status.ResponseFor.PromulgationDate);
             stringBuilder.AppendFormat("<edXML:DocumentId>{0}</edXML:DocumentId>", status.Header.Status.ResponseFor.DocumentId);
             stringBuilder.Append("</edXML:ResponseFor>");
             stringBuilder.Append("<edXML:From>");
             stringBuilder.AppendFormat("<edXML:OrganId>{0}</edXML:OrganId>", status.Header.Status.From.OrganId);
-            stringBuilder.AppendFormat("<edXML:OrganName>{0}</edXML:OrganName>", status.Header.Status.From.OrganName);
+            stringBuilder.AppendFormat("<edXML:OrganName><![CDATA[{0}]]></edXML:OrganName>", status.Header.Status.From.OrganName);
             stringBuilder.Append("<edXML:OrganizationInCharge />");
             stringBuilder.Append("<edXML:OrganAdd />");
             stringBuilder.Append("<edXML:Email />");
@@ -690,8 +691,8 @@ namespace QLVB.Core.Implementation
             stringBuilder.AppendFormat("<edXML:Description>{0}</edXML:Description>", status.Header.Status.Description);
             stringBuilder.AppendFormat("<edXML:Timestamp>{0}</edXML:Timestamp>", status.Header.Status.Timestamp);
             stringBuilder.Append("<edXML:StaffInfo>");
-            stringBuilder.AppendFormat("<edXML:Department>{0}</edXML:Department>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Department);
-            stringBuilder.AppendFormat("<edXML:Staff>{0}</edXML:Staff>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Staff);
+            stringBuilder.AppendFormat("<edXML:Department><![CDATA[{0}]]></edXML:Department>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Department);
+            stringBuilder.AppendFormat("<edXML:Staff><![CDATA[{0}]]></edXML:Staff>", status.Header.Status.StaffInfo == null ? string.Empty : status.Header.Status.StaffInfo.Staff);
             stringBuilder.Append("</edXML:StaffInfo>");
             stringBuilder.Append("</edXML:Status>");
             stringBuilder.Append("</SOAP-ENV:Header>");
@@ -753,7 +754,14 @@ namespace QLVB.Core.Implementation
                             var donvi = _donviManager.GetDonvi(canbo.intdonvi.Value);
 
                             if (donvi != null) phongban = donvi.strtendonvi;
+
+                            else phongban = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
                         }
+                    }
+                    else
+                    {
+                        nguoigui = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
+                        phongban = _configRepo.GetConfig(ThamsoHethong.TenDonviTrucTinh);
                     }
                 }
                
@@ -874,8 +882,64 @@ namespace QLVB.Core.Implementation
                 var ngayKy = vanbandi.strngayky;
                 var jan1St1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 var ngayKyEncode = (long)((ngayKy - jan1St1970).TotalMilliseconds);
-                var dokhanVb = string.Empty;
+                var dokhanVb = string.Empty;               
+                var donvichidao = string.Empty;
+                var sophathanhchidao = string.Empty;
+                var ngaybanhanhchidao = string.Empty;
+                var documentID = string.Empty;
+                int idvanbanden = 0;
+                try
+                {
+                    if (!string.IsNullOrEmpty(vanbandi.strtraloivanbanso))
+                    {
+                        idvanbanden = _hoibaovanbanRepo.Hoibaovanbans
+                                        .Where(p => p.intTransID == vanbandi.intid)
+                                        .Where(p => p.intloai == (int)enumHoibaovanban.intloai.Vanbandi)
+                                        .FirstOrDefault().intRecID;
+                    }
+                }
+                catch { }
 
+                if (idvanbanden != 0)
+                {
+                    var vanbanden = _vbdenRepo.GetVanbandenById(idvanbanden);
+                    if (vanbanden!=null)
+                    {
+                        var idvanbandenmail = vanbanden.intidvanbandenmail;
+                        if (idvanbandenmail!=null)
+                        {
+                            var vanbandenmail = _vanbandenmailRepository.Vanbandenmails.Where(p => p.intid == idvanbandenmail).FirstOrDefault();
+                            if(vanbandenmail!=null)
+                            {
+                                ngaybanhanhchidao = string.Format("{0:dd/MM/yyyy}", vanbandenmail.strngayky) ;
+                                if (vanbandenmail.intso == null)
+                                    sophathanhchidao = vanbandenmail.strkyhieu;
+                                else
+                                sophathanhchidao = vanbandenmail.intso + "/" + vanbandenmail.strkyhieu;
+
+                                documentID = vanbandenmail.strvanbangocid;
+                                if (vanbandenmail.strmadinhdanh != null)
+                                {
+                                    if (vanbandenmail.intnhanvanbantu == enumVanbandenmail.intnhanvanbantu.TrucLienThongTinh)
+                                    {
+                                        var orgs = this.GetAllOrganization();
+                                        var orgnhan = orgs.FirstOrDefault(x => x.code == vanbandenmail.strmadinhdanh);
+                                        donvichidao = orgnhan.edxmlCode;
+                                    }
+                                    else
+                                    {
+                                        donvichidao = vanbandenmail.strmadinhdanh;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                }
                 if (vanbandi.intidphanloaivanbandi.HasValue)
                 {
                     var loaivb = _phanloaiVanbanRepository.GetLoaiVB(vanbandi.intidphanloaivanbandi.Value);
@@ -922,9 +986,10 @@ namespace QLVB.Core.Implementation
                             + "<do-khan> <![CDATA[" + dokhanVb + "]]> </do-khan>"
                             + "<phan-loai-van-ban> <![CDATA[0]]> </phan-loai-van-ban>"
                             + "<thoi-han-chi-dao> <![CDATA[0]]> </thoi-han-chi-dao>"
-                            + "<don-vi-chi-dao> <![CDATA[]]> </don-vi-chi-dao>"
-                            + "<so-phat-hanh-chi-dao> <![CDATA[]]> </so-phat-hanh-chi-dao>"
-                            + "<ngay-ban-hanh-chi-dao> <![CDATA[]]> </ngay-ban-hanh-chi-dao>"
+                            + "<don-vi-chi-dao> <![CDATA["+ donvichidao +"]]> </don-vi-chi-dao>"
+                            + "<so-phat-hanh-chi-dao> <![CDATA["+sophathanhchidao+"]]> </so-phat-hanh-chi-dao>"
+                            + "<ngay-ban-hanh-chi-dao> <![CDATA["+ngaybanhanhchidao+"]]> </ngay-ban-hanh-chi-dao>"
+                            + "<documentID> <![CDATA[" + documentID + "]]> </documentID>"
                         + " </van-ban-qua-mang>";
                 return Base64Encode(sXML);
             }

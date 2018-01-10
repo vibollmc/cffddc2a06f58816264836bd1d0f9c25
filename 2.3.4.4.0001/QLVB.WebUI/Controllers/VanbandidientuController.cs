@@ -196,8 +196,25 @@ namespace QLVB.WebUI.Controllers
 
         public ActionResult TinhHinhXuLy_Read([DataSourceRequest]DataSourceRequest request, int id)
         {
-            return Json(_tinhhinhXulyVanbanDiManager.GetTinhhinhXulyVanbanDi(id)
-                .OrderBy(p => p.strngayxuly)
+            //return Json(_tinhhinhXulyVanbanDiManager.GetTinhhinhXulyVanbanDi(id)
+            //    .OrderBy(p => p.strngayxuly).ThenBy(p => p.strmaxuly)
+            //    .ToDataSourceResult(request)
+            //    );
+            var data = _tinhhinhXulyVanbanDiManager.GetTinhhinhXulyVanbanDi(id)
+                .OrderBy(p => p.strngayxuly).ThenBy(p => p.strmaxuly)
+                .GroupBy(x => new { x.strmaxuly, x.intidguivanban, x.strdiengiai, x.strngayxuly, x.strnguoixuly, x.strphongban })
+                .Select(x => new Domain.Entities.TinhhinhXulyVanBanDi
+                {
+                    strmaxuly = x.Key.strmaxuly,
+                    strngayxuly = x.Key.strngayxuly,
+                    intidguivanban = x.Key.intidguivanban,
+                    strphongban = x.Key.strphongban,
+                    strnguoixuly = x.Key.strnguoixuly,
+                    strdiengiai = x.Key.strdiengiai,
+                    intid = x.First().intid
+                });
+
+            return Json(data
                 .ToDataSourceResult(request)
                 );
         }

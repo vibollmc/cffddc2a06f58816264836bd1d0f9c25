@@ -446,7 +446,7 @@ namespace QLVB.WebUI.Controllers
             string strgiatri = "";
             string strnoinhan = "";
             foreach (string p in collection)
-            {   // lay cac gia tri tu form dien vao control 
+            {   // lay cac gia tri tu form dien vao control
                 strgiatri = collection[p];
                 if (!string.IsNullOrEmpty(strgiatri))
                 {

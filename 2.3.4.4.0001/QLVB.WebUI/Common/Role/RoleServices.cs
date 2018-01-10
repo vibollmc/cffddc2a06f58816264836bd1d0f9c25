@@ -104,6 +104,9 @@ namespace QLVB.WebUI.Common.Role
                                 .FirstOrDefault(p => p.intid == userId)
                                 .intnhomquyen;
 
+            //int? idnhomquyen = null;
+            //var canbo = context.Canbos.FirstOrDefault(p => p.intid == userId);
+            //if (canbo != null) idnhomquyen = canbo.intnhomquyen;
             var roles = context.Quyens
                         .Where(p => p.inttrangthai == 1)    // chi lay nhung quyen dang duoc active
                         .Join(
