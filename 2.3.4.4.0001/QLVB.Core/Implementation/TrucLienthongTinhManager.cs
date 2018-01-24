@@ -247,8 +247,17 @@ namespace QLVB.Core.Implementation
                 throw ex;
             }
         }
+        public ResultFunction NhanVanBan1()
 
-        public ResultFunction NhanVanBan()
+        {
+            SendStatusByIdVanbanDenMail(19, "03", "Tiếp nhận", "Văn thư", "Phòng Tư Pháp");
+            SendStatusByIdVanbanDenMail(19, "04", "Đã Phân công", "Lãnh đạo", "Phòng Tư pháp");
+            SendStatusByIdVanbanDenMail(19, "05", "Đang xử lý", "Lãnh đạo", "Phòng Tư pháp");
+            SendStatusByIdVanbanDenMail(19, "06", "Hoàn thành", "Lãnh đạo", "Phòng Nội vụ");
+            return null;
+
+        }
+            public ResultFunction NhanVanBan()
         {
             var kq = new ResultFunction {id = -1};
             try
