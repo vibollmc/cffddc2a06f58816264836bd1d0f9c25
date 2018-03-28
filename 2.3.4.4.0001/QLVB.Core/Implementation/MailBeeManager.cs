@@ -185,6 +185,7 @@ namespace QLVB.Core.Implementation
                     kq = SendSMTP_Donvikhac(idvanban, listSendDonvi_normal, intloaivanban, isUpdateTrangthai);
                 }
             }
+
             return kq;
         }
 

@@ -22,9 +22,23 @@ namespace QLVB.DTO.Tinhhinhxuly
         public int idsovb { get; set; }
         public IEnumerable<SoVanban> Sovanban { get; set; }
     }
+    public class ListcoquanbenngoaiViewModel
+    {
+        public int iddonvi { get; set; }
+        public IEnumerable<Tochucdoitac> Donvi { get; set; }
+
+        public DateTime dteNgaybd { get; set; }
+
+        public DateTime dteNgaykt { get; set; }
+
+        public int idloaingay { get; set; }
+        public int idsovb { get; set; }
+        public IEnumerable<SoVanban> Sovanban { get; set; }
+    }
     public enum enumidloaingay
     {
         Vanbanden = 1,
-        Thoihanxuly = 2
+        Thoihanxuly = 2,
+        Vanbandi =3
     }
 }

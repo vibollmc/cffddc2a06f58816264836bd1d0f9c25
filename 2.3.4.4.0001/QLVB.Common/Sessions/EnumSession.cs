@@ -42,7 +42,8 @@ namespace QLVB.Common.Sessions
         {
             Vanbanden = 1,
             Quytrinh = 2,
-            Ykcd = 3
+            Ykcd = 3,
+            Vanbandi =4
         }
 
 

@@ -26,8 +26,12 @@ namespace QLVB.DAL
         {
             try
             {
+                if (vb.intsoban == 0) vb.intsoban = null;
+                if (vb.intsoto == 0) vb.intsoto = null;
                 vb.strngaynhanvb = DateTime.Now;
                 vb.inttrangthai = (int)enumVanbandenmail.inttrangthai.Chuacapnhat;
+                if (vb.strngayky.HasValue)
+                    vb.strngayky = vb.strngayky.Value.Date;
                 context.Vanbandenmails.Add(vb);
                 context.SaveChanges();
                 return vb.intid;

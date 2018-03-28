@@ -12,6 +12,8 @@ using QLVB.Common.Utilities;
 using QLVB.Common.Sessions;
 using QLVB.DTO.TinhhinhXulyVanbanDi;
 using QLVB.DTO;
+using QLVB.DTO.Tinhhinhxuly;
+using QLVB.DTO.Vanbandi;
 
 namespace QLVB.Core.Implementation
 {
@@ -24,6 +26,17 @@ namespace QLVB.Core.Implementation
         {
             _tinhhinhxlRepo = tinhhinhxlRepo;
         }
+
+        public ListcoquanbenngoaiViewModel GetListDonvi(int? iddonvi, string strngaybd, string strngaykt, int? idloaingay, int? idsovb)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ListVanbandiViewModel> GetListVanbandi(int intloai, int iddonvi, string strngaybd, string strngaykt, int idloaingay, int idsovb)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<TinhhinhXulyVanbanDiViewModel> GetTinhhinhXulyVanbanDi()
         {
             return null;
@@ -47,6 +60,11 @@ namespace QLVB.Core.Implementation
             {
                 id = addObject.intid
             };
+        }
+
+        public IEnumerable<XLVanbandi> TonghopVBDi(int iddonvi, string strngaybd, string strngaykt, int idloaingay, int idsovb)
+        {
+            throw new NotImplementedException();
         }
 
         IEnumerable<TinhhinhXulyVanBanDi> ITinhhinhXulyVanbanDiManager.GetTinhhinhXulyVanbanDi(int idguivanban)

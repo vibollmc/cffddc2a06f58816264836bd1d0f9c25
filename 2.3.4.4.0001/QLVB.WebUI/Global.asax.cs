@@ -96,7 +96,7 @@ namespace QLVB.WebUI
 
                if (truclienthongManager != null)
                {
-                   truclienthongManager.ReceiveStatus();
+                //   truclienthongManager.ReceiveStatus(); 
                }
 
                        //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();

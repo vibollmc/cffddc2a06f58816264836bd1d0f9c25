@@ -119,17 +119,21 @@
 
         }
     }
+
+    var intervalSendMail;
+    var intervalReceiveMail;
+    var intervalSendTHVB;
     $(function () {
         SetMenuType('@strMenuType');
         var intTimeAutoMail = '@intTimeAutoMail';
         var second = intTimeAutoMail * 60;
         var msReceive = second * 1000;
-        setInterval(AutoReceiveMail, msReceive + 10000);
+        intervalReceiveMail = setInterval(AutoReceiveMail, msReceive + 10000);
         setInterval(AutoReceiveTructinh, msReceive);
 
-        var SendSecond = 10 * 60;
+        var SendSecond = 60;
         var msSend = SendSecond * 1000;
-        setInterval(AutoSendMail, msSend);
+        intervalSendMail = setInterval(AutoSendMail, msSend);
 
         var intTimeAutoSendTHVB = '@intTimeAutoSendTHVB';
         var msSendTHVB = intTimeAutoSendTHVB * 60 * 1000;
@@ -137,7 +141,7 @@
         // gui so lieu lap tuc
         var intStartSendTHVB = '@intStartSendTHVB';
         if (intStartSendTHVB == 1) {
-            AutoSendTHVB();
+            intervalSendTHVB = AutoSendTHVB();
         }
 
     });

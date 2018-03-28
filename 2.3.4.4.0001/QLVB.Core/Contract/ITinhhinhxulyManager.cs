@@ -19,7 +19,7 @@ namespace QLVB.Core.Contract
         /// lay ds cac phong ban 
         /// </summary>
         /// <returns></returns>
-        ListdonviViewModel GetListDonvi(int? iddonvi, string strngaybd, string strngaykt, int? idloaingay, int? idsovb);
+        ListdonviViewModel GetListDonvi(int? iddonvi, string strngaybd, string strngaykt, int? idloaingay, int? idsovb);       
 
         /// <summary>
         /// thong tin tong hop tinh hinh xu ly cua iddonvi
