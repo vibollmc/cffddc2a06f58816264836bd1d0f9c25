@@ -13,6 +13,14 @@ namespace QLVB.Core.Contract
 {
     public interface ITinhhinhxulyManager
     {
+        #region Vanbandi
+
+        IEnumerable<XLVanbandi> TonghopVbDi(string strngaybd, string strngaykt, LoaiNgay loaingay);
+
+        IEnumerable<DTO.Vanbandi.ListVanbandiViewModel> GetListVanbandi(LoaiXuLyVbDi loaiXuLyVbDi, string donvi,
+            string strngaybd,
+            string strngaykt, LoaiNgay loaingay);
+        #endregion
         #region Vanbanden
 
         /// <summary>

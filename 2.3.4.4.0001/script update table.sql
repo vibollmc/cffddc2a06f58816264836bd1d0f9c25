@@ -1,4 +1,8 @@
-﻿--========== cập nhật: 15/11/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
+﻿--========== cập nhật: 30/03/2018 -- cập nhật tình hình xử lý văn bản đi ==========
+INSERT [dbo].[Menu] ([Id], [ParentId], [intlevel], [strmota], [straction], [strcontroller], [stricon], [blopenwindow], [intorder], [strquyen], [inttrangthai]) VALUES (40, 4, 1, N'Tình hình xử lý văn bản đi', N'Vanbandi', N'Tinhhinhxuly', NULL, 0, 2, N'Tinhhinhxuly', 1)
+GO
+
+--========== cập nhật: 15/11/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========
 CREATE TABLE [dbo].[TinhhinhXulyVanBanDi](
 	[intid] [int] IDENTITY(1,1) NOT NULL,
 	[intidguivanban] [int] NULL,

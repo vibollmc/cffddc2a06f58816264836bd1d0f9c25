@@ -146,9 +146,12 @@
     <Compile Include="Tinhhinhxuly\FlowchartTonghopViewModel.cs" />
     <Compile Include="Tinhhinhxuly\ListdonviViewModel.cs" />
     <Compile Include="Tinhhinhxuly\ListQuytrinhViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\ListTonghopVbDiViewModel.cs" />
     <Compile Include="Tinhhinhxuly\ListVanbandenViewModel.cs" />
     <Compile Include="Tinhhinhxuly\QuytrinhVBDenViewModel.cs" />
+    <Compile Include="Tinhhinhxuly\VanbandiViewModel.cs" />
     <Compile Include="Tinhhinhxuly\XLVanbanden.cs" />
+    <Compile Include="Tinhhinhxuly\XLVanbandi.cs" />
     <Compile Include="TonghopVanbanViewModel.cs" />
     <Compile Include="Tonghop\ListTonghopVBDenViewModel.cs" />
     <Compile Include="TracuuLuutru\CapnhatLuutruViewModel.cs" />

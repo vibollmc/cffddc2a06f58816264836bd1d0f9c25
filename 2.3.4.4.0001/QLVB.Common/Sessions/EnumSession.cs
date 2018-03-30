@@ -35,14 +35,16 @@ namespace QLVB.Common.Sessions
             HSCV = 8,
             TinhhinhQuytrinh = 9,
             TracuuVBDen = 10,
-            TracuuVBDi = 11
+            TracuuVBDi = 11,
+            TinhhinhVBDi = 12
         }
 
         public enum TonghopXuly
         {
             Vanbanden = 1,
             Quytrinh = 2,
-            Ykcd = 3
+            Ykcd = 3,
+            Vanbandi = 4
         }
 
 

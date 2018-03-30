@@ -1,0 +1,112 @@
+﻿@using QLVB.Common.Date;
+@model QLVB.DTO.Tinhhinhxuly.VanbandiViewModel
+@{
+    ViewBag.Title = "Vanbandi";
+    var strngaybd = DateServices.FormatDateVN(Model.Ngaybd);
+    var strngaykt = DateServices.FormatDateVN(Model.Ngaykt);
+
+    var Loaingay = new[]{
+        new {value = "1", name = "Ngày ký văn bản"},
+        new {value = "2", name = "Ngày gửi văn bản"}
+    };
+}
+@section header{
+    <i class="glyphicon glyphicon-tasks">&nbsp;</i>Tổng hợp tình hình xử lý văn bản đi
+}
+<div class="box ">
+    <header>
+        <nav class="box-toolbar">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button id="Thongkebtn" type="button" class="btn btn-sm btn-primary btn-flat" title="Tổng hợp">
+                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;Thống kê
+                    </button>
+                    <button id="PrintTonghopVBDenbtn" type="button" class="btn btn-sm btn-primary btn-flat button-box">
+                        <i class="glyphicon glyphicon-print"></i>&nbsp;In&nbsp;
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    Từ ngày &nbsp;
+                    @(Html.Kendo().DatePicker()
+                          .Name("strngaybd")
+                          .Value(Model.Ngaybd)
+                          .Format("dd/MM/yyyy")
+                          )
+                    &nbsp;&nbsp;==>&nbsp;&nbsp;
+                    @(Html.Kendo().DatePicker()
+                          .Name("strngaykt")
+                          .Value(Model.Ngaykt)
+                          .Format("dd/MM/yyyy")
+                          )
+                </div>
+                <div class="col-xs-6">
+                    @(Html.Kendo().DropDownList()
+                          .Name("idloaingay")
+                          .BindTo(Loaingay)
+                          .DataTextField("name")
+                          .DataValueField("value")
+                          .HtmlAttributes(new { @style = "width:200px;" })
+                          .Value(((int)Model.Loaingay).ToString())
+                          )
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
+<div id="TonghopVBDi" class="row">
+    @Html.Action("_TonghopVBDi", "Tinhhinhxuly", new
+    {
+        strngaybd,
+        strngaykt,
+        loaingay = Model.Loaingay
+    })
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+
+    $('#Thongkebtn').click(function() {
+        ReloadTonghopxuly();
+    });
+
+	function ReloadTonghopxuly() {
+		ShowLoading();
+		var strngaybd = $('#strngaybd').val();
+		var strngaykt = $('#strngaykt').val();
+	    var idloaingay = $('#idloaingay').val();
+		var url = '@Url.Action("_TonghopVBDi", "Tinhhinhxuly")';
+	    url = url + '?strngaybd=' + strngaybd + '&strngaykt=' + strngaykt;
+	    url = url + "&loaingay=" + idloaingay;
+		$('#TonghopVBDi').load(url);
+	}
+    function OpenDetail(intloai, donvi) {
+        //LoaiXuLyVbDi loaiXuLyVbDi, string donvi, string strngaybd,string strngaykt, LoaiNgay loaingay, bool? isBack
+        var strngaybd = $('#strngaybd').val();
+        var strngaykt = $('#strngaykt').val();
+        var idloaingay = $('#idloaingay').val();
+        var url = '@Url.Action("ListVanbandi","Tinhhinhxuly")';
+        url = url + '?loaiXuLyVbDi=' + intloai;
+        url = url + '&donvi=' + donvi;
+        url = url + '&strngaybd=' + strngaybd + '&strngaykt=' + strngaykt;
+        url = url + "&loaingay=" + idloaingay;
+        $().redirect(url);
+    }
+
+    $('#PrintTonghopVBDenbtn').click(function() {
+        PrintElement('#TonghopVBDi');
+    });
+    $('#strngaybd').keyup(function() {
+        var ngay = $('#strngaybd').val();
+        var _ngay = editdate(ngay);
+        $('#strngaybd').val(_ngay);
+    });
+    $('#strngaykt').keyup(function() {
+        var ngay = $('#strngaykt').val();
+        var _ngay = editdate(ngay);
+        $('#strngaykt').val(_ngay);
+    });
+</script>
