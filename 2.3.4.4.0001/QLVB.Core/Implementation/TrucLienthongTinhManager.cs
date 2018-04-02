@@ -413,10 +413,12 @@ namespace QLVB.Core.Implementation
                         vbdenMail.strngayky = outDateTime;
                     }                    
                     vbdenMail.strkyhieu = objDocument.sokyhieuvanban;
-                    vbdenMail.strnoiguivb = objDocument.tennoiphathanh;
-
-                    vbdenMail.strmadinhdanh = (!string.IsNullOrEmpty(objDocument.manoiphathanh)) ? objDocument.manoiphathanh : objReceivedMessage.sendingsystemid ;
+                   
+                     var madinhdanh = vbdenMail.strmadinhdanh = (!string.IsNullOrEmpty(objDocument.manoiphathanh)) ? objDocument.manoiphathanh : objReceivedMessage.sendingsystemid ;
                                         
+                    var orgs = this.GetAllOrganization();
+                    var orgnhan = orgs.FirstOrDefault(x => x.code == madinhdanh);                    
+                    vbdenMail.strnoiguivb = (!string.IsNullOrEmpty(objDocument.tennoiphathanh)) ? objDocument.tennoiphathanh: orgnhan.name;
 
                     vbdenMail.strnguoiky = objDocument.nguoiky;
 
