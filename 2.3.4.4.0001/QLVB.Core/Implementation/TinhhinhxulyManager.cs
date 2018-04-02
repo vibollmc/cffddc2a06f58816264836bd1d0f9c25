@@ -43,6 +43,7 @@ namespace QLVB.Core.Implementation
         private ITinhtrangQuytrinhRepository _tinhtrangqtRepo;
         private IHosoQuytrinhXulyRepository _hsqtRepo;
         private IQuytrinhVersionRepository _qtVersionRepo;
+        private IGuiVanbanRepository _guiVanbanRepository;
 
         public TinhhinhxulyManager(ILogger logger,
             IVanbandenRepository vanbandenRepo, IPhanloaiVanbanRepository plvanbanRepo,
@@ -56,7 +57,7 @@ namespace QLVB.Core.Implementation
             IAttachVanbanRepository fileRepo,
             IPhanloaiQuytrinhRepository loaiquytrinhRepo, IQuytrinhRepository quytrinhRepo,
             IRoleManager role, ISessionServices session, ITinhtrangQuytrinhRepository tinhtrangRepo,
-            IHosoQuytrinhXulyRepository hsqtRepo, IQuytrinhVersionRepository qtVersionRepo)
+            IHosoQuytrinhXulyRepository hsqtRepo, IQuytrinhVersionRepository qtVersionRepo, IGuiVanbanRepository guiVanbanRepository)
         {
             _logger = logger;
             _vanbandenRepo = vanbandenRepo;
@@ -81,9 +82,116 @@ namespace QLVB.Core.Implementation
             _tinhtrangqtRepo = tinhtrangRepo;
             _hsqtRepo = hsqtRepo;
             _qtVersionRepo = qtVersionRepo;
+            _guiVanbanRepository = guiVanbanRepository;
         }
 
         #endregion Constructor
+
+        #region Vanbandi
+
+        public IEnumerable<XLVanbandi> TonghopVbDi(string strngaybd, string strngaykt, LoaiNgay loaingay)
+        {
+            var dtengaybd = DateServices.FormatDateEn(strngaybd);
+            var dtengaykt = DateServices.FormatDateEn(strngaykt);
+
+            var dteNow = DateTime.Now;
+
+            var data = _guiVanbanRepository.GuiVanbans
+                .Where(x => dtengaybd <= x.strngaygui && x.strngaygui <= dtengaykt &&
+                            x.intloaivanban == (int) enumLuutruVanban.intloaivanban.vanbandi &&
+                            x.intloaigui == (int) enumGuiVanban.intloaigui.Tructinh)
+                .Join(_vanbandiRepo.Vanbandis,
+                    g => g.intidvanban,
+                    v => v.intid,
+                    (g, v) => new {g.intiddonvi, g.strtendonvi, g.strngaygui, g.strngaytiepnhan, g.strngaydangxuly, g.strngayhoanthanh, v.strngayky, v.strhanxuly});
+
+            var xlvbdi = data
+                .Where(x => (loaingay == LoaiNgay.NgayGui && dtengaybd <= x.strngaygui &&
+                             x.strngaygui <= dtengaykt) ||
+                            (loaingay == LoaiNgay.NgayKy && dtengaybd <= x.strngayky &&
+                             x.strngayky <= dtengaykt))
+                .GroupBy(g => new {g.intiddonvi, g.strtendonvi})
+                .Select(x => new XLVanbandi
+                {
+                    IdDonvi = x.Key.intiddonvi,
+                    Donvi = x.Key.strtendonvi,
+                    Dagui = x.Count(y => y.strngaygui.HasValue && !y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue && (!y.strhanxuly.HasValue || (y.strhanxuly.HasValue && y.strhanxuly >= dteNow))),
+                    Tiepnhan = x.Count(y => y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
+                    DangXuly = x.Count(y => y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
+                    Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue),
+                    Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow)
+                });
+
+            return xlvbdi;
+        }
+
+        public IEnumerable<DTO.Vanbandi.ListVanbandiViewModel> GetListVanbandi(LoaiXuLyVbDi loaiXuLyVbDi, string donvi, string strngaybd,
+            string strngaykt, LoaiNgay loaingay)
+        {
+            var dtengaybd = DateServices.FormatDateEn(strngaybd);
+            var dtengaykt = DateServices.FormatDateEn(strngaykt);
+            var dteNow = DateTime.Now;
+
+            var result = _guiVanbanRepository.GuiVanbans
+                .Where(x => x.intloaigui == (int) enumGuiVanban.intloaigui.Tructinh && x.intloaivanban == (int)enumLuutruVanban.intloaivanban.vanbandi)
+                .Join(_vanbandiRepo.Vanbandis,
+                    g => g.intidvanban,
+                    v => v.intid,
+                    (g, v) => new {g, v})
+                .Where(
+                    x => (
+                             (loaingay == LoaiNgay.NgayGui && dtengaybd <= x.g.strngaygui &&
+                              x.g.strngaygui <= dtengaykt) ||
+
+                             (loaingay == LoaiNgay.NgayKy && dtengaybd <= x.v.strngayky &&
+                              x.v.strngayky <= dtengaykt)
+                         )
+                         &&
+                         (
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Dagui && x.g.strngaygui.HasValue &&
+                              !x.g.strngaytiepnhan.HasValue && !x.g.strngaydangxuly.HasValue &&
+                              !x.g.strngayhoanthanh.HasValue &&
+                              (!x.v.strhanxuly.HasValue ||
+                               (x.v.strhanxuly.HasValue && x.v.strhanxuly >= dteNow))) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Datiepnhan && x.g.strngaytiepnhan.HasValue &&
+                              !x.g.strngaydangxuly.HasValue && !x.g.strngayhoanthanh.HasValue) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Dangxuly && x.g.strngaydangxuly.HasValue &&
+                              !x.g.strngayhoanthanh.HasValue) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanh && x.g.strngayhoanthanh.HasValue) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Quahan && !x.g.strngayhoanthanh.HasValue &&
+                              x.v.strhanxuly.HasValue && x.v.strhanxuly < dteNow)
+                         )
+                         &&
+                         (
+                            (donvi.Trim() == "") ||
+                            (donvi.Trim() != "" && donvi == x.g.strtendonvi)
+                         )
+                )
+                .Select(x => new DTO.Vanbandi.ListVanbandiViewModel
+                {
+                    intid = x.v.intid,
+                    dtengayky = x.v.strngayky,
+                    intso = x.v.intso,
+                    strkyhieu = x.v.strkyhieu,
+                    strtrichyeu = x.v.strtrichyeu,
+                    strnoinhan = x.v.strnoinhan,
+                    dtehanxuly = x.v.strhanxuly,
+                    inttrangthai = x.v.inttrangthai,
+                    IsAttach = _fileRepo.AttachVanbans
+                            .Any(a => a.intidvanban == x.v.intid && 
+                            a.inttrangthai == (int)enumAttachVanban.inttrangthai.IsActive &&
+                            a.intloai == (int)enumAttachVanban.intloai.Vanbandi),
+                    strsophu = !string.IsNullOrEmpty(x.v.strmorong) ? x.v.strmorong : ""
+                });
+
+            return result;
+        }
+
+        #endregion
 
         #region Vanbanden
 

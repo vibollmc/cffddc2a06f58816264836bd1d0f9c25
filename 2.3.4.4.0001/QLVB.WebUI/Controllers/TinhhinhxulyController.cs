@@ -38,6 +38,225 @@ namespace QLVB.WebUI.Controllers
            
         }
 
+        #region Vanbandi
+
+        public ActionResult Vanbandi(bool? isBack, string strngaybd, string strngaykt, LoaiNgay? loaingay) 
+        {
+            if (isBack == true)
+            {
+                var _SearchType = Convert.ToInt32(_session.GetObject(AppConts.SessionTonghopXuly));
+                if (_SearchType == (int)EnumSession.TonghopXuly.Vanbandi)
+                {
+                    var strSearchValues = _session.GetObject(AppConts.SessionTonghopValues).ToString();
+
+                    var _strngaybd = _session.GetStringSearchValues("strngaybd", strSearchValues);
+                    var _strngaykt = _session.GetStringSearchValues("strngaykt", strSearchValues);
+                    var _loaingay = _session.GetIntSearchValues("loaingay", strSearchValues);
+
+                    try
+                    {
+                        strngaybd = _strngaybd;
+                        strngaykt = _strngaykt;
+                        loaingay = (LoaiNgay)_loaingay;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            var model = new VanbandiViewModel
+            {
+                Loaingay = loaingay ?? LoaiNgay.NgayKy,
+
+                Ngaybd = string.IsNullOrWhiteSpace(strngaybd)
+                    ? DateTime.Now
+                    : (DateServices.FormatDateEn(strngaybd) ?? DateTime.Now),
+
+                Ngaykt = string.IsNullOrWhiteSpace(strngaykt)
+                    ? DateTime.Now
+                    : (DateServices.FormatDateEn(strngaykt) ?? DateTime.Now)
+            };
+
+
+
+            return View(model);
+        }
+
+        public ActionResult _TonghopVBDi(string strngaybd, string strngaykt, LoaiNgay loaingay)
+        {
+
+            var model = _xuly.TonghopVbDi(strngaybd, strngaykt, loaingay);
+            return PartialView(model);
+        }
+
+        public ActionResult ListVanbandi(LoaiXuLyVbDi loaiXuLyVbDi, string donvi, string strngaybd,
+            string strngaykt, LoaiNgay loaingay, bool? isBack)
+        {
+            if (isBack == true)
+            {
+                var searchType = Convert.ToInt32(_session.GetObject(AppConts.SessionTonghopXuly));
+                if (searchType == (int)EnumSession.TonghopXuly.Vanbandi)
+                {
+                    var strSearchValues = _session.GetObject(AppConts.SessionTonghopValues).ToString();
+
+                    var _strngaybd = _session.GetStringSearchValues("strngaybd", strSearchValues);
+                    var _strngaykt = _session.GetStringSearchValues("strngaykt", strSearchValues);
+                    var _donvi = _session.GetStringSearchValues("donvi", strSearchValues);
+                    var _loaixuly = _session.GetIntSearchValues("loaixuly", strSearchValues);
+                    var _loaingay = _session.GetIntSearchValues("loaingay", strSearchValues);
+
+                    try
+                    {
+                        donvi = _donvi;
+                        strngaybd = _strngaybd;
+                        strngaykt = _strngaykt;
+                        loaiXuLyVbDi = (LoaiXuLyVbDi) _loaixuly;
+                        loaingay = (LoaiNgay) _loaingay;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            else
+            {
+                var strSearchValues = string.Empty;
+                strSearchValues += "strngaybd=" + strngaybd + ";strngaykt=" + strngaykt + ";";
+                strSearchValues += "donvi=" + donvi + ";";
+                strSearchValues += "loaingay=" + (int)loaingay + ";";
+                strSearchValues += "loaixuly=" + (int)loaiXuLyVbDi + ";";
+
+                // luu cac gia tri vao session
+                _session.InsertObject(AppConts.SessionTonghopXuly, EnumSession.TonghopXuly.Vanbandi);
+                _session.InsertObject(AppConts.SessionTonghopValues, strSearchValues);
+            }
+
+            //===============================================
+            var model = new ListTonghopVbDiViewModel();
+            ViewBag.intPage = 1;
+            var strloaivanban = string.Empty;
+            switch (loaiXuLyVbDi)
+            {
+                case LoaiXuLyVbDi.Dangxuly:
+                    strloaivanban = "DANH SÁCH VĂN BẢN ĐANG XỬ LÝ";
+                    break;
+                case LoaiXuLyVbDi.Datiepnhan:
+                    strloaivanban = "DANH SÁCH VĂN BẢN ĐÃ TIẾP NHẬN";
+                    break;
+                case LoaiXuLyVbDi.Hoanthanh:
+                    strloaivanban = "DANH SÁCH VĂN BẢN HOÀN THÀNH";
+                    break;
+                case LoaiXuLyVbDi.Quahan:
+                    strloaivanban = "DANH SÁCH VĂN BẢN QUÁ HẠN";
+                    break;
+                default:
+                    strloaivanban = "DANH SÁCH VĂN BẢN ĐÃ GỬI";
+                    break;
+            }
+            model.LoaiNgay = loaingay;
+            model.LoaiVanBan = strloaivanban;
+            model.Donvi = donvi;
+            model.Ngaybd = strngaybd;
+            model.Ngaykt = strngaykt;
+            model.LoaiXuly = loaiXuLyVbDi;
+
+            return View(model);
+        }
+
+        public ActionResult Vanbandi_Read(
+            [DataSourceRequest]DataSourceRequest request,
+            LoaiXuLyVbDi loaiXuLyVbDi, string donvi, string strngaybd, string strngaykt, LoaiNgay loaingay)
+        {
+            var currentPage = request.Page;
+
+            // luu trang dang xem vao session
+            _session.InsertObject(AppConts.SessionSearchPageType, EnumSession.PageType.TinhhinhVBDi);
+            _session.InsertObject(AppConts.SessionSearchPageValues, currentPage);
+
+
+            return Json(_xuly.GetListVanbandi(loaiXuLyVbDi, donvi, strngaybd, strngaykt, loaingay)
+                .OrderByDescending(p => p.strnoinhan)
+                .ThenByDescending(p => p.dtengayky)
+                .ThenByDescending(p => p.intso)
+                .ToDataSourceResult(request));
+        }
+
+        public FileResult ExportVanbanDi([DataSourceRequest]DataSourceRequest request,
+            LoaiXuLyVbDi loaiXuLyVbDi, string donvi, string strngaybd, string strngaykt, LoaiNgay loaingay)
+        {
+
+            //Get the data representing the current grid state - page, sort and filter
+            //var products = new List<Product>(db.Products.ToDataSourceResult(request).Data as IEnumerable<Product>);
+
+            var vanban = _xuly.GetListVanbandi(loaiXuLyVbDi, donvi, strngaybd, strngaykt, loaingay)
+                .OrderByDescending(p => p.strnoinhan)
+                .ThenByDescending(p => p.dtengayky)
+                .ThenByDescending(p => p.intso)
+                .ToList();
+
+
+
+            using (var stream = new System.IO.MemoryStream())
+            {
+                /* Create the worksheet. */
+
+                var spreadsheet = Excel.CreateWorkbook(stream);
+                Excel.AddBasicStyles(spreadsheet);
+                Excel.AddAdditionalStyles(spreadsheet);
+                Excel.AddWorksheet(spreadsheet, "Văn bản đi");
+                var worksheet = spreadsheet.WorkbookPart.WorksheetParts.First().Worksheet;
+
+                //create columns and set their widths
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 1, "Ngày ký", false, false);
+                Excel.SetColumnWidth(worksheet, 1, 15);
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 2, "Số", false, false);
+                Excel.SetColumnWidth(worksheet, 2, 10);
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 3, "Ký hiệu", false, false);
+                Excel.SetColumnWidth(worksheet, 3, 15);
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 4, "Trích yếu", false, false);
+                Excel.SetColumnWidth(worksheet, 4, 50);
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 5, "Nơi nhận", false, false);
+                Excel.SetColumnWidth(worksheet, 5, 50);
+
+                Excel.SetColumnHeadingValue(spreadsheet, worksheet, 6, "Hạn trả lời", false, false);
+                Excel.SetColumnWidth(worksheet, 6, 15);
+
+
+                /* Add the data to the worksheet. */
+
+                // For each row of data...
+                for (int idx = 0; idx < vanban.Count; idx++)
+                {
+                    // Set the field values in the spreadsheet for the current row.
+                    var strngayky = DateServices.FormatDateVN(vanban[idx].dtengayky);
+                    Excel.SetCellValue(spreadsheet, worksheet, 1, (uint)idx + 2, strngayky, false, false);
+
+                    Excel.SetCellValue(spreadsheet, worksheet, 2, (uint)idx + 2, vanban[idx].intso.ToString(), false, false);
+                    Excel.SetCellValue(spreadsheet, worksheet, 3, (uint)idx + 2, vanban[idx].strkyhieu, false, false);
+                    Excel.SetCellValue(spreadsheet, worksheet, 4, (uint)idx + 2, vanban[idx].strtrichyeu, false, false);
+                    Excel.SetCellValue(spreadsheet, worksheet, 5, (uint)idx + 2, vanban[idx].strnoinhan, false, false);
+                    Excel.SetCellValue(spreadsheet, worksheet, 6, (uint)idx + 2, string.Format("{0:dd/MM/yyyy}",vanban[idx].dtehanxuly), false, false);
+                }
+
+                /* Save the worksheet and store it in Session using the spreadsheet title. */
+
+                worksheet.Save();
+                spreadsheet.Close();
+
+                return File(stream.ToArray(),   //The binary data of the XLS file
+                "application/vnd.ms-excel", //MIME type of Excel files
+                "ExportVanbandi.xlsx");
+            }
+        }
+
+        #endregion
+
         #region Vanbanden
         public ActionResult Vanbanden(bool? isBack,
             int? iddonvi, string strngaybd, string strngaykt, int? idloaingay, int? idsovb)

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<QLVB.DTO.Tinhhinhxuly.XLVanbandi>
+@{
+    var count = 0;
+    var tong = 0;
+    var tongDagui = 0;
+    var tongTiepnhan = 0;
+    var tongDangXl = 0;
+    var tongHoanthanh = 0;
+    var tongQuahan = 0;
+    var tongCong = 0;
+}
+<table id="detail-tinhhinhxuly" class="table table-bordered table-condensed responsive-table" style="width: 100%">
+    <tr style="font-weight:bold;">
+        <td style="width: 5%; text-align: center;">STT</td>
+        <td style="width:auto">Đơn vị</td>
+        <td style="width: 10% ;text-align:center;">VB Đã gửi</td>
+        <td style="width: 10%; text-align: center;">VB Đã tiếp nhận</td>
+        <td style="width: 10%; text-align: center;">VB Đang xử lý</td>
+        <td style="width: 10%; text-align: center;">VB Đã quá hạn</td>
+        <td style="width: 10%; text-align: center;">VB Hoàn thành</td>
+        <td style="width: 10%; text-align: center;">Tổng</td>
+    </tr>
+    @foreach (var m in Model)
+    {
+        count++;
+        tong = m.Dagui + m.Tiepnhan + m.DangXuly + m.Hoanthanh + m.Quahan;
+        tongDagui += m.Dagui;
+        tongTiepnhan += m.Tiepnhan;
+        tongDangXl += m.DangXuly;
+        tongHoanthanh += m.Hoanthanh;
+        tongQuahan += m.Quahan;
+        <tr id="@m.Donvi">
+            <td style="width:5%; text-align: center;">@count</td>
+            <td style="width:auto;cursor:pointer">@m.Donvi</td>
+            <td style="width:10%;text-align:center;cursor:pointer " onclick="OpenDetail(1,'@m.Donvi')">@m.Dagui</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(2,'@m.Donvi')">@m.Tiepnhan</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(3,'@m.Donvi')">@m.DangXuly</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(4,'@m.Donvi')">@m.Quahan</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(5,'@m.Donvi')">@m.Hoanthanh</td>
+            <td style="width: 10%; text-align: center;">@tong</td>
+
+        </tr>
+    }
+    @{
+        tongCong = tongDagui + tongTiepnhan + tongDangXl + tongHoanthanh + tongQuahan;
+    }
+    <tr id="TongCong" style="color:red;font-weight:bold;">
+        <td style="width: 5%; text-align: center;">&nbsp;</td>
+        <td style="width:auto;cursor:pointer" onclick="LoadPieChart(0)">TỔNG CỘNG</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(1,'')">@tongDagui</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(2,'')">@tongTiepnhan</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(3,'')">@tongDangXl</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(4,'')">@tongQuahan</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(5,'')">@tongHoanthanh</td>
+        <td style="width: 10%; text-align: center;cursor:pointer">@tongCong</td>
+    </tr>
+</table>
+@Scripts.Render("~/bundles/d3")
+<script type="text/javascript">
+    $(document).ready(function() {
+        HideLoading();
+    });
+</script>
+

@@ -24,7 +24,6 @@
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
     <UseGlobalApplicationHostFile />
-    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -441,7 +440,6 @@
       <DependentUpon>qlvbDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="Views\Tinhhinhxulyvanbandi\TinhhinhxulyvanbandiController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Certificate\images\DN.jpg" />
@@ -5577,7 +5575,9 @@
     <Content Include="Views\Vanbandi\_GetDonviTrucTinh.cshtml" />
     <Content Include="Views\Vanbandidientu\_TinhHinhXuLy.cshtml" />
     <Content Include="Views\Vanbandidientu\_ViewTinhHinhXuLy.cshtml" />
-    <Content Include="Views\Tinhhinhxulyvanbandi\Vanbandi.cshtml" />
+    <Content Include="Views\Tinhhinhxuly\Vanbandi.cshtml" />
+    <Content Include="Views\Tinhhinhxuly\_TonghopVBDi.cshtml" />
+    <Content Include="Views\Tinhhinhxuly\ListVanbandi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
