@@ -92,15 +92,19 @@ namespace QLVB.WebUI
 
                isProcessing = true;
 
+               //luc nao build trien khai thi mo ra build
                //var truclienthongManager = NinjectWebCommon.Resolve<ITrucLienthongTinhManager>();
+               //if (truclienthongManager != null)
+               //{
+               //    truclienthongManager.ReceiveStatus();
+               //}
 
-               }
-                       //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
+               //var edxmlManager = NinjectWebCommon.Resolve<IEdxmlManager>();
 
-                       //if (edxmlManager != null)
-                       //{
-                       //  edxmlManager.ReceiveStatusFile();
-                       //}
+               //if (edxmlManager != null)
+               //{
+               //  edxmlManager.ReceiveStatusFile();
+               //}
 
                isProcessing = false;
 
