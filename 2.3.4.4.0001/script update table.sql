@@ -1,4 +1,27 @@
-﻿--========== cập nhật: 30/03/2018 -- cập nhật tình hình xử lý văn bản đi ==========
+﻿--========== cập nhật: 02/05/2018 -- cập nhật tình hình xử lý văn bản đi ==========
+CREATE NONCLUSTERED INDEX [Idx_strNgaygui] ON [dbo].[GuiVanban]
+(
+	[strngaygui] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+CREATE NONCLUSTERED INDEX [idx_loaivanban] ON [dbo].[GuiVanban]
+(
+	[intloaivanban] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+CREATE NONCLUSTERED INDEX [Idx_loaigui] ON [dbo].[GuiVanban]
+(
+	[intloaigui] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+CREATE NONCLUSTERED INDEX [Idx_intidVanban] ON [dbo].[GuiVanban]
+(
+	[intidvanban] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
+
+
+--========== cập nhật: 30/03/2018 -- cập nhật tình hình xử lý văn bản đi ==========
 INSERT [dbo].[Menu] ([Id], [ParentId], [intlevel], [strmota], [straction], [strcontroller], [stricon], [blopenwindow], [intorder], [strquyen], [inttrangthai]) VALUES (40, 4, 1, N'Tình hình xử lý văn bản đi', N'Vanbandi', N'Tinhhinhxuly', NULL, 0, 2, N'Tinhhinhxuly', 1)
 GO
 

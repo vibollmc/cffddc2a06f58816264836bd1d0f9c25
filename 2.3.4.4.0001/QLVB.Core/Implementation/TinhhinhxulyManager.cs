@@ -96,20 +96,53 @@ namespace QLVB.Core.Implementation
 
             var dteNow = DateTime.Now;
 
-            var data = _guiVanbanRepository.GuiVanbans
-                .Where(x => dtengaybd <= x.strngaygui && x.strngaygui <= dtengaykt &&
-                            x.intloaivanban == (int) enumLuutruVanban.intloaivanban.vanbandi &&
-                            x.intloaigui == (int) enumGuiVanban.intloaigui.Tructinh)
+            var sqlQuery = _guiVanbanRepository.GuiVanbans
                 .Join(_vanbandiRepo.Vanbandis,
                     g => g.intidvanban,
                     v => v.intid,
-                    (g, v) => new {g.intiddonvi, g.strtendonvi, g.strngaygui, g.strngaytiepnhan, g.strngaydangxuly, g.strngayhoanthanh, v.strngayky, v.strhanxuly});
+                    (g, v) => new
+                    {
+                        g.intidvanban,
+                        g.intiddonvi,
+                        g.strtendonvi,
+                        g.strngaygui,
+                        g.strngaytiepnhan,
+                        g.strngaydangxuly,
+                        g.strngayhoanthanh,
+                        g.intloaivanban,
+                        g.intloaigui,
+                        v.strngayky,
+                        v.strhanxuly
+                    })
+                .Where(x => x.intloaivanban == (int) enumLuutruVanban.intloaivanban.vanbandi &&
+                            x.intloaigui == (int) enumGuiVanban.intloaigui.Tructinh &&
+                            ((loaingay == LoaiNgay.NgayGui && dtengaybd <= x.strngaygui &&
+                              x.strngaygui <= dtengaykt) ||
+                             (loaingay == LoaiNgay.NgayKy && dtengaybd <= x.strngayky &&
+                              x.strngayky <= dtengaykt)))
+                .GroupBy(x => new {x.intidvanban, x.strtendonvi})
+                .ToList()
+                .SelectMany(g => g.OrderByDescending(x => x.strngayhoanthanh)
+                    .ThenByDescending(x => x.strngaydangxuly)
+                    .ThenByDescending(x => x.strngaytiepnhan)
+                    .ThenByDescending(x => x.strngaygui)
+                    .Select((y, idx) => new
+                    {
+                        y.intidvanban,
+                        y.intiddonvi,
+                        y.strtendonvi,
+                        y.strngaygui,
+                        y.strngaytiepnhan,
+                        y.strngaydangxuly,
+                        y.strngayhoanthanh,
+                        y.strngayky,
+                        y.strhanxuly,
+                        RowNumber = idx + 1
+                    }));
+
+            var data = sqlQuery.Where(x => x.RowNumber == 1);
 
             var xlvbdi = data
-                .Where(x => (loaingay == LoaiNgay.NgayGui && dtengaybd <= x.strngaygui &&
-                             x.strngaygui <= dtengaykt) ||
-                            (loaingay == LoaiNgay.NgayKy && dtengaybd <= x.strngayky &&
-                             x.strngayky <= dtengaykt))
                 .GroupBy(g => new {g.intiddonvi, g.strtendonvi})
                 .Select(x => new XLVanbandi
                 {
@@ -120,7 +153,8 @@ namespace QLVB.Core.Implementation
                     DangXuly = x.Count(y => y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
                     Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue),
                     Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow)
-                });
+                })
+                .OrderBy(x=> x.Donvi);
 
             return xlvbdi;
         }
@@ -132,14 +166,16 @@ namespace QLVB.Core.Implementation
             var dtengaykt = DateServices.FormatDateEn(strngaykt);
             var dteNow = DateTime.Now;
 
-            var result = _guiVanbanRepository.GuiVanbans
-                .Where(x => x.intloaigui == (int) enumGuiVanban.intloaigui.Tructinh && x.intloaivanban == (int)enumLuutruVanban.intloaivanban.vanbandi)
+            var sqlData = _guiVanbanRepository.GuiVanbans
                 .Join(_vanbandiRepo.Vanbandis,
                     g => g.intidvanban,
                     v => v.intid,
                     (g, v) => new {g, v})
                 .Where(
-                    x => (
+                    x =>
+                         x.g.intloaigui == (int)enumGuiVanban.intloaigui.Tructinh && 
+                         x.g.intloaivanban == (int)enumLuutruVanban.intloaivanban.vanbandi &&
+                         (
                              (loaingay == LoaiNgay.NgayGui && dtengaybd <= x.g.strngaygui &&
                               x.g.strngaygui <= dtengaykt) ||
 
@@ -171,21 +207,63 @@ namespace QLVB.Core.Implementation
                             (donvi.Trim() != "" && donvi == x.g.strtendonvi)
                          )
                 )
+                .Select(x => new
+                {
+                    x.g.intidvanban,
+                    x.g.strtendonvi,
+                    x.g.strngaygui,
+                    x.g.strngaytiepnhan,
+                    x.g.strngaydangxuly,
+                    x.g.strngayhoanthanh,
+
+                    x.v.intid,
+                    x.v.strngayky,
+                    x.v.intso,
+                    x.v.strkyhieu,
+                    x.v.strtrichyeu,
+                    x.v.strnoinhan,
+                    x.v.strhanxuly,
+                    x.v.inttrangthai,
+                    x.v.strmorong
+                })
+                .GroupBy(x => new { x.intidvanban, x.strtendonvi })
+                
+                .ToList()
+                .SelectMany(g => g.OrderByDescending(x => x.strngayhoanthanh)
+                    .ThenByDescending(x => x.strngaydangxuly)
+                    .ThenByDescending(x => x.strngaytiepnhan)
+                    .ThenByDescending(x => x.strngaygui)
+                    .Select((x, idx) => new
+                    {
+                        intid = x.intid,
+                        dtengayky = x.strngayky,
+                        intso = x.intso,
+                        strkyhieu = x.strkyhieu,
+                        strtrichyeu = x.strtrichyeu,
+                        strnoinhan = x.strnoinhan,
+                        dtehanxuly = x.strhanxuly,
+                        inttrangthai = x.inttrangthai,
+                        strsophu = !string.IsNullOrEmpty(x.strmorong) ? x.strmorong : "",
+                        RowNumber = idx + 1
+                    }));
+
+            var result = sqlData
+                .Where(x=> x.RowNumber == 1)
                 .Select(x => new DTO.Vanbandi.ListVanbandiViewModel
                 {
-                    intid = x.v.intid,
-                    dtengayky = x.v.strngayky,
-                    intso = x.v.intso,
-                    strkyhieu = x.v.strkyhieu,
-                    strtrichyeu = x.v.strtrichyeu,
-                    strnoinhan = x.v.strnoinhan,
-                    dtehanxuly = x.v.strhanxuly,
-                    inttrangthai = x.v.inttrangthai,
+                    intid = x.intid,
+                    dtengayky = x.dtengayky,
+                    intso = x.intso,
+                    strkyhieu = x.strkyhieu,
+                    strtrichyeu = x.strtrichyeu,
+                    strnoinhan = x.strnoinhan,
+                    dtehanxuly = x.dtehanxuly,
+                    inttrangthai = x.inttrangthai,
                     IsAttach = _fileRepo.AttachVanbans
-                            .Any(a => a.intidvanban == x.v.intid && 
-                            a.inttrangthai == (int)enumAttachVanban.inttrangthai.IsActive &&
-                            a.intloai == (int)enumAttachVanban.intloai.Vanbandi),
-                    strsophu = !string.IsNullOrEmpty(x.v.strmorong) ? x.v.strmorong : ""
+                        .Any(a => a.intidvanban == x.intid &&
+                                  a.inttrangthai == (int) enumAttachVanban.inttrangthai.IsActive &&
+                                  a.intloai == (int) enumAttachVanban.intloai.Vanbandi),
+                    strsophu = x.strsophu
                 });
 
             return result;
