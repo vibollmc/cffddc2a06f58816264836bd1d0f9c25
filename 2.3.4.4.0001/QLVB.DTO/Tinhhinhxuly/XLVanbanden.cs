@@ -23,6 +23,4 @@ namespace QLVB.DTO.Tinhhinhxuly
         public int intTong { get; set; }
 
     }
-
-
 }

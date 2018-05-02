@@ -35,6 +35,7 @@ namespace QLVB.WebUI.Controllers
         public ActionResult Index()
         {
             return RedirectToAction("Vanbanden", "Tinhhinhxuly");
+           
         }
 
         #region Vanbandi
@@ -596,7 +597,7 @@ namespace QLVB.WebUI.Controllers
 
 
         #endregion Vanbanden
-
+ 
         #region Quytrinh
 
         public ActionResult Quytrinh(
