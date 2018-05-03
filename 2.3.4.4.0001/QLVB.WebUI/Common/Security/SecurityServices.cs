@@ -11,6 +11,7 @@ using QLVB.WebUI.Common.Role;
 using QLVB.DTO;
 using System.Web.Mvc;
 using Elmah.Mvc;
+using QLVB.DTO.Tinhhinhxuly;
 using QLVB.WebUI.Common.Session;
 using QLVB.WebUI.Controllers.Store;
 
@@ -232,6 +233,13 @@ namespace QLVB.WebUI.Common.Security
                 configuration.For<TinhhinhxulyController>(x => x.QuytrinhVBDen_Read(request, 1, "", 1, 1, "", "")).RequireAnyRole(RoleTinhhinhxulyQuytrinh.Truycap);
                 configuration.For<TinhhinhxulyController>(x => x._XemQuytrinh(1, 1, "", "")).RequireAnyRole(RoleTinhhinhxulyQuytrinh.Truycap);
                 configuration.For<TinhhinhxulyController>(x => x.ExportVBDenQuytrinh(request, 1, "", 1, 1, "", "")).RequireAnyRole(RoleTinhhinhxulyQuytrinh.Truycap);
+
+                //==============TÌNH HÌNH XỬ LÝ VB ĐI ========================================                
+                configuration.For<TinhhinhxulyController>(x => x.Vanbandi(false, "", "", LoaiNgay.NgayGui)).RequireAnyRole(RoleTinhhinhxulyVBDi.Truycap);
+                configuration.For<TinhhinhxulyController>(x => x.ListVanbandi(LoaiXuLyVbDi.Dagui, "", "", "", LoaiNgay.NgayGui, false)).RequireAnyRole(RoleTinhhinhxulyVBDi.Truycap);
+                configuration.For<TinhhinhxulyController>(x => x._TonghopVBDi("", "", LoaiNgay.NgayGui)).RequireAnyRole(RoleTinhhinhxulyVBDi.Truycap);
+                configuration.For<TinhhinhxulyController>(x => x.Vanbandi_Read(request, LoaiXuLyVbDi.Dagui, "", "", "", LoaiNgay.NgayGui)).RequireAnyRole(RoleTinhhinhxulyVBDi.Truycap);
+                configuration.For<TinhhinhxulyController>(x => x.ExportVanbanDi(request, LoaiXuLyVbDi.Dagui, "", "", "", LoaiNgay.NgayGui)).RequireAnyRole(RoleTinhhinhxulyVBDi.Truycap);
 
                 #endregion HosoCongviec
 

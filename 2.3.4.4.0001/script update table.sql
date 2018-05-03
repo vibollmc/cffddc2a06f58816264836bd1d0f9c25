@@ -20,9 +20,41 @@ CREATE NONCLUSTERED INDEX [Idx_intidVanban] ON [dbo].[GuiVanban]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 GO
 
+IF EXISTS (SELECT TOP 1 1 FROM Menu WHERE Id = 40)
+BEGIN
+UPDATE Menu
+SET ParentId = 4,
+	intlevel = 1,
+	strmota = N'Tình hình xử lý Văn bản đi',
+	straction = 'Vanbandi',
+	strcontroller = 'Tinhhinhxuly',
+	blopenwindow = 0,
+	intorder = 2,
+	strquyen = 'TinhhinhxulyVbdi',
+	inttrangthai = 1
+WHERE Id = 40
+END
+ELSE
+BEGIN
+INSERT [dbo].[Menu] ([Id], [ParentId], [intlevel], [strmota], [straction], [strcontroller], [stricon], [blopenwindow], [intorder], [strquyen], [inttrangthai]) VALUES (40, 4, 1, N'Tình hình xử lý Văn bản đi', N'Vanbandi', N'Tinhhinhxuly', NULL, 0, 2, N'TinhhinhxulyVbdi', 1)
+END
+GO
+
+IF NOT EXISTS (SELECT TOP 1 1 FROM Quyen WHERE strquyen = 'TinhhinhxulyVbdi')
+BEGIN
+  INSERT INTO Quyen(intidmenu,strtenquyen,strquyen,intorder,inttrangthai)
+  VALUES(40, N'Truy cập biểu mẫu tình hình xử lý', 'TinhhinhxulyVbdi', 1, 1)
+END
+GO
+IF NOT EXISTS (SELECT TOP 1 1 FROM Quyen WHERE strquyen = 'TinhhinhxulyVbdi')
+BEGIN
+INSERT INTO Quyen(intidmenu,strtenquyen,strquyen,intorder,inttrangthai)
+VALUES(40, N'Hiển thị toàn bộ tình hình văn bản đi', 'AllTinhhinhxulyVbdi', 1, 1)
+END
+GO
 
 --========== cập nhật: 30/03/2018 -- cập nhật tình hình xử lý văn bản đi ==========
-INSERT [dbo].[Menu] ([Id], [ParentId], [intlevel], [strmota], [straction], [strcontroller], [stricon], [blopenwindow], [intorder], [strquyen], [inttrangthai]) VALUES (40, 4, 1, N'Tình hình xử lý văn bản đi', N'Vanbandi', N'Tinhhinhxuly', NULL, 0, 2, N'Tinhhinhxuly', 1)
+INSERT [dbo].[Menu] ([Id], [ParentId], [intlevel], [strmota], [straction], [strcontroller], [stricon], [blopenwindow], [intorder], [strquyen], [inttrangthai]) VALUES (40, 4, 1, N'Tình hình xử lý văn bản đi', N'Vanbandi', N'Tinhhinhxuly', NULL, 0, 2, N'TinhhinhxulyVbdi', 1)
 GO
 
 --========== cập nhật: 15/11/2017 -- cập nhật trạng thái gửi nhận văn bản trên trục tỉnh ==========

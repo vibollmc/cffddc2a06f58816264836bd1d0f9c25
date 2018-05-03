@@ -173,6 +173,12 @@ namespace QLVB.Common.Utilities
         public const string Xemtatca = "AllTinhhinhxulyQuytrinh";
     }
 
+    public class RoleTinhhinhxulyVBDi
+    {
+        public const string Truycap = "TinhhinhxulyVbdi";
+        public const string Xemtatca = "AllTinhhinhxulyVbdi";
+    }
+
     #endregion HOSOCONGVIEC
 
     #region VANBAN
