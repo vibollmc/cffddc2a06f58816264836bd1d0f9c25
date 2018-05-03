@@ -262,7 +262,7 @@ namespace QLVB.Core.Implementation
                     strnoinhan = x.strnoinhan,
                     dtehanxuly = x.dtehanxuly,
                     inttrangthai = x.inttrangthai,
-                    IsAttach = _fileRepo.AttachVanban
+                    IsAttach = _fileRepo.AttachVanbans
                         .Any(a => a.intidvanban == x.intid &&
                                   a.inttrangthai == (int) enumAttachVanban.inttrangthai.IsActive &&
                                   a.intloai == (int) enumAttachVanban.intloai.Vanbandi),
