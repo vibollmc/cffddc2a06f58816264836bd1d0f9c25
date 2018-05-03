@@ -147,6 +147,9 @@ namespace QLVB.WebUI.Controllers
                 case LoaiXuLyVbDi.Hoanthanh:
                     strloaivanban = "DANH SÁCH VĂN BẢN HOÀN THÀNH";
                     break;
+                case LoaiXuLyVbDi.Hoanthanhtrehan:
+                    strloaivanban = "DANH SÁCH VĂN BẢN HOÀN THÀNH TRỄ HẠN";
+                    break;
                 case LoaiXuLyVbDi.Quahan:
                     strloaivanban = "DANH SÁCH VĂN BẢN QUÁ HẠN";
                     break;

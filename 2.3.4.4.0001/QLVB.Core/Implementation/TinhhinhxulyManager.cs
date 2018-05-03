@@ -110,7 +110,7 @@ namespace QLVB.Core.Implementation
                              x.strngaygui <= dtengaykt) ||
                             (loaingay == LoaiNgay.NgayKy && dtengaybd <= x.strngayky &&
                              x.strngayky <= dtengaykt))
-                .GroupBy(g => new {g.intiddonvi, g.strtendonvi})
+                .GroupBy(g => new {g.intiddonvi, g.strtendonvi})                
                 .Select(x => new XLVanbandi
                 {
                     IdDonvi = x.Key.intiddonvi,
@@ -118,9 +118,11 @@ namespace QLVB.Core.Implementation
                     Dagui = x.Count(y => y.strngaygui.HasValue && !y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue && (!y.strhanxuly.HasValue || (y.strhanxuly.HasValue && y.strhanxuly >= dteNow))),
                     Tiepnhan = x.Count(y => y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
                     DangXuly = x.Count(y => y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
-                    Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue),
-                    Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow)
-                });
+                    Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue && !(y.strhanxuly.HasValue && y.strhanxuly < y.strngayhoanthanh)),
+                    Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow),
+                    Hoanthanhtrehan = x.Count(y => y.strngayhoanthanh.HasValue && y.strhanxuly.HasValue && y.strhanxuly < y.strngayhoanthanh)
+                })                
+            ;
 
             return xlvbdi;
         }
@@ -160,10 +162,14 @@ namespace QLVB.Core.Implementation
                              (loaiXuLyVbDi == LoaiXuLyVbDi.Dangxuly && x.g.strngaydangxuly.HasValue &&
                               !x.g.strngayhoanthanh.HasValue) ||
 
-                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanh && x.g.strngayhoanthanh.HasValue) ||
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanh && x.g.strngayhoanthanh.HasValue && 
+                             !(x.v.strhanxuly.HasValue && x.v.strhanxuly < x.g.strngayhoanthanh)) ||
 
                              (loaiXuLyVbDi == LoaiXuLyVbDi.Quahan && !x.g.strngayhoanthanh.HasValue &&
-                              x.v.strhanxuly.HasValue && x.v.strhanxuly < dteNow)
+                              x.v.strhanxuly.HasValue && x.v.strhanxuly < dteNow) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanhtrehan && x.g.strngayhoanthanh.HasValue &&
+                              x.v.strhanxuly.HasValue && x.v.strhanxuly < x.g.strngayhoanthanh)
                          )
                          &&
                          (

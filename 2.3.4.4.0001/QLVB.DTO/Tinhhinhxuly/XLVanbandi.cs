@@ -15,6 +15,7 @@ namespace QLVB.DTO.Tinhhinhxuly
         public int DangXuly { get; set; }
         public int Hoanthanh { get; set; }
         public int Quahan { get; set; }
+        public int Hoanthanhtrehan { get; set; }
     }
 
     public enum LoaiNgay
@@ -29,6 +30,7 @@ namespace QLVB.DTO.Tinhhinhxuly
         Datiepnhan = 2,
         Dangxuly = 3,
         Quahan = 4,
-        Hoanthanh = 5
+        Hoanthanh = 5,
+        Hoanthanhtrehan = 6
     }
 }
