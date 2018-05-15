@@ -1009,7 +1009,8 @@ namespace QLVB.Core.Implementation
             int? idkhoiph, int? idsovb, string xuly,
             int? intsodenbd, int? intsodenkt, string strngaydenbd, string strngaydenkt,
             string strngaykybd, string strngaykykt, string strsokyhieu, string strnguoiky,
-            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban
+            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban,
+            bool isSearch
             )
         {
             string strSearchValues = _SqlSearchVBDen
@@ -1017,7 +1018,8 @@ namespace QLVB.Core.Implementation
                 idkhoiph, idsovb, xuly,
                 intsodenbd, intsodenkt, strngaydenbd, strngaydenkt,
                 strngaykybd, strngaykykt, strsokyhieu, strnguoiky,
-                strnoigui, strtrichyeu, strnguoixuly, strdangvanban
+                strnoigui, strtrichyeu, strnguoixuly, strdangvanban,
+                isSearch
                 );
 
             bool isViewVBDenDaXL = _configRepo.GetConfigToBool(ThamsoHethong.IsViewVBDenDaXL);
@@ -1060,13 +1062,14 @@ namespace QLVB.Core.Implementation
             int? idkhoiph, int? idsovb, string xuly,
             int? intsodenbd, int? intsodenkt, string strngaydenbd, string strngaydenkt,
             string strngaykybd, string strngaykykt, string strsokyhieu, string strnguoiky,
-            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban
+            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban,
+            bool isSearch
             )
         {
             string strWhere = string.Empty;
             string query = string.Empty;
 
-            bool isSearch = false;
+            //bool isSearch = false;
             bool isCategory = false;
             string strSearchValues = string.Empty;
             // strSearchValues = "intsodenbd=1;intsodenkt=10;idloaivb=2;"
@@ -1090,7 +1093,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 //isCategory = true;
                 strSearchValues += "strngaydencat=" + strngaydencat + ";";
             }
@@ -1105,7 +1108,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 //isCategory = true;
                 strSearchValues += "idloaivb=" + idloaivb.ToString() + ";";
             }
@@ -1120,7 +1123,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 //isCategory = true;
                 strSearchValues += "idsovb=" + idsovb.ToString() + ";";
             }
@@ -1135,8 +1138,8 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
-                isCategory = true;
+                //isSearch = true;
+                //isCategory = true;
                 strSearchValues += "idkhoiph=" + idkhoiph.ToString() + ";";
             }
             // tinh trang xu ly
@@ -1172,8 +1175,8 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
-                isCategory = true;
+                //isSearch = true;
+                //isCategory = true;
                 strSearchValues += "xuly=" + xuly + ";";
             }
 
@@ -1193,7 +1196,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "intsodenbd=" + intsodenbd.ToString() + ";intsodenkt=" + intsodenkt.ToString() + ";";
                 }
             }
@@ -1210,7 +1213,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "intsodenbd=" + intsodenbd.ToString() + ";";
                 }
             }
@@ -1232,7 +1235,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "strngaydenbd=" + strngaydenbd + ";strngaydenkt=" + strngaydenkt + ";";
                 }
             }
@@ -1251,7 +1254,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "strngaydenbd=" + strngaydenbd + ";";
                 }
             }
@@ -1276,7 +1279,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "strngaykybd=" + strngaykybd + ";strngaykykt=" + strngaykykt + ";";
                 }
             }
@@ -1296,7 +1299,7 @@ namespace QLVB.Core.Implementation
                     {
                         strWhere += " and " + query;
                     }
-                    isSearch = true;
+                    //isSearch = true;
                     strSearchValues += "strngaykybd=" + strngaykybd + ";";
                 }
             }
@@ -1324,7 +1327,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strsokyhieu=" + strsokyhieu + ";";
             }
 
@@ -1361,7 +1364,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strtrichyeu=" + strtrichyeu + ";";
             }
 
@@ -1378,7 +1381,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strnguoixuly=" + strnguoixuly + ";";
             }
 
@@ -1395,7 +1398,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strnguoiky=" + strnguoiky + ";";
             }
 
@@ -1412,7 +1415,7 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strnoigui=" + strnoigui + ";";
             }
 
@@ -1445,9 +1448,11 @@ namespace QLVB.Core.Implementation
                 {
                     strWhere += " and " + query;
                 }
-                isSearch = true;
+                //isSearch = true;
                 strSearchValues += "strdangvanban=" + strdangvanban + ";";
             }
+
+            strSearchValues += "isSearch=" + isSearch + ";";
 
             //========================================================
             // end search
@@ -1484,22 +1489,22 @@ namespace QLVB.Core.Implementation
                 // tim kiem thi hien thi tat ca
 
                 // Category thi gioi han ngay hien thi
-                if (isCategory)
-                {
-                    int intngay = _configRepo.GetConfigToInt(ThamsoHethong.SoNgayHienThi);
-                    DateTime? dtengaybd = DateTime.Now.AddDays(-intngay);
-                    string strngaybd = DateServices.FormatDateEn(dtengaybd);
-                    query = " strngayden >='" + strngaybd + "' ";
-                    if (string.IsNullOrEmpty(strWhere))
-                    {
-                        strWhere += query;
-                    }
-                    else
-                    {
-                        strWhere += " and " + query;
-                    }
-                    //vanban = vanban.Where(p => p.strngayden >= dtengaybd);
-                }
+                //if (isCategory)
+                //{
+                //    int intngay = _configRepo.GetConfigToInt(ThamsoHethong.SoNgayHienThi);
+                //    DateTime? dtengaybd = DateTime.Now.AddDays(-intngay);
+                //    string strngaybd = DateServices.FormatDateEn(dtengaybd);
+                //    query = " strngayden >='" + strngaybd + "' ";
+                //    if (string.IsNullOrEmpty(strWhere))
+                //    {
+                //        strWhere += query;
+                //    }
+                //    else
+                //    {
+                //        strWhere += " and " + query;
+                //    }
+                //    //vanban = vanban.Where(p => p.strngayden >= dtengaybd);
+                //}
             }
 
             return strWhere;
@@ -2041,7 +2046,8 @@ namespace QLVB.Core.Implementation
                 idkhoiph, idsovb, xuly,
                 intsodenbd, intsodenkt, strngaydenbd, strngaydenkt,
                 strngaykybd, strngaykykt, strsokyhieu, strnguoiky,
-                strnoigui, strtrichyeu, strnguoixuly, null
+                strnoigui, strtrichyeu, strnguoixuly, null,
+                true
                 );
 
 
