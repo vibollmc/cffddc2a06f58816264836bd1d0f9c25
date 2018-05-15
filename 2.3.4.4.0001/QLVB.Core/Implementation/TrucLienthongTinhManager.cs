@@ -257,7 +257,7 @@ namespace QLVB.Core.Implementation
             return null;
 
         }
-            public ResultFunction NhanVanBan()
+        public ResultFunction NhanVanBan()
         {
             var kq = new ResultFunction {id = -1};
             try
@@ -469,12 +469,15 @@ namespace QLVB.Core.Implementation
                         if (numberOfAttach == 0)
                             _vanbandenmailRepository.UpdateIntAttach(idmail, enumVanbandenmail.intattach.Khong);
                     }
+
+#if !DEBUG
                     if (getFileSuccess)
                     {
                         //sau khi lấy văn bản, xác nhận  văn bản đã lấy thành công
                         webService.updateReceiveFinish(messageIdsByDocument);
                     }
                     SendStatusByIdVanbanDenMail(idmail, "01", "Đã đến","Phần mềm QLVB", "Phần mềm QLVB");
+#endif
                 }
 
                 //kq.id = (int) ResultViewModels.Success;                
@@ -850,9 +853,9 @@ namespace QLVB.Core.Implementation
         }
 
 
-        #endregion implement functions
+#endregion implement functions
 
-        #region PrivateMethods
+#region PrivateMethods
 
         private IList<string> GetFileAttachments(int vanbandiId)
         {
@@ -1236,9 +1239,9 @@ namespace QLVB.Core.Implementation
 
                 
 
-        #endregion PrivateMethods
+#endregion PrivateMethods
 
-        #region public related class
+#region public related class
         public class ResultUploadFile
         {
             public string fileSize { get; set; }
@@ -1467,6 +1470,6 @@ namespace QLVB.Core.Implementation
             public string SOAPENV { get; set; }
         }
           
-        #endregion
+#endregion
     }
 }

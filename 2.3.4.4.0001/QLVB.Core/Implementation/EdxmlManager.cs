@@ -582,22 +582,29 @@ namespace QLVB.Core.Implementation
                         string folderpath = AppSettings.Noidung + "/" + AppConts.FileEmail;
                         string physisfolderzip = System.Web.HttpContext.Current.Server.MapPath(folderpath);
 
-                        FileAttach fn = fi;
-                        fn.FileStream = QLVB.Common.Edxml.EdXml2Override.Decompressed(fn, physisfolderzip);
-                        fn.FileSize = fn.FileStream.Length;
+                        //FileAttach fn = fi;
+                        //fn.FileStream = QLVB.Common.Edxml.EdXml2Override.Decompressed(fn, physisfolderzip);
+                        //fn.FileSize = fn.FileStream.Length;
 
-                        using (FileStream fileStream = new FileStream(fileSavepath, FileMode.Create, FileAccess.Write))
+                        //using (FileStream fileStream = new FileStream(fileSavepath, FileMode.Create, FileAccess.Write))
+                        //{
+                        //    byte[] array = new byte[fn.FileSize];
+                        //    int count;
+                        //    while ((count = fn.FileStream.Read(array, 0, array.Length)) > 0)
+                        //    {
+                        //        fileStream.Write(array, 0, count);
+                        //    }
+                        //    fileStream.Close();
+                        //}
+
+                        using (var fileStream = new FileStream(fileSavepath, FileMode.Create, FileAccess.Write))
                         {
-                            byte[] array = new byte[fn.FileSize];
-                            int count;
-                            while ((count = fn.FileStream.Read(array, 0, array.Length)) > 0)
-                            {
-                                fileStream.Write(array, 0, count);
-                            }
+                            fi.FileStream.WriteTo(fileStream);
+
                             fileStream.Close();
                         }
 
-                        // insert vao database attachmail                                    
+                            // insert vao database attachmail                                    
                         _mailFormat.InsertAttachment(idmail, fileSavepath, strmota, (int)enumAttachMail.intloai.Vanbandendientu);
 
                     }

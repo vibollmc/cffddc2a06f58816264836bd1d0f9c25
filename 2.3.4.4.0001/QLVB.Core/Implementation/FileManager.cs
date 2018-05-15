@@ -241,7 +241,7 @@ namespace QLVB.Core.Implementation
                 string strfoldernam = ngayhientai.ToString("yyyy");
                 //folderpath += "\\" + strfoldernam;
                 strnoidung += "/" + strfoldernam;
-                folderpath = HttpContext.Current.Server.MapPath(strnoidung);
+                folderpath = HttpContext.Current != null ? HttpContext.Current.Server.MapPath(strnoidung) : strnoidung.Replace("~/", AppDomain.CurrentDomain.BaseDirectory);
                 if (!Directory.Exists(folderpath))
                 {
                     Directory.CreateDirectory(folderpath);
@@ -251,7 +251,7 @@ namespace QLVB.Core.Implementation
                 //folderpath += "\\" + strfolderthang;
                 strnoidung += "/" + strfolderthang;
                 //HostingEnvironment.MapPath
-                folderpath = HttpContext.Current.Server.MapPath(strnoidung);
+                folderpath = HttpContext.Current != null ? HttpContext.Current.Server.MapPath(strnoidung) : strnoidung.Replace("~/", AppDomain.CurrentDomain.BaseDirectory);
                 if (!Directory.Exists(folderpath))
                 {
                     Directory.CreateDirectory(folderpath);
@@ -260,7 +260,7 @@ namespace QLVB.Core.Implementation
                 string strfolderngay = ngayhientai.ToString("dd");
                 //folderpath += "\\" + strfolderngay;
                 strnoidung += "/" + strfolderngay;
-                folderpath = HttpContext.Current.Server.MapPath(strnoidung);
+                folderpath = HttpContext.Current != null ? HttpContext.Current.Server.MapPath(strnoidung) : strnoidung.Replace("~/", AppDomain.CurrentDomain.BaseDirectory);
                 if (!Directory.Exists(folderpath))
                 {
                     Directory.CreateDirectory(folderpath);

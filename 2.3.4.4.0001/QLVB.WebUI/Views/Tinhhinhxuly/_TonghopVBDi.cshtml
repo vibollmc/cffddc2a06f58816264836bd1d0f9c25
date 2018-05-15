@@ -8,16 +8,18 @@
     var tongHoanthanh = 0;
     var tongQuahan = 0;
     var tongCong = 0;
+    var tongHoanthanhtrehan = 0;
 }
 <table id="detail-tinhhinhxuly" class="table table-bordered table-condensed responsive-table" style="width: 100%">
     <tr style="font-weight:bold;">
         <td style="width: 5%; text-align: center;">STT</td>
         <td style="width:auto">Đơn vị</td>
-        <td style="width: 10% ;text-align:center;">VB Đã gửi</td>
-        <td style="width: 10%; text-align: center;">VB Đã tiếp nhận</td>
+        <td style="width: 10% ;text-align:center;">VB Mới gửi</td>
+        <td style="width: 10%; text-align: center;">VB Vừa tiếp nhận</td>
         <td style="width: 10%; text-align: center;">VB Đang xử lý</td>
         <td style="width: 10%; text-align: center;">VB Đã quá hạn</td>
         <td style="width: 10%; text-align: center;">VB Hoàn thành</td>
+        <td style="width: 10%; text-align: center;">VB Hoàn thành trễ hạn</td>
         <td style="width: 10%; text-align: center;">Tổng</td>
     </tr>
     @foreach (var m in Model)
@@ -29,6 +31,7 @@
         tongDangXl += m.DangXuly;
         tongHoanthanh += m.Hoanthanh;
         tongQuahan += m.Quahan;
+        tongHoanthanhtrehan += m.Hoanthanhtrehan;
         <tr id="@m.Donvi">
             <td style="width:5%; text-align: center;">@count</td>
             <td style="width:auto;cursor:pointer">@m.Donvi</td>
@@ -37,6 +40,7 @@
             <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(3,'@m.Donvi')">@m.DangXuly</td>
             <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(4,'@m.Donvi')">@m.Quahan</td>
             <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(5,'@m.Donvi')">@m.Hoanthanh</td>
+            <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(6,'@m.Donvi')">@m.Hoanthanhtrehan</td>
             <td style="width: 10%; text-align: center;">@tong</td>
 
         </tr>
@@ -52,6 +56,7 @@
         <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(3,'')">@tongDangXl</td>
         <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(4,'')">@tongQuahan</td>
         <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(5,'')">@tongHoanthanh</td>
+        <td style="width: 10%; text-align: center;cursor:pointer" onclick="OpenDetail(6,'')">@tongHoanthanhtrehan</td>
         <td style="width: 10%; text-align: center;cursor:pointer">@tongCong</td>
     </tr>
 </table>

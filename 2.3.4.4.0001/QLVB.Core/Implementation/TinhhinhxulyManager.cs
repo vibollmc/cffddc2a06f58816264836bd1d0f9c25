@@ -95,7 +95,6 @@ namespace QLVB.Core.Implementation
             var dtengaykt = DateServices.FormatDateEn(strngaykt);
 
             var dteNow = DateTime.Now;
-
             var sqlQuery = _guiVanbanRepository.GuiVanbans
                 .Join(_vanbandiRepo.Vanbandis,
                     g => g.intidvanban,
@@ -151,10 +150,11 @@ namespace QLVB.Core.Implementation
                     Dagui = x.Count(y => y.strngaygui.HasValue && !y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue && (!y.strhanxuly.HasValue || (y.strhanxuly.HasValue && y.strhanxuly >= dteNow))),
                     Tiepnhan = x.Count(y => y.strngaytiepnhan.HasValue && !y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
                     DangXuly = x.Count(y => y.strngaydangxuly.HasValue && !y.strngayhoanthanh.HasValue),
-                    Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue),
-                    Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow)
+                    Hoanthanh = x.Count(y => y.strngayhoanthanh.HasValue && !(y.strhanxuly.HasValue && y.strhanxuly < y.strngayhoanthanh)),
+                    Quahan = x.Count(y => y.strhanxuly.HasValue && !y.strngayhoanthanh.HasValue && y.strhanxuly < dteNow),
+                    Hoanthanhtrehan = x.Count(y => y.strngayhoanthanh.HasValue && y.strhanxuly.HasValue && y.strhanxuly < y.strngayhoanthanh)
                 })
-                .OrderBy(x=> x.Donvi);
+            	.OrderBy(x=> x.Donvi);
 
             return xlvbdi;
         }
@@ -165,7 +165,6 @@ namespace QLVB.Core.Implementation
             var dtengaybd = DateServices.FormatDateEn(strngaybd);
             var dtengaykt = DateServices.FormatDateEn(strngaykt);
             var dteNow = DateTime.Now;
-
             var sqlData = _guiVanbanRepository.GuiVanbans
                 .Join(_vanbandiRepo.Vanbandis,
                     g => g.intidvanban,
@@ -196,10 +195,14 @@ namespace QLVB.Core.Implementation
                              (loaiXuLyVbDi == LoaiXuLyVbDi.Dangxuly && x.g.strngaydangxuly.HasValue &&
                               !x.g.strngayhoanthanh.HasValue) ||
 
-                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanh && x.g.strngayhoanthanh.HasValue) ||
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanh && x.g.strngayhoanthanh.HasValue && 
+                             !(x.v.strhanxuly.HasValue && x.v.strhanxuly < x.g.strngayhoanthanh)) ||
 
                              (loaiXuLyVbDi == LoaiXuLyVbDi.Quahan && !x.g.strngayhoanthanh.HasValue &&
-                              x.v.strhanxuly.HasValue && x.v.strhanxuly < dteNow)
+                              x.v.strhanxuly.HasValue && x.v.strhanxuly < dteNow) ||
+
+                             (loaiXuLyVbDi == LoaiXuLyVbDi.Hoanthanhtrehan && x.g.strngayhoanthanh.HasValue &&
+                              x.v.strhanxuly.HasValue && x.v.strhanxuly < x.g.strngayhoanthanh)
                          )
                          &&
                          (
