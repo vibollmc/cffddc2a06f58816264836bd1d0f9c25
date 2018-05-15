@@ -220,7 +220,8 @@ namespace QLVB.WebUI.Controllers
             string strngaydencat, int? idloaivb, int? idkhoiph, int? idsovb, string xuly,
             int? intsodenbd, int? intsodenkt, string strngaydenbd, string strngaydenkt,
             string strngaykybd, string strngaykykt, string strsokyhieu, string strnguoiky,
-            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban
+            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban,
+            bool isSearch
             )
         {
             int currentPage = request.Page;
@@ -268,6 +269,8 @@ namespace QLVB.WebUI.Controllers
 
                 string _strdangvanban = _session.GetStringSearchValues("strdangvanban", strSearchValues);
 
+                bool.TryParse(_session.GetStringSearchValues("isSearch", strSearchValues), out isSearch);
+
                 highlightResult = _strtrichyeu;
 
                 vbden = _vanban.GetListVanbanden
@@ -275,7 +278,8 @@ namespace QLVB.WebUI.Controllers
                     _idkhoiph, _idsovb, _xuly,
                     _intsodenbd, _intsodenkt, _strngaydenbd, _strngaydenkt,
                     _strngaykybd, _strngaykykt, _strsokyhieu, _strnguoiky,
-                    _strnoigui, _strtrichyeu, _strnguoixuly, _strdangvanban
+                    _strnoigui, _strtrichyeu, _strnguoixuly, _strdangvanban,
+                    isSearch
                     );
             }
             else
@@ -287,7 +291,8 @@ namespace QLVB.WebUI.Controllers
                     idkhoiph, idsovb, xuly,
                     intsodenbd, intsodenkt, strngaydenbd, strngaydenkt,
                     strngaykybd, strngaykykt, strsokyhieu, strnguoiky,
-                    strnoigui, strtrichyeu, strnguoixuly, strdangvanban
+                    strnoigui, strtrichyeu, strnguoixuly, strdangvanban,
+                    isSearch
                     );
             }
 
@@ -728,12 +733,17 @@ namespace QLVB.WebUI.Controllers
 
             string _strdangvanban = _session.GetStringSearchValues("strdangvanban", strSearchValues);
 
+            bool isSearch = false;
+
+            bool.TryParse(_session.GetStringSearchValues("isSearch", strSearchValues), out isSearch);
+
             vanban = new List<ListVanbandenViewModel>(_vanban.GetListVanbanden
                     (_strngaydencat, _idloaivb,
                     _idkhoiph, _idsovb, "",
                     _intsodenbd, _intsodenkt, _strngaydenbd, _strngaydenkt,
                     _strngaykybd, _strngaykykt, _strsokyhieu, _strnguoiky,
-                    _strnoigui, _strtrichyeu, _strnguoixuly, _strdangvanban
+                    _strnoigui, _strtrichyeu, _strnguoixuly, _strdangvanban,
+                    isSearch
                     ));
 
 

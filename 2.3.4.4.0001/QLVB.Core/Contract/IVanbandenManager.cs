@@ -35,7 +35,8 @@ namespace QLVB.Core.Contract
             int? idkhoiph, int? idsovb, string xuly,
             int? intsodenbd, int? intsodenkt, string strngaydenbd, string strngaydenkt,
             string strngaykybd, string strngaykykt, string strsokyhieu, string strnguoiky,
-            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban
+            string strnoigui, string strtrichyeu, string strnguoixuly, string strdangvanban,
+            bool isSearch
             );
 
 

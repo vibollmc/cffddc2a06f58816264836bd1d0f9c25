@@ -99,9 +99,9 @@
     $(window).resize(function () {
         SetTreeViewHeight();
     });
-    $(document).ready(function () {
+    $(document).ready(function() {
         SetTreeViewHeight();
-    })
+    });
     function onSelect_treeview(e) {
         var treeview = $("#treeview").getKendoTreeView();
         var text = treeview.dataItem(e.node).text;
@@ -109,7 +109,7 @@
         //console.log(id);        
         if (id != "parentNode") {
             var url = '@Url.Action("_ListVanbanden_2", "Vanbanden")';
-            url = url + '?isSearch=true&' + id;
+            url = url + '?isSearch=false&' + id;
             //console.log(url);
             $('#listvanbanden').load(url);
         } else {
